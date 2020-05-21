@@ -1,0 +1,25 @@
+{
+  "name": "mojl",
+  "version": "0.0.1",
+  "description": "A simple content module repackager",
+  "private": true,
+  "main": "mojl.js",
+  "files": [
+    "dev-js.tpl"
+  ],
+  "scripts": {
+    "test": "gulp test",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-jshint": "^2.1.0",
+    "gulp-mocha": "^7.0.2",
+    "gulp-watch": "^5.0.1",
+    "gulp4-run-sequence": "^1.0.1",
+    "jshint": "^2.11.1"
+  }
+}
