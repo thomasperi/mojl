@@ -1,5 +1,7 @@
 {
 	"modules_dir": "components/parts",
 	"build_dir": "assembled/put-together",
-	"images_dir": "pictures/photos"
+	"asset_dirs": [
+		"pictures/photos"
+	]
 }

@@ -96,6 +96,7 @@ describe('Directory Comparison Tests', () => {
 	test('custom-directories');
 	test('custom-directories-nested');
 	test('rewrite-image-paths');
+	test('multiple-asset-dirs');
 
 // 	test('rewrite-image-paths-nested', true);
 

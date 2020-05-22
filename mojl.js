@@ -31,25 +31,27 @@ function simulate_build(config) {
 // 		"base": "./web/wp-content/themes/your-theme",
 
 		// The directory to find the modules in, relative to `base`.
+		// (The endpoint is also used as the basename for the build files.)
 		"modules_dir": "modules",
 
 		// The directory to build the monolithic files in, relative to `base`.
 		"build_dir": "build",
 		
-		// The directory to find images in, relative to each module directory.
-		"images_dir": "images",
+		// The directories to find references assets in, such as images,
+		// relative to each module directory.
+		"asset_dirs": [
+			"images",
+		],
 
 		// Which file extensions to concatenate.
 		"concat_exts": [
 			"css",
-			"scss",
 			"js",
 		],
 		
-		// Types of files in which to rewrite image paths.
-		"img_rewrite": [
+		// Types of files in which to rewrite asset paths when concatenating.
+		"concat_rewrite_exts": [
 			"css",
-			"scss",
 		],
 		
 		// Define the order in which the modules should be loaded.
@@ -98,7 +100,7 @@ function find_mods(config) {
 				mods[dir.name] = {
 					base: thismod_dir,
 					files: find_pieces(thismod_dir, dir.name),
-					images: find_images(thismod_dir, config.images_dir),
+					images: find_images(thismod_dir, config.asset_dirs),
 				};
 			})
 		);
@@ -131,16 +133,22 @@ function find_pieces(thismod_dir, dirname) {
 }
 
 // Add a list of files in this module's image directory.
-function find_images(thismod_dir, dirname) {
-	let images_dir = path.join(thismod_dir, dirname);
-	return (
-		fs.existsSync(images_dir) && 
-		fs.lstatSync(images_dir).isDirectory()
-	) ? (fs
-		.readdirSync(images_dir, {withFileTypes: true})
-		.filter(ent => ent.isFile())
-		.map(file => path.join(dirname, file.name))
-	) : [];
+function find_images(thismod_dir, dirnames) {
+	let result = [];
+	dirnames.forEach(dirname => {
+		let images_dir = path.join(thismod_dir, dirname);
+		if (
+			fs.existsSync(images_dir) && 
+			fs.lstatSync(images_dir).isDirectory()
+		) {
+			result.push(...(fs
+				.readdirSync(images_dir, {withFileTypes: true})
+				.filter(ent => ent.isFile())
+				.map(file => path.join(dirname, file.name))
+			));
+		}
+	});
+	return result;
 }
 
 // 
@@ -178,7 +186,7 @@ function concatenate(mods, config) {
 					);
 			
 				// Rewrite image names in specified file types...
-				if (config.img_rewrite.includes(ext)) {
+				if (config.concat_rewrite_exts.includes(ext)) {
 					images.forEach(rel_img => {
 						let path_img = path.join(base, rel_img),
 							ts = timestamp(path_img);
