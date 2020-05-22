@@ -3,6 +3,7 @@
  * (c) Thomas Peri <hello@thomasperi.net>
  * MIT License
  */
+/*global document, console, setTimeout */
 (function (urls) {
 	// document.currentScript polyfill, doesn't work with async attribute.
 	// https://2ality.com/2014/05/current-script.html 
@@ -29,14 +30,14 @@
 	}
 	
 	// Add all the script urls passed in.
-	console.log('=== bindle dev mode : adding scripts ===')
+	console.log('=== bindle dev mode : adding scripts ===');
 	var i = 0;
 	function next() {
 		if (i < urls.length) {
 			load(urls[i++]);
 		} else {
 			setTimeout(function () {
-				console.log('=== bindle dev mode : done adding scripts ===')
+				console.log('=== bindle dev mode : done adding scripts ===');
 			}, 0);
 		}
 	}

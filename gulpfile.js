@@ -6,7 +6,8 @@ const runSequence = require('gulp4-run-sequence');
 
 var files = {
 	src: 'mojl.js',
-	test: 'test/*/*.js',
+	tpl: 'dev-js.tpl',
+	test: 'test/test.js',
 };
 
 // Make it easier to run tasks from inside other tasks.
@@ -27,7 +28,7 @@ var lint_settings = {
 
 task('lint', true, function() {
 	return (gulp
-		.src(files.src)
+		.src([files.src, files.tpl])
 		.pipe(jshint(lint_settings))
 		.pipe(jshint.reporter('default'))
 	);
@@ -46,10 +47,7 @@ task('test', true, function () {
 
 // Run tasks when changes are detected on certain files.
 task('watch', false, function () {
-	watch([
-		files.src,
-		files.test
-	], tasks['default']);
+	watch(Object.values(files), tasks['default']);
 });
 
 // Run the tasks in series, in the order they were defined. 

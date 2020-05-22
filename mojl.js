@@ -1,5 +1,5 @@
 /**
- * mojl v1.0.0
+ * mojl v1.0.0-dev
  * A node module to allow "content modules" with related assets grouped
  * together during development, and concatenate each file type from all the
  * modules into single monolithic .js, .css, etc. files.
@@ -17,6 +17,7 @@ function build(config) {
 	Object.keys(plan).forEach(filename => {
 		fs.writeFileSync(filename, plan[filename]);
 	});
+	return plan;
 }
 
 // Build dev and production files based on a directory of modules.
@@ -79,7 +80,7 @@ function simulate_build(config) {
 // Find all the modules.
 function find_mods(config) {
 	let mods = {},
-		modules_dir = config.base + '/' + config.modules_dir;
+		modules_dir = path.join(config.base, config.modules_dir);
 
 	// Map all the modules.	
 	if (fs.lstatSync(modules_dir).isDirectory()) {
@@ -92,7 +93,7 @@ function find_mods(config) {
 			// Add items to the mods object.
 			.forEach(dir => {
 				// Add a new object to represent the module.
-				let thismod_dir = path.normalize(modules_dir + '/' + dir.name);
+				let thismod_dir = path.join(modules_dir, dir.name);
 				mods[dir.name] = {
 					base: thismod_dir,
 					files: find_pieces(thismod_dir, dir.name),
@@ -130,22 +131,21 @@ function find_pieces(thismod_dir, dirname) {
 
 // Add a list of files in this module's image directory.
 function find_images(thismod_dir, dirname) {
-	let images_dir = thismod_dir + '/' + dirname;
+	let images_dir = path.join(thismod_dir, dirname);
 	return (
 		fs.existsSync(images_dir) && 
 		fs.lstatSync(images_dir).isDirectory()
 	) ? (fs
 		.readdirSync(images_dir, {withFileTypes: true})
 		.filter(ent => ent.isFile())
-		.map(file => dirname + '/' + file.name)
+		.map(file => path.join(dirname, file.name))
 	) : [];
 }
 
 // 
 function concatenate(mods, config) {
 	let cat = {},
-// 		base = path.normalize(config.base),
-		abs_prefix = path.normalize(config.base + '/' + config.build_dir),
+		abs_prefix = path.join(config.base, config.build_dir),
 		names = get_order(mods, config);
 
 	// For each module, add on to the concatenated object,
@@ -171,16 +171,15 @@ function concatenate(mods, config) {
 				}
 			
 				// Read the source file...
-				let prefix = base + '/',
-					content = fs.readFileSync(
-						prefix + files[ext],
+				let content = fs.readFileSync(
+						path.join(base, files[ext]),
 						{encoding: 'utf8'}
 					);
 			
 				// Rewrite image names in specified file types...
 				if (config.img_rewrite.includes(ext)) {
 					images.forEach(rel_img => {
-						let path_img = prefix + rel_img,
+						let path_img = path.join(base, rel_img),
 							ts = timestamp(path_img);
 						content = content.replace(
 							rel_img,
@@ -243,30 +242,28 @@ function timestamp(path) {
 // Build a list of files that will hold the concatenated contents
 // from the files in all the modules.
 function plan_files(cat, config) {
-	let plan = {};
+	let plan = {},
+		basename = path.basename(config.modules_dir);
 	Object.keys(cat).forEach(ext => {
-		let filename = path.normalize(
-				config.base + '/' +
-				config.build_dir + '/modules.' + ext
+		let filename = path.join(
+				config.base, config.build_dir, basename + '.' + ext
 			),
 			contents = cat[ext].files.join('\n\n'),
 			
-			tpl_dev_path = __dirname + '/dev-' + ext + '.tpl',
+			tpl_dev_path = path.join(__dirname, 'dev-' + ext + '.tpl'),
 			tpl_dev_exists = fs.existsSync(tpl_dev_path);
 
 		plan[filename] = contents;
 		
 		if (tpl_dev_exists) {
 			let tpl_dev = fs.readFileSync(tpl_dev_path, {encoding: 'utf8'}),
-				filename_dev = path.normalize(
-					config.base + '/' + 
-					config.build_dir + '/modules-dev.' + ext
+				filename_dev = path.join(
+					config.base, config.build_dir, basename + '-dev.' + ext
 				),
 				urls_dev = cat[ext].manifest.map(name => {
-					let asset = config.base + '/' +
-							config.modules_dir + '/' +
-								name + '/' +
-									name + '.' + ext;
+					let asset = path.join(
+						config.base, config.modules_dir, name, name + '.' + ext
+					);
 					return path.relative(
 						path.dirname(filename_dev),
 						asset
@@ -286,6 +283,6 @@ function plan_files(cat, config) {
 }
 
 module.exports = {
-	simulate_build,
 	build,
+	simulate_build,
 };
