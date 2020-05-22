@@ -1,6 +1,11 @@
 /**
- * These tests work by comparing the expected results from simulating a build
- * with actual results in files that were produced with the same config.
+ * These tests work by comparing the results from simulating a build
+ * with results from a prior build.
+ * 
+ * To create a new test (or update an existing one) passing `true` as the
+ * second argument to `test` will cause the "expected" reference files to be
+ * rewritten. Examine the resulting build files to determine whether the build
+ * went as expected, then remove the `true` from the `test` call.
  */
 
 /*global require, describe, it, __dirname */
@@ -15,11 +20,10 @@ const expect = chai.expect;
 // const should = chai.should();
 
 
-function test(name, config, write) {
-	let base = path.join(__dirname, name),
-		expected_path = path.join(base, 'expected.json');
+// For fs.readFileSync
+const utf8 = {encoding: 'utf8'};
 
-	config = { base, ...config };
+function test(name, write) {
 
 	function relativize(plan) {
 		Object.keys(plan).forEach(abspath => {
@@ -31,6 +35,18 @@ function test(name, config, write) {
 		return plan;
 	}
 
+	let base = path.join(__dirname, name),
+		expected_path = path.join(base, 'expected.json'),
+		config_path = path.join(base, 'config.json'),
+		config = { base };
+	
+	if (fs.existsSync(config_path)) {
+		Object.assign(
+			config, 
+			JSON.parse(fs.readFileSync(config_path, utf8))
+		);
+	}
+	
 	if (write) {
 		fs.writeFileSync(
 			expected_path,
@@ -47,7 +63,7 @@ function test(name, config, write) {
 			mojl.simulate_build(config)
 		),
 		expected = JSON.parse(
-			fs.readFileSync(expected_path, {encoding: 'utf8'})
+			fs.readFileSync(expected_path, utf8)
 		);
 	
 	it(name, () => {
@@ -58,7 +74,10 @@ function test(name, config, write) {
 
 describe('Directory Comparison Tests', () => {
 
-	test('single-module', {});
-	test('multiple-modules', {});
+	test('single-module');
+	test('multiple-modules');
+	test('ordered-head');
+	test('ordered-tail');
+	test('ordered-both');
 
 });
