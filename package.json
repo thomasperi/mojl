@@ -2,7 +2,6 @@
   "name": "mojl",
   "version": "0.0.1",
   "description": "A simple content module repackager",
-  "private": true,
   "main": "mojl.js",
   "files": [
     "dev-js.tpl"
@@ -12,8 +11,9 @@
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": "github:thomasperi/mojl",
+  "author": "Thomas Peri <hello@thomasperi.net>",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
     "gulp": "^4.0.2",
