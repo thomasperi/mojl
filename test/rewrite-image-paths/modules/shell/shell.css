@@ -1,0 +1,5 @@
+/* all instances should be rewritten */
+.shell { background-image: url(images/shell.gif); }
+.shell a { background-image: url(images/shell.gif); }
+/* no rewrite on non-existant images */
+.shell p { background-image: url(images/nav.gif); }

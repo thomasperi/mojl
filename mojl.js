@@ -37,7 +37,7 @@ function simulate_build(config) {
 		"build_dir": "build",
 		
 		// The directory to find images in, relative to each module directory.
-		"img_dir": "images",
+		"images_dir": "images",
 
 		// Which file extensions to concatenate.
 		"concat_exts": [
@@ -98,7 +98,7 @@ function find_mods(config) {
 				mods[dir.name] = {
 					base: thismod_dir,
 					files: find_pieces(thismod_dir, dir.name),
-					images: find_images(thismod_dir, config.img_dir),
+					images: find_images(thismod_dir, config.images_dir),
 				};
 			})
 		);
@@ -182,9 +182,11 @@ function concatenate(mods, config) {
 					images.forEach(rel_img => {
 						let path_img = path.join(base, rel_img),
 							ts = timestamp(path_img);
-						content = content.replace(
-							rel_img,
-							() => path.relative(abs_prefix, path_img) + ts
+						
+						// Replace all from string
+						content = (content
+							.split(rel_img)
+							.join(path.relative(abs_prefix, path_img) + ts)
 						);
 					});
 				}

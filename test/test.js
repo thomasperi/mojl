@@ -8,7 +8,8 @@
  * went as expected, then remove the `true` from the `test` call.
  */
 
-/*global require, describe, it, __dirname */
+/*global require, describe, it, __dirname, setTimeout, console */
+
 const mojl = require('../mojl.js');
 
 const fs = require('fs');
@@ -19,9 +20,21 @@ const chai = require('chai');
 const expect = chai.expect;
 // const should = chai.should();
 
-
 // For fs.readFileSync
 const utf8 = {encoding: 'utf8'};
+
+
+// Be conspicuous
+function warn(name) {
+	console.log(`
+    + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+    |                                                                 |
+        WARNING
+        "${name}" is in write mode!
+    |                                                                 |
+    + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+    `);
+}
 
 function test(name, write) {
 
@@ -57,6 +70,7 @@ function test(name, write) {
 				null, 2
 			)
 		);
+		setTimeout(()=>warn(name), 500);
 	}
 
 	let actual = relativize(
@@ -79,5 +93,10 @@ describe('Directory Comparison Tests', () => {
 	test('ordered-head');
 	test('ordered-tail');
 	test('ordered-both');
+	test('custom-directories');
+	test('custom-directories-nested');
+	test('rewrite-image-paths');
+
+// 	test('rewrite-image-paths-nested', true);
 
 });

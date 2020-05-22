@@ -1,0 +1,5 @@
+/* all instances should be rewritten */
+nav { background-image: url(images/nav.gif); }
+nav a { background-image: url(images/nav.gif); }
+/* no rewrite on non-existant images */
+nav p  { background-image: url(images/shell.gif); }
