@@ -8,7 +8,7 @@
  * MIT License
  */
 
-/*global require, module, __dirname */
+/*global require, module, __dirname, console */
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
@@ -249,10 +249,10 @@ function concatenate(mods, config) {
 					
 					let src_dir = path.dirname(file_path),
 						rewrite_fn = function (url) {
-
-
-							// to-do: don't rewrite absolute urls
-
+							// Don't rewrite absolute urls
+							if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
+								return url;
+							}
 
 							// Where is this file really?
 							let asset_path = path.join(src_dir, url);
@@ -363,12 +363,6 @@ function plan_files(cat, config) {
 	return plan;
 }
 
-function debug(val) {
-	if (mojl.debug) {
-		return console.log(val);
-	}
-}
-
 const mojl = {
 	debug: false,
 	build,
@@ -376,5 +370,12 @@ const mojl = {
 	commenters,
 	rewriters,
 };
+
+function debug(val) {
+	if (mojl.debug) {
+		return console.log(val);
+	}
+}
+debug();
 
 module.exports = mojl;
