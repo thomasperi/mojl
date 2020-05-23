@@ -1,5 +1,5 @@
 /*!
- * mojl v1.0.1
+ * mojl v1.0.2
  *
  * A node module to allow "content modules" with related assets grouped
  * together during development, and concatenate each file type from all the
