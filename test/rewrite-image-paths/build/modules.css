@@ -3,13 +3,13 @@
 /* all instances should be rewritten */
 nav { background-image: url(../modules/nav/images/nav.gif?t=1043302086000); }
 nav a { background-image: url(../modules/nav/images/nav.gif?t=1043302086000); }
-/* no rewrite on non-existant images */
-nav p  { background-image: url(images/shell.gif); }
+/* no timestamp possible on non-existant images */
+nav p  { background-image: url(../modules/nav/images/shell.gif?t=not-found); }
 
 /*******************************  shell  ******************************/
 
 /* all instances should be rewritten */
 .shell { background-image: url(../modules/shell/images/shell.gif?t=1043302086000); }
 .shell a { background-image: url(../modules/shell/images/shell.gif?t=1043302086000); }
-/* no rewrite on non-existant images */
-.shell p { background-image: url(images/nav.gif); }
+/* no timestamp possible on non-existant images */
+.shell p { background-image: url(../modules/shell/images/nav.gif?t=not-found); }

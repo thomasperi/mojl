@@ -61,6 +61,7 @@ function test(name, write) {
 	}
 	
 	if (write) {
+		mojl.debug = true;
 		fs.writeFileSync(
 			expected_path,
 			JSON.stringify(
@@ -70,6 +71,7 @@ function test(name, write) {
 				null, 2
 			)
 		);
+		mojl.debug = false;
 		setTimeout(()=>warn(name), 500);
 	}
 
@@ -97,6 +99,8 @@ describe('Directory Comparison Tests', () => {
 	test('custom-directories-nested');
 	test('rewrite-image-paths');
 	test('multiple-asset-dirs');
+	test('custom-file-types');
+	test('sub-extensions');
 
 // 	test('rewrite-image-paths-nested', true);
 

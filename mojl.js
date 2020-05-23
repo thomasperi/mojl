@@ -9,8 +9,123 @@
  */
 
 /*global require, module, __dirname */
-let fs = require('fs');
-let path = require('path');
+const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
+const rewriteCssUrls = require('rewrite-css-urls');
+
+
+// Default configuration options
+const config_defaults = {
+	// The base directory for everything mojl does.
+	// Required. (Don't uncomment)
+// 	"base": "./web/wp-content/themes/your-theme",
+
+	// The directory to find the modules in, relative to `base`.
+	// (The endpoint is also used as the basename for the build files.)
+	"modules_dir": "modules",
+
+	// The directory to build the monolithic files in, relative to `base`.
+	"build_dir": "build",
+	
+	// Describe how to handle files of each type.
+	"file_types": {
+		"css": {
+			"comment": "block",
+			"rewrite": "css"
+		},
+		"js": {
+			"comment": "block"
+		}
+	},
+	
+	// The order in which the modules should be loaded.
+	// `head` should contain the names of modules that should be loaded first,
+	// in the order in which they should be loaded.
+	// `tail` should contain the names of modules that should be loaded last,
+	// in the order in which they should be loaded.
+	// The rest of the modules are loaded alphabetically.
+	"module_order": {
+		"head": [],
+		"tail": []
+	}
+};
+
+
+/**
+ * Each rewriter should accept these arguments, find the URLs in `code`,
+ * replace each URL with the result of passing the URL to `rewrite`,
+ * and return the resulting string.
+ *
+ * code: The code to do the rewrites on.
+ * rewrite: The function, internal to mojl, that actually rewrites the url.
+ */
+const rewriters = {
+	css: function (code, rewrite) {
+		return rewriteCssUrls.findAndReplace(code, {
+			replaceUrl: function (ref) {
+				return rewrite(ref.url);
+			}
+		});
+	}
+};
+
+/**
+ * Each commenter should accept the text of the comment to be written
+ * and return the full comment. When writing a commenter, be sure to
+ * prevent accidental closing of the comment.
+ */
+const commenters = {
+	block: {
+		open: '/*',
+		fill: '*',
+		close: '*/',
+		filter: t => t.split('*/').join('*!/'),
+	}
+};
+
+// Just for fun, optionally center the name of the component
+// in a long banner comment.
+function generate_commenter(options) {
+	_.defaults(options, {
+		// Commented options are required
+		width: 72,
+// 		open: '/*',
+		fill: '#',
+		close: '',
+		pad: 2,
+		filter: t => t,
+	});
+	
+	if (typeof options.open !== 'string') {
+		throw 'invalid comment open';
+	}
+	
+	return function (text) {
+		let open = options.open,
+			close = options.close,
+			
+			// Length of comment minus the opening and closing delimiters
+			len = options.width - open.length - close.length,
+			
+			// The spaces around the text
+			spaces = ' '.repeat(options.pad),
+			
+			// Filter and pad the text
+			content = spaces + options.filter(text) + spaces,
+			
+			// Create the fill
+			bg = options.fill.repeat(len),
+			
+			// How many fill characters should come before and after the text
+			half = Math.max(0, (len - content.length) / 2),
+			bg_head = bg.substr(0, Math.ceil(half)),
+			bg_tail = bg.substr(bg.length - Math.floor(half));
+		
+		// Enclose the comment in the delimiters
+		return open + bg_head + content + bg_tail + close;
+	};
+}
 
 // Really write the files from simulate_build.
 function build(config) {
@@ -24,51 +139,8 @@ function build(config) {
 // Build dev and production files based on a directory of modules.
 function simulate_build(config) {
 	// Superimpose the supplied config file over the defaults.
-	config = Object.assign({
+	_.defaultsDeep(config, config_defaults);
 
-		// The base directory for everything mojl does.
-		// Required. (Don't uncomment)
-// 		"base": "./web/wp-content/themes/your-theme",
-
-		// The directory to find the modules in, relative to `base`.
-		// (The endpoint is also used as the basename for the build files.)
-		"modules_dir": "modules",
-
-		// The directory to build the monolithic files in, relative to `base`.
-		"build_dir": "build",
-		
-		// The directories to find references assets in, such as images,
-		// relative to each module directory.
-		"asset_dirs": [
-			"images",
-		],
-
-		// Which file extensions to concatenate.
-		"concat_exts": [
-			"css",
-			"js",
-		],
-		
-		// Types of files in which to rewrite asset paths when concatenating.
-		"concat_rewrite_exts": [
-			"css",
-		],
-		
-		// Define the order in which the modules should be loaded.
-		"module_order": {
-			// Modules that should be loaded first
-// 			"head": [],
-
-			// Modules that should be loaded last
-// 			"tail": [],
-		}
-	}, config);
-
-	config.module_order = Object.assign({
-		"head": [],
-		"tail": []
-	}, config.module_order);
-	
 	if (!config.base) {
 		throw 'The `base` setting is required.';
 	}
@@ -100,7 +172,6 @@ function find_mods(config) {
 				mods[dir.name] = {
 					base: thismod_dir,
 					files: find_pieces(thismod_dir, dir.name),
-					images: find_images(thismod_dir, config.asset_dirs),
 				};
 			})
 		);
@@ -132,29 +203,10 @@ function find_pieces(thismod_dir, dirname) {
 	return pieces;
 }
 
-// Add a list of files in this module's image directory.
-function find_images(thismod_dir, dirnames) {
-	let result = [];
-	dirnames.forEach(dirname => {
-		let images_dir = path.join(thismod_dir, dirname);
-		if (
-			fs.existsSync(images_dir) && 
-			fs.lstatSync(images_dir).isDirectory()
-		) {
-			result.push(...(fs
-				.readdirSync(images_dir, {withFileTypes: true})
-				.filter(ent => ent.isFile())
-				.map(file => path.join(dirname, file.name))
-			));
-		}
-	});
-	return result;
-}
-
 // 
 function concatenate(mods, config) {
 	let cat = {},
-		abs_prefix = path.join(config.base, config.build_dir),
+		dest_dir = path.join(config.base, config.build_dir),
 		names = get_order(mods, config);
 
 	// For each module, add on to the concatenated object,
@@ -162,48 +214,76 @@ function concatenate(mods, config) {
 	names.forEach(key => {
 		let mod = mods[key],
 			base = mod.base,
-			files = mod.files,
-			images = mod.images,
-			exts = config.concat_exts;
+			files = mod.files;
 	
 		// For each type of file in the module...
 		Object.keys(files).forEach(ext => {
+			let real_ext = ext.split('.').pop();
+			
 			// Verify that we should be concatenating this file type...
-			if (exts.includes(ext)) {
+			if (config.file_types[real_ext]) {
 				// Add the property to the concatenation object
 				// if it doesn't already exist...
 				if (!cat[ext]) {
 					cat[ext] = {
+						real_ext: real_ext,
 						manifest: [],
 						files: [],
 					};
 				}
 			
 				// Read the source file...
-				let content = fs.readFileSync(
-						path.join(base, files[ext]),
-						{encoding: 'utf8'}
-					);
-			
-				// Rewrite image names in specified file types...
-				if (config.concat_rewrite_exts.includes(ext)) {
-					images.forEach(rel_img => {
-						let path_img = path.join(base, rel_img),
-							ts = timestamp(path_img);
-						
-						// Replace all from string
-						content = (content
-							.split(rel_img)
-							.join(path.relative(abs_prefix, path_img) + ts)
-						);
-					});
+				let file_path = path.join(base, files[ext]),
+					content = fs.readFileSync(file_path, {encoding: 'utf8'}),
+					rewriter = config.file_types[real_ext].rewrite,
+					commenter = config.file_types[real_ext].comment;
+				
+				// Rewrite urls
+				if (rewriter) {
+					if (typeof rewriter === 'string') {
+						rewriter = rewriters[rewriter];
+					}
+					if (typeof rewriter !== 'function') {
+						throw 'invalid rewriter';
+					}
+					
+					let src_dir = path.dirname(file_path),
+						rewrite_fn = function (url) {
+
+
+							// to-do: don't rewrite absolute urls
+
+
+							// Where is this file really?
+							let asset_path = path.join(src_dir, url);
+
+							// Return a timestamped relative path from the destination directory
+							// to the url's location in the source directory.
+							return path.relative(dest_dir, asset_path) +
+								timestamp(asset_path);
+						};
+					
+					content = rewriter(content, rewrite_fn);
 				}
 			
-				// Push the content onto the array,
-				// along with a comment indicating which module it came from.
-				cat[ext].manifest.push(key);
-				cat[ext].files.push(center_name(key));
+				// Push a comment indicating the module the content came from
+				if (commenter) {
+					if (typeof commenter === 'string') {
+						commenter = commenters[commenter];
+					}
+					if (typeof commenter === 'object') {
+						commenter = generate_commenter(commenter);
+					}
+					if (typeof commenter !== 'function') {
+						throw 'invalid commenter';
+					}
+					cat[ext].files.push(commenter(key));
+				}
+
+				// Push the content onto the files array
+				// and the key onto the manifest.
 				cat[ext].files.push(content);
+				cat[ext].manifest.push(key);
 			}
 		});
 	});
@@ -231,23 +311,12 @@ function get_order(mods, config) {
 	return [...head, ...Object.keys(mods_copy), ...tail];
 }
 
-// Just for fun, center the name of the component in a long banner comment.
-function center_name(name, width) {
-	width = width || 72;
-	let fill = width - 4, // Allow for the /* and */
-		padded = `  ${name}  `,
-		stars = Math.max(0, fill - padded.length),
-		half = stars / 2,
-		before = Math.ceil(half),
-		after = Math.floor(half);
-	return '/*' + '*'.repeat(before) + padded + '*'.repeat(after) + '*/';
-}
-
 // Get a timestamp URL query to append to asset URLs.
 function timestamp(path) {
-	if (fs.existsSync(path)) {
-		return '?t=' + new Date(fs.statSync(path).mtime).getTime();
-	}
+	let stamp = fs.existsSync(path) ?
+		new Date(fs.statSync(path).mtime).getTime() :
+		'not-found';
+	return '?t=' + stamp;
 }
 
 // Build a list of files that will hold the concatenated contents
@@ -261,7 +330,8 @@ function plan_files(cat, config) {
 			),
 			contents = cat[ext].files.join('\n\n'),
 			
-			tpl_dev_path = path.join(__dirname, 'dev-' + ext + '.tpl'),
+			tpl_dev_file = 'dev-' + cat[ext].real_ext + '.tpl',
+			tpl_dev_path = path.join(__dirname, tpl_dev_file),
 			tpl_dev_exists = fs.existsSync(tpl_dev_path);
 
 		plan[filename] = contents;
@@ -293,7 +363,18 @@ function plan_files(cat, config) {
 	return plan;
 }
 
-module.exports = {
+function debug(val) {
+	if (mojl.debug) {
+		return console.log(val);
+	}
+}
+
+const mojl = {
+	debug: false,
 	build,
 	simulate_build,
+	commenters,
+	rewriters,
 };
+
+module.exports = mojl;
