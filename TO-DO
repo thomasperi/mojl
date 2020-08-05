@@ -3,3 +3,28 @@ Add dev-loader templates for CSS and SASS
 That'll probably involve using a real template engine instead of just replacing a single token, so...
 
 Add a templating feature, where modules can `include` one another and you can build a whole site with it.
+
+Add the option to set a pattern or function to determine whether to timestamp a given file during path rewriting.
+
+Add “superset” feature to node mojl for merging css and scss into the same file
+
+Allow modules in nested folders, for namespacing purposes
+
+Allow mojl modules to be npm packages (thereby being able to require other mojls), by checking for the presence of a `mojl.json` file. If present, read it to determine the path of the subdirectory that includes the module's files instead of the module's root directory. Should default to the same name as the endpoint.
+
+Discourage distributing them using composer and other package managers. Every mojl will be built with node-mojl, but only some mojls are for use with PHP, WP, or whatever else.
+
+Allow combining modules from multiple parent directories in the same build, so that composer and npm mojls can be used alongside each other.
+
+
+
+
+PHP MOJL:
+
+Feature for reading a module’s output into a string instead of echoing.
+
+Feature to read and cache mojl.json for each module, to determine where to find its files.
+
+
+WP MOJL:
+
