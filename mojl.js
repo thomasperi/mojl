@@ -1,5 +1,5 @@
 /*!
- * mojl v1.0.2
+ * mojl v1.0.3-dev
  *
  * A node module to allow "content modules" with related assets grouped
  * together during development, and concatenate each file type from all the
@@ -67,6 +67,18 @@ const rewriters = {
 				return rewrite(ref.url);
 			}
 		});
+	}
+};
+
+/**
+ * Settings for underscore templates of each file type.
+ */
+const template_settings = {
+	// Use extended block comments as delimiters in JS templates, so that the
+	// templates can be linted as long as the delimiter outputs function
+	// arguments. JSLint will just see an empty argument list.
+	js: {
+		'interpolate': /\/\*\{\=((?:\n|\r|.)+?)\}\*\//g
 	}
 };
 
@@ -329,8 +341,8 @@ function plan_files(cat, config) {
 				config.base, config.build_dir, basename + '.' + ext
 			),
 			contents = cat[ext].files.join('\n\n'),
-			
-			tpl_dev_file = 'dev-' + cat[ext].real_ext + '.tpl',
+			real_ext = cat[ext].real_ext,
+			tpl_dev_file = 'dev-' + real_ext + '.tpl',
 			tpl_dev_path = path.join(__dirname, tpl_dev_file),
 			tpl_dev_exists = fs.existsSync(tpl_dev_path);
 
@@ -341,7 +353,7 @@ function plan_files(cat, config) {
 				filename_dev = path.join(
 					config.base, config.build_dir, basename + '-dev.' + ext
 				),
-				urls_dev = cat[ext].manifest.map(name => {
+				dev_urls = cat[ext].manifest.map(name => {
 					let asset = path.join(
 						config.base, config.modules_dir, name, name + '.' + ext
 					);
@@ -351,11 +363,15 @@ function plan_files(cat, config) {
 					) + timestamp(asset);
 				}),
 				
-				// Some quick-n-dirty templating.
-				contents_dev = tpl_dev ? tpl_dev.replace(
-					'/*{urls}*/', // <-- not a regex
-					() => JSON.stringify(urls_dev)
-				) : '';
+				// Choose template settings based on real extension.
+				tpl_settings = template_settings.hasOwnProperty(real_ext) ?
+					template_settings[real_ext] : null,
+				
+				// Compile and use underscore template.
+				contents_dev = tpl_dev ?
+					_.template(tpl_dev, tpl_settings)({dev_urls}) :
+					'';
+
 			plan[filename_dev] = contents_dev;
 		}
 		

@@ -45,4 +45,4 @@
 		next();
 	}
 	
-}(/*{urls}*/));
+}(/*{= JSON.stringify(dev_urls) }*/));
