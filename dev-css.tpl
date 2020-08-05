@@ -3,4 +3,4 @@
  * (c) Thomas Peri <hello@thomasperi.net>
  * MIT License
  */
-<%= dev_urls.map(item => '@import "' + item + '";').join('\n') %>
+<%= dev_urls.map(item => '@import ' + JSON.stringify(item) + ';').join('\n') %>
