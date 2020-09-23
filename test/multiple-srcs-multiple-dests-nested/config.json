@@ -1,0 +1,22 @@
+{
+	"module_order": {
+		"head": [
+			"shell",
+			"nav"
+		],
+		"tail": [
+			"footer"
+		]
+	},
+	"assets_build_dir": "build/assets",
+	"modules_dir": {
+		"modules-one": [
+			"modules-a",
+			"modules-b"
+		],
+		"mod2/modules-two": [
+			"modules-c",
+			"modules-d"
+		]
+	}
+}

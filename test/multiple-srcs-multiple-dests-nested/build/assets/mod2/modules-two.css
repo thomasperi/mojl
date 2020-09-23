@@ -1,0 +1,23 @@
+/**************************  modules-c/shell  *************************/
+
+.shell { background-image: url(../../modules-c/shell/images/shell-c.gif?t=1043302086000); }
+
+
+/**************************  modules-d/shell  *************************/
+
+.shell { background-image: url(../../modules-d/shell/images/shell-b.gif?t=not-found); }
+
+
+/***************************  modules-d/nav  **************************/
+
+.nav { background-image: url(../../modules-d/nav/images/nav-d.gif?t=1043302086000); }
+
+
+/**************************  modules-c/main  **************************/
+
+.main { background-image: url(../../modules-c/main/images/main-c.gif?t=1043302086000); }
+
+
+/*************************  modules-d/footer  *************************/
+
+.footer { background-image: url(../../modules-d/footer/images/footer-d.gif?t=1043302086000); }

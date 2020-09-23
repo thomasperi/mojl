@@ -1,0 +1,21 @@
+{
+	"module_order": {
+		"head": [
+			"shell",
+			"nav"
+		],
+		"tail": [
+			"footer"
+		]
+	},
+	"modules_dir": {
+		"modules-one": [
+			"modules-a",
+			"modules-b"
+		],
+		"modules-two": [
+			"modules-c",
+			"modules-d"
+		]
+	}
+}

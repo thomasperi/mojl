@@ -1,0 +1,17 @@
+{
+	"module_order": {
+		"head": [
+			"shell",
+			"nav"
+		],
+		"tail": [
+			"footer"
+		]
+	},
+	"modules_dir": {
+		"modules-combined": [
+			"modules-a",
+			"modules-b"
+		]
+	}
+}

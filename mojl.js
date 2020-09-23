@@ -12,6 +12,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const shell = require('shelljs');
 const rewriteCssUrls = require('rewrite-css-urls');
 
 
@@ -205,6 +206,15 @@ function generate_commenter(options) {
 function build(config) {
 	let plan = simulate_build(config);
 	Object.keys(plan).forEach(filename => {
+		// Prevent writing outside `config.base`.
+		if (!filename.startsWith(config.base + '/')) {
+			throw `Path "${filename}" is outside base directory "${config.base}"`;
+		}
+
+		// Create any intermediate directories that don't exist yet.
+		shell.mkdir('-p', path.dirname(filename));
+
+		// Write the file.
 		fs.writeFileSync(filename, plan[filename]);
 	});
 	return plan;
@@ -257,6 +267,28 @@ function simulate_build(config) {
 }
 
 // Find all the modules and their destinations.
+/*
+{
+  "modules-combined": {
+	"shell": [
+	  {
+		"base": "/Users/thomas/Projects/Node/mojl/test/multiple-module-dirs/modules-a/shell",
+		"files": {
+		  "css": "shell.css",
+		  "html.tpl": "shell.html.tpl"
+		}
+	  },
+	  {
+		"base": "/Users/thomas/Projects/Node/mojl/test/multiple-module-dirs/modules-b/shell",
+		"files": {
+		  "css": "shell.css",
+		  "html.tpl": "shell.html.tpl"
+		}
+	  }
+	]
+  }
+}
+*/
 function find_mods_dests(config) {
 	let dests = {};
 	
@@ -267,63 +299,56 @@ function find_mods_dests(config) {
 		// Loop over the sources (modules directories) for that destination.
 		config.modules_dir[destination].forEach(source => {
 
-			// Get the full path of the source modules directory.
-			let modules_dir = path.join(config.base, source);
-
-			// Map all the modules.	
-			if (fs.lstatSync(modules_dir).isDirectory()) {
-				// Read the modules directory.
-				(fs.readdirSync(modules_dir, {withFileTypes: true})
-
-					// Only look at directories.
-					.filter(ent => ent.isDirectory())
-
-					// Add items to the mods object.
-					.forEach(dir => {
-						// Add a new object to represent the module.
-						let thismod_dir = path.join(modules_dir, dir.name);
-						
-						if (!(dir.name in mods)) {
-							mods[dir.name] = [];
-						}
-						
-						mods[dir.name].push({
-							dir: source,
-							base: thismod_dir,
-							files: find_pieces(thismod_dir, dir.name),
-						});
-					})
-				);
-			}
+			
+			find_mods_recursive(source, '', mods, config);
 		});
 	});
-	
-// 	console.log('---- dests ----');
-// 	console.log(JSON.stringify(dests));
-	/*
-	{
-	  "modules-combined": {
-		"shell": [
-		  {
-			"base": "/Users/thomas/Projects/Node/mojl/test/multiple-module-dirs/modules-a/shell",
-			"files": {
-			  "css": "shell.css",
-			  "html.tpl": "shell.html.tpl"
-			}
-		  },
-		  {
-			"base": "/Users/thomas/Projects/Node/mojl/test/multiple-module-dirs/modules-b/shell",
-			"files": {
-			  "css": "shell.css",
-			  "html.tpl": "shell.html.tpl"
-			}
-		  }
-		]
-	  }
-	}
-	*/
 
 	return dests;
+}
+
+// Recursively find subdirectories of `dir` that quality as modules.
+function find_mods_recursive(source, subdir, mods, config) {
+	// The full path of the source modules directory.
+	let modules_dir = path.join(config.base, source);
+	
+	// The full path of the subdirectory we're currently looking at.
+	let working_dir = path.join(modules_dir, subdir);
+	
+	// Map all the modules.	
+	if (fs.lstatSync(working_dir).isDirectory()) {
+		// Read the modules directory.
+		(fs.readdirSync(working_dir, {withFileTypes: true})
+
+			// Only look at directories.
+			.filter(ent => ent.isDirectory())
+
+			// Add items to the mods object.
+			.forEach(dir => {
+				// The full path to this module.
+				let thismod_fullpath = path.join(working_dir, dir.name);
+				
+				// The path to this module relative to the current modules source.
+				let thismod_relpath = path.join(subdir, dir.name);
+				
+				// Create the array to hold modules with this relative path
+				// if it doesn't exist already.
+				if (!(thismod_relpath in mods)) {
+					mods[thismod_relpath] = [];
+				}
+				
+				// Add a new object to represent the module.
+				mods[thismod_relpath].push({
+					dir: source,
+					base: thismod_fullpath,
+					files: find_pieces(thismod_fullpath, dir.name),
+				});
+				
+				// Look inside this module for nested modules.
+				find_mods_recursive(source, thismod_relpath, mods, config);
+			})
+		);
+	}
 }
 
 // Find all the files in a directory whose names without extension
@@ -378,10 +403,6 @@ function find_pieces(thismod_dir, dirname) {
 }
 */
 function concatenate(dests, config) {
-
-	
-	// to-do: convert to use the new mods format (dests)
-	
 	let cat_dests = {};
 	
 	Object.keys(dests).forEach(destination => {
@@ -390,6 +411,9 @@ function concatenate(dests, config) {
 			
 			dest_dir = path.join(config.base, config.assets_build_dir),
 			names = get_order(mods, config);
+		
+// 		console.log('---- names ----');
+// 		console.log(names);
 		
 		// For each module, add on to the concatenated object,
 		// which will get a property named for each file extension 

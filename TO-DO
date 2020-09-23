@@ -1,6 +1,4 @@
-Add dev-loader templates for CSS and SASS
-
-That'll probably involve using a real template engine instead of just replacing a single token, so...
+Add the option to automagically copy assets to a subdirectory inside build, so that the modules directory can be outside docroot. Maybe allow a pattern to be assigned for deciding whether to copy each file.
 
 Add a templating feature, where modules can `include` one another and you can build a whole site with it.
 

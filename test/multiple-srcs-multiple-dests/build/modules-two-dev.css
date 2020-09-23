@@ -1,0 +1,10 @@
+/**
+ * A dev loader for stylesheets that will be concatenated in production.
+ * (c) Thomas Peri <hello@thomasperi.net>
+ * MIT License
+ */
+@import "../modules-c/shell/shell.css?t=1600887541028";
+@import "../modules-d/shell/shell.css?t=1600886738770";
+@import "../modules-d/nav/nav.css?t=1600887577531";
+@import "../modules-c/main/main.css?t=1600887492868";
+@import "../modules-d/footer/footer.css?t=1600887556373";
