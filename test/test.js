@@ -108,6 +108,8 @@ describe('Directory Comparison Tests', () => {
 	test('multiple-srcs-multiple-dests-nested');
 
 	test('nested-modules');
+	test('custom-dev-suffix');
+	
 	
 	
 	// to-do: more multi-module-dir tests	

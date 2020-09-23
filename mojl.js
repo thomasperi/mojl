@@ -22,14 +22,17 @@ const config_defaults = {
 	// Required. (Don't uncomment)
 // 	"base": "./web/wp-content/themes/your-theme",
 
-	// Whether to build files for a development instance.
-	// to-do
-	"dev": true,
-	
 	// Whether to build files for a production or staging instance.
 	// to-do
 	"prod": true,
 
+	// Whether to build files for a development instance.
+	// to-do
+	"dev": true,
+	
+	// The suffix to add (before the file type extension) on development asset files.
+	"dev_suffix": "-dev",
+	
 	// The directory to find the modules in, relative to `base`.
 	// (The endpoint is also used as the basename for the build files.)
 	//
@@ -568,7 +571,7 @@ function plan_files(cat_dests, config) {
 					filename_dev = path.join(
 						config.base,
 						config.assets_build_dir,
-						destination + '-dev.' + ext
+						destination + config.dev_suffix + '.' + ext
 					),
 					dev_urls = cat[ext].manifest.map(name => {
 						let asset = path.join(
