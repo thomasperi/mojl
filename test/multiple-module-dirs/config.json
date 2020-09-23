@@ -1,0 +1,8 @@
+{
+	"modules_dir": {
+		"modules-combined": [
+			"modules-a",
+			"modules-b"
+		]
+	}
+}

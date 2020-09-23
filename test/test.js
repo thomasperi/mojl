@@ -102,6 +102,10 @@ describe('Directory Comparison Tests', () => {
 	test('custom-file-types');
 	test('sub-extensions');
 
+	test('multiple-module-dirs');
+	
+	
+
 // 	test('rewrite-image-paths-nested', true);
 
 });

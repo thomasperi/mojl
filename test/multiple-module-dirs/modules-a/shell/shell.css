@@ -1,13 +1,11 @@
-/***************************  modules/shell  **************************/
-
 /* all instances should be rewritten, quoted and unquoted */
-.shell { background-image: url(../modules/shell/images/shell.gif?t=1043302086000); }
-.shell a { background-image: url('../modules/shell/images/shell.gif?t=1043302086000'); }
-.shell i { background-image: url("../modules/shell/images/shell.gif?t=1043302086000"); }
+.shell { background-image: url(images/shell-a.gif); }
+.shell a { background-image: url('images/shell-a.gif'); }
+.shell i { background-image: url("images/shell-a.gif"); }
 
 /* no timestamp possible on non-existant images, but do the rewrite anyway
 	to keep it broken in case it exists somewhere else */
-.shell p { background-image: url(../modules/shell/images/nav.gif?t=not-found); }
+.shell p { background-image: url(images/nav.gif); }
 
 /* no rewriting absolute paths */
 .shell p { background-image: url(http://example.com/images/nav.gif); }
