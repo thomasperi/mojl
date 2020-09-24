@@ -33,17 +33,35 @@ const config_defaults = {
 	// The suffix to add (before the file type extension) on development asset files.
 	"dev_suffix": "-dev",
 	
+	// Enforce the local `is_mojl` setting on each module.
+	// This is forced to `true` when `modules_dir` is an object
+	// (used for multiple module source directories).
+	"enforce_is_mojl": false,
+	
 	// The directory to find the modules in, relative to `base`.
 	// (The endpoint is also used as the basename for the build files.)
-	//
-	// to-do:
-	// Let this optionally be an array, with multiple directories
-	// to look for modules inside of.
+	// 
+	// Optionally, instead of a string, this setting can also accept
+	// an object whose keys (A) represent the filenames (minus extension) of the
+	// concatenated asset files. Each value (B) must be an array of strings. 
+	// Each of those strings refers to the directory, relative to `base`,
+	// which will supply the objects to be written to the that key (A).
+	/*
+		// Example:
+		"modules_dir": {
+			"modules-one": [
+				"modules-a",
+				"modules-b"
+			],
+			"mod2/modules-two": [
+				"modules-c",
+				"modules-d"
+			]
+		}
+	*/
 	// Since this is to allow modules to be added via npm, there needs to be
-	// some way of differentiating them from other npm packages.
-	// Therefore, when `modules_dir` is an array, only modules with an 
-	// `<endpoint>.mojl.json` file should be seen as modules.
-	//
+	// some way of differentiating them from other npm packages. Therefore,
+	// when `modules_dir` is an object, `enforce_is_mojl` is forced to `true`.
 	"modules_dir": "modules",
 
 	// This value serves as the default value for `assets_build_dir` and
@@ -117,6 +135,14 @@ const config_defaults = {
 	}
 };
 
+// Default configuration for <endpoint>.mojl.json files
+const dir_config_defaults = {
+	// A `true` value indicates that mojl should treat the working
+	// directory as a module itself (unless it's a root `modules_dir`
+	// directory), and that all subdirectories should default to being
+	// treated as mojl modules.
+	"is_mojl": false
+};
 
 /**
  * Each rewriter should accept these arguments, find the URLs in `code`,
@@ -247,12 +273,17 @@ function simulate_build(config) {
 	//     "path/to/one/modules_dir",
 	//     "path/to/another/modules_dir",
 	//     "paths/to/even/more/directories"
+	//   ],
+	//   "another_destination": [
+	//     "another/source/path"
 	//   ]
 	// }
-	if (
-		!config.modules_dir ||
-		('object' !== typeof config.modules_dir)
-	) {
+	if (config.modules_dir instanceof Object) {
+		// If it's already an object, force `enforce_is_mojl` to `true`.
+		// (See explanation in `config_defaults` comments.)
+		config.enforce_is_mojl = true;
+	} else {
+		// If not already an object, make it one.
 		let dir = config.modules_dir;
 		config.modules_dir = {};
 		config.modules_dir[path.basename(dir)] = [dir];
@@ -301,9 +332,12 @@ function find_mods_dests(config) {
 
 		// Loop over the sources (modules directories) for that destination.
 		config.modules_dir[destination].forEach(source => {
-
-			
-			find_mods_recursive(source, '', mods, config);
+			let source_config = read_module_config(
+				path.join(config.base, source),
+				path.basename(source),
+				{}
+			);
+			find_mods_recursive(config, source, '', mods, source_config);
 		});
 	});
 
@@ -311,7 +345,7 @@ function find_mods_dests(config) {
 }
 
 // Recursively find subdirectories of `dir` that quality as modules.
-function find_mods_recursive(source, subdir, mods, config) {
+function find_mods_recursive(config, source, subdir, mods, parent_config) {
 	// The full path of the source modules directory.
 	let modules_dir = path.join(config.base, source);
 	
@@ -331,27 +365,65 @@ function find_mods_recursive(source, subdir, mods, config) {
 				// The full path to this module.
 				let thismod_fullpath = path.join(working_dir, dir.name);
 				
+				// Read the directory's config file
+				let thismod_config = read_module_config(
+					thismod_fullpath,
+					dir.name,
+					parent_config
+				);
+				
 				// The path to this module relative to the current modules source.
 				let thismod_relpath = path.join(subdir, dir.name);
+
+				// Only add this module if it's been determined to really be a module.
+				if (!config.enforce_is_mojl || thismod_config.is_mojl) {
 				
-				// Create the array to hold modules with this relative path
-				// if it doesn't exist already.
-				if (!(thismod_relpath in mods)) {
-					mods[thismod_relpath] = [];
+					// Create the array to hold modules with this relative path
+					// if it doesn't exist already.
+					if (!(thismod_relpath in mods)) {
+						mods[thismod_relpath] = [];
+					}
+				
+					// Add a new object to represent the module.
+					mods[thismod_relpath].push({
+						dir: source,
+						base: thismod_fullpath,
+						files: find_pieces(thismod_fullpath, dir.name),
+					});
 				}
 				
-				// Add a new object to represent the module.
-				mods[thismod_relpath].push({
-					dir: source,
-					base: thismod_fullpath,
-					files: find_pieces(thismod_fullpath, dir.name),
-				});
-				
 				// Look inside this module for nested modules.
-				find_mods_recursive(source, thismod_relpath, mods, config);
+				find_mods_recursive(config, source, thismod_relpath, mods, thismod_config);
 			})
 		);
 	}
+}
+
+// Read a directory's `<endpoint>.mojl.json` config file.
+function read_module_config(thismod_fullpath, endpoint, parent_config) {
+// 	console.log('-- read_module_config --');
+// 	console.log('---- thismod_fullpath: ' + thismod_fullpath);
+// 	console.log('---- endpoint: ' + endpoint);
+// 	console.log('---- parent_config:');
+// 	console.log(parent_config);
+// 	console.log('');
+	
+	// The path of the module's json config file.
+	let config_path = path.join(
+		thismod_fullpath,
+		endpoint + '.mojl.json'
+	);
+	
+	// Read the config file if it exists, fall back to empty object.
+	let thismod_config = fs.existsSync(config_path) ? require(config_path) : null;
+	if (!thismod_config || !(thismod_config instanceof Object)) {
+		thismod_config = {};
+	}
+
+	// Superimpose the supplied config file over the defaults.
+	_.defaultsDeep(thismod_config, parent_config, dir_config_defaults);
+
+	return thismod_config;
 }
 
 // Find all the files in a directory whose names without extension
@@ -421,6 +493,11 @@ function concatenate(dests, config) {
 		// For each module, add on to the concatenated object,
 		// which will get a property named for each file extension 
 		names.forEach(key => {
+			// Skip any non-existant modules named in module_order.
+			if (!(key in mods)) {
+				return;
+			}
+		
 			// get the array of 
 			let mod_array = mods[key];
 			
