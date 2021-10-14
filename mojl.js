@@ -200,10 +200,13 @@ function simulate_build(config) {
 	if (!config.base) {
 		throw 'The `base` setting is required.';
 	}
+	
+	// Work with a copy of the config object, in case it's used outside.
+	config = _.cloneDeep(config);
 
 	// If file_maps wasn't supplied but any or all legacy parts were,
 	// then plan on generating the file_maps array from the legacy parts.
-	let do_generate = !config.file_maps && (
+	let do_convert_legacy = !config.file_maps && (
 			config.build_dir || config.modules_dir || config.module_order
 		);
 
@@ -211,29 +214,125 @@ function simulate_build(config) {
 	_.defaultsDeep(config, config_defaults);
 
 	// Generate the build map if that was the verdict above.
-	if (do_generate) {
-		config.file_maps = generate_file_maps(config);
+	if (do_convert_legacy) {
+		convert_legacy(config);
+		
+		// to-do:
+		// Issue a warning about legacy parts being deprecated.
 	}
+	
+// 	console.log('\n\n======= config: =======');
+// 	console.log(JSON.stringify(config, null, 4));
+	
+	// Expand wildcards in the module lists.
+	expand_file_maps(config);
+	
+// 	console.log('\n------- expanded: -------');
+// 	console.log(JSON.stringify(config, null, 4));
+	
 	
 	// Build the plan.
 	let mods = find_mods(config),
 		cat = concatenate(mods, config),
 		plan = plan_files(cat, config);
-	
+
 	return plan;
 }
 
-// Generate the "file_maps" config value using the legacy
-// "build_dir", "modules_dir", and "module_order" values.
-function generate_file_maps(config) {
+/**
+ * Convert the legacy "build_dir", "modules_dir", and "module_order" values
+ * to the new "file_maps" config value.
+ * This function modifies the config object.
+ */
+function convert_legacy(config) {
 	let order = config.module_order || {},
 		head = order.head || [],
 		tail = order.tail || [];
-	return [{
-		build: path.join(config.build_dir, config.modules_dir),
+	config.file_maps = [{
+		build: path.join(config.build_dir, path.basename(config.modules_dir)),
 		modules: head.concat(['*']).concat(tail).
 			map(mod => path.join(config.modules_dir, mod))
 	}];
+	
+	// Delete the legacy properties to ensure that no other part of the code
+	// is relying on them instead of using config.file_maps.
+	//
+	// to-do:
+	// Uncomment these lines:
+	//
+	// delete config.build_dir;
+	// delete config.modules_dir;
+	// delete config.module_order;
+}
+
+/**
+ * Expand module wild cards in file maps.
+ * This function modifies the config object.
+ */
+function expand_file_maps(config) {
+	let all_mods = []; // An array to tally all the mods loaded so far.
+
+	// Loop through the maps defined in config.
+	config.file_maps.forEach(map => {
+		// Discern the parts of this build path.
+		let build_dir = map.build,
+			build_basebame = path.basename(build_dir),
+			expanded_mods = [];
+		
+		// Loop through the modules in this map.
+		map.modules.forEach(mod_path => {
+			// If it's a wildcard, find all the modules in that directory.
+			if (path.basename(mod_path) === '*') {
+				let wilds = find_mods_in_dir(config, path.dirname(mod_path));
+				wilds.forEach(wild => {
+					// Omit any of the modules the wildcard expanded into
+					// that are already explicitly referenced in map.modules.
+					if (!map.modules.includes(wild)) {
+						expanded_mods.push(wild);
+					}
+				});
+			} else {
+				// It's not a wildcard so just add it to the expanded list.
+				expanded_mods.push(mod_path);
+			}
+		});
+
+		// Issue a warning if any of the modules just added
+		// are already in another file mapping.
+		if (expanded_mods.some(item => all_mods.includes(item))) {
+			// to-do
+			console.log('warning about modules already being in use');
+		}
+		
+		// Replace the mapping's module list with the expanded one.
+		map.modules = expanded_mods;
+
+		// Add the expanded modules to the running list of all modules in use.
+		all_mods = all_mods.concat(expanded_mods);
+	});
+}
+
+// Find all the modules at the root of the given directory.
+function find_mods_in_dir(config, parent_dir) {
+	let mods = [],
+		modules_dir = path.join(config.base, parent_dir);
+
+	// Map all the modules.	
+	if (fs.lstatSync(modules_dir).isDirectory()) {
+		// Read the modules directory.
+		(fs.readdirSync(modules_dir, {withFileTypes: true})
+
+			// Only look at directories.
+			.filter(ent => ent.isDirectory())
+
+			// Add items to the mods array.
+			.forEach(dir => {
+				mods.push(path.join(parent_dir, dir.name));
+			})
+		);
+	}
+
+	return mods;
 }
 
 // Find all the modules.
