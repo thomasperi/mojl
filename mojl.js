@@ -14,8 +14,9 @@ const fs = require('fs');
 const path = require('path');
 const rewriteCssUrls = require('rewrite-css-urls');
 
-
-// Default configuration options
+/**
+ * Default configuration options
+ */
 const config_defaults = {
 	// The base directory for everything mojl does.
 	// Required. (Don't uncomment)
@@ -48,9 +49,61 @@ const config_defaults = {
 	"module_order": {
 		"head": [],
 		"tail": []
-	}
-};
+	},
+	
+	// to-do (in progress)
+	/*
+	An object describing which modules get built into which concatenated files.
+	
+	Each key in config.file_maps is a destination directory. The endpoint
+	becomes the base name of the files generated inside that directory.
 
+	The value for that key is an array of paths to modules. Each of those 
+	module's files get copied into the files in the destination directory.
+	
+	to-do: (NOW) change dev-js.tpl so that multiple instances load in series
+		instead of in parallel. Currently multiple dev scripts will cause their
+		source scripts to load out of order.
+	
+	to-do: (NOW) Change program logic to use config.file_maps
+		instead of the three legacy properties.
+	
+	to-do: (LATER) let modules require other modules
+		for example, let foo/bar/bar.mojl.json specify
+		that foo/zote needs to load too, which would cause it to be loaded
+		just before foo/bar unless it had already been loaded,
+		manually or by another module.
+		Problem: how to handle things if the dependency is loaded 
+			but in a separate monolith?
+			Maybe issue a warning if two separate monoliths both end up with
+			a shared dependency that isn't already satisfied in
+			yet a third monolith.
+		Maybe also don't call them dependencies,
+			since there won't be any version numbers and it refers to mojl
+			modules (just a pathname to whatever is there),
+			not node packages necessarily.
+	
+	*/
+	"file_maps": [
+		{
+			"build": "build/modules",
+			// Creates files named:
+			// {config.base}/build/modules-dev.css
+			// {config.base}/build/modules-dev.js
+			// {config.base}/build/modules.css
+			// {config.base}/build/modules.js
+			
+			"modules": [
+				"modules/*"
+				// Uses all modules inside {config.base}/modules/
+				// This "*" wildcard can be omitted or used in conjunction with
+				// specific modules before and after. Multiple wildcards from 
+				// multiple directories can be used too.
+			]
+		}
+	]
+
+};
 
 /**
  * Each rewriter should accept these arguments, find the URLs in `code`,
@@ -84,8 +137,9 @@ const commenters = {
 	}
 };
 
-// Just for fun, optionally center the name of the component
-// in a long banner comment.
+/**
+ * Generate a function that creates comments in a particular format.
+ */
 function generate_commenter(options) {
 	_.defaults(options, {
 		// Commented options are required
@@ -127,7 +181,9 @@ function generate_commenter(options) {
 	};
 }
 
-// Really write the files from simulate_build.
+/**
+ * Write dev and production files based on the modules specified in config.
+ */
 function build(config) {
 	let plan = simulate_build(config);
 	Object.keys(plan).forEach(filename => {
@@ -136,20 +192,48 @@ function build(config) {
 	return plan;
 }
 
-// Build dev and production files based on a directory of modules.
+/**
+ * Build dev and production files based on the modules specified in config,
+ * but don't really write anything to the filesystem.
+ */
 function simulate_build(config) {
-	// Superimpose the supplied config file over the defaults.
-	_.defaultsDeep(config, config_defaults);
-
 	if (!config.base) {
 		throw 'The `base` setting is required.';
 	}
 
+	// If file_maps wasn't supplied but any or all legacy parts were,
+	// then plan on generating the file_maps array from the legacy parts.
+	let do_generate = !config.file_maps && (
+			config.build_dir || config.modules_dir || config.module_order
+		);
+
+	// Superimpose the supplied config file over the defaults.
+	_.defaultsDeep(config, config_defaults);
+
+	// Generate the build map if that was the verdict above.
+	if (do_generate) {
+		config.file_maps = generate_file_maps(config);
+	}
+	
+	// Build the plan.
 	let mods = find_mods(config),
 		cat = concatenate(mods, config),
 		plan = plan_files(cat, config);
 	
 	return plan;
+}
+
+// Generate the "file_maps" config value using the legacy
+// "build_dir", "modules_dir", and "module_order" values.
+function generate_file_maps(config) {
+	let order = config.module_order || {},
+		head = order.head || [],
+		tail = order.tail || [];
+	return [{
+		build: path.join(config.build_dir, config.modules_dir),
+		modules: head.concat(['*']).concat(tail).
+			map(mod => path.join(config.modules_dir, mod))
+	}];
 }
 
 // Find all the modules.
