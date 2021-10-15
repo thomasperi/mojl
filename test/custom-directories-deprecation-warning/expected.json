@@ -1,3 +1,4 @@
 {
-  "/assembled/components.css": "/*************************  components/shell  *************************/\n\n.shell { background-image: url(../components/shell/pictures/spacer.gif?t=1043302086000); }\n.shell p { background-image: url(../components/shell/pictures/spacer.gif?t=1043302086000); }"
+  "/assembled/components.css": "/*************************  components/shell  *************************/\n\n.shell { background-image: url(../components/shell/pictures/spacer.gif?t=1043302086000); }\n.shell p { background-image: url(../components/shell/pictures/spacer.gif?t=1043302086000); }",
+  "/assembled/components-dev.css": "/**\n * A dev loader for stylesheets that will be concatenated in production.\n * (c) Thomas Peri <hello@thomasperi.net>\n * MIT License\n */\n@import \"../components/shell/shell.css?t=1590176280533\";"
 }

@@ -124,6 +124,18 @@ const rewriters = {
 };
 
 /**
+ * Settings for underscore templates of each file type.
+ */
+const template_settings = {
+	// Use extended block comments as delimiters in JS templates, so that the
+	// templates can be linted as long as the delimiter outputs function
+	// arguments. JSLint will just see an empty argument list.
+	js: {
+		'interpolate': /\/\*\{\=((?:\n|\r|.)+?)\}\*\//g
+	}
+};
+
+/**
  * Each commenter should accept the text of the comment to be written
  * and return the full comment. When writing a commenter, be sure to
  * prevent accidental closing of the comment.
@@ -525,8 +537,9 @@ function plan_files(cat_dests, config) {
 					config.base, dest_key + '.' + ext
 				),
 				contents = monolith.contents.join('\n\n'),
+				real_ext = monolith.real_ext,
 			
-				tpl_dev_file = 'dev-' + monolith.real_ext + '.tpl',
+				tpl_dev_file = 'dev-' + real_ext + '.tpl',
 				tpl_dev_path = path.join(__dirname, tpl_dev_file),
 				tpl_dev_exists = fs.existsSync(tpl_dev_path);
 
@@ -537,7 +550,7 @@ function plan_files(cat_dests, config) {
 					filename_dev = path.join(
 						config.base, dest_key + '-dev.' + ext
 					),
-					urls_dev = monolith.manifest.map(name => {
+					dev_urls = monolith.manifest.map(name => {
 						let asset = path.join(
 							config.base, name, path.basename(name) + '.' + ext
 						);
@@ -547,11 +560,16 @@ function plan_files(cat_dests, config) {
 						) + timestamp(asset);
 					}),
 				
-					// Some quick-n-dirty templating.
-					contents_dev = tpl_dev ? tpl_dev.replace(
-						'/*{urls}*/', // <-- not a regex
-						() => JSON.stringify(urls_dev)
-					) : '';
+					// Choose template settings based on real extension.
+					tpl_settings =
+						template_settings.hasOwnProperty(real_ext) ?
+							template_settings[real_ext] : null,
+
+					// Compile and use underscore template.
+					contents_dev = tpl_dev ?
+						_.template(tpl_dev, tpl_settings)({dev_urls}) :
+						'';
+
 				plan[filename_dev] = contents_dev;
 			}
 		

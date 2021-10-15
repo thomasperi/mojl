@@ -67,4 +67,4 @@
 	document.write(html.join(''));
 	/* jshint evil: false */
 	
-}(/*{urls}*/));
+}(/*{= JSON.stringify(dev_urls) }*/));
