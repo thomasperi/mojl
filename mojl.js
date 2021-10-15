@@ -9,10 +9,15 @@
  */
 
 /*global require, module, __dirname, console */
+
+// Dependencies
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const rewriteCssUrls = require('rewrite-css-urls');
+
+// Stashed warnings
+let warnings = [];
 
 /**
  * Default configuration options
@@ -64,9 +69,8 @@ const config_defaults = {
 	to-do: (NOW) change dev-js.tpl so that multiple instances load in series
 		instead of in parallel. Currently multiple dev scripts will cause their
 		source scripts to load out of order.
-	
-	to-do: (NOW) Change program logic to use config.file_maps
-		instead of the three legacy properties.
+		
+	to-do: (NOW) Update tests to accommodate new module paths in comments
 	
 	to-do: (LATER) let modules require other modules
 		for example, let foo/bar/bar.mojl.json specify
@@ -182,12 +186,25 @@ function generate_commenter(options) {
 }
 
 /**
+ * A for...in loop basically
+ * Usage:
+ * objEach(obj, (key, value) => {
+ *   ...
+ * });
+ */
+function objEach(obj, fn) {
+	Object.keys(obj).forEach(key => {
+		fn(key, obj[key]);
+	});
+}
+
+/**
  * Write dev and production files based on the modules specified in config.
  */
 function build(config) {
 	let plan = simulate_build(config);
-	Object.keys(plan).forEach(filename => {
-		fs.writeFileSync(filename, plan[filename]);
+	objEach(plan, (filename, contents) => {
+		fs.writeFileSync(filename, contents);
 	});
 	return plan;
 }
@@ -230,12 +247,12 @@ function simulate_build(config) {
 	let mods = find_mods(config);
 	let cat = concatenate(mods, config);
 	let plan = plan_files(cat, config);
-
-	console.log('\n===== plan =====');
-	console.log(JSON.stringify(plan, null, 4));
-
-	console.log('\n----- plan_new -----');
-	console.log(JSON.stringify(plan_new, null, 4));
+	
+	// to-do
+	// return the result of the new way instead of the old
+	// after tests are all passing:
+	// * remove old functions and vars, and rename the new ones
+	// * write new tests for the new functionality
 
 	return plan;
 }
@@ -255,8 +272,9 @@ function convert_legacy(config) {
 			map(mod => path.join(config.modules_dir, mod))
 	}];
 	
-	// to-do:
 	// Issue a warning about legacy parts being deprecated.
+	// to-do: test this
+	warn('The `build_dir`, `modules_dir`, and `module_order` configuration options are deprecated. Use `file_maps` instead.');
 
 	// Delete the legacy properties to ensure that no other part of the code
 	// is relying on them instead of using config.file_maps.
@@ -298,19 +316,23 @@ function expand_file_maps(config) {
 			}
 		});
 
-		// Issue a warning if any of the modules just added
-		// are already in another file mapping.
-		if (expanded_mods.some(item => all_mods.includes(item))) {
-			// to-do
-			console.log('warning about modules already being in use');
-		}
-		
 		// Replace the mapping's module list with the expanded one.
 		map.modules = expanded_mods;
 
 		// Add the expanded modules to the running list of all modules in use.
 		all_mods = all_mods.concat(expanded_mods);
 	});
+
+	// Issue a warning if any of the modules just added
+	// are already in another file mapping.
+	// to-do: test this
+	let dupes = all_mods.filter(
+		(mod, index) => all_mods.indexOf(mod) !== index
+	);
+	if (dupes.length > 0) {
+		warn('The following modules are loaded more than once: ' + 
+			dupes.join(', '));
+	}
 }
 
 /**
@@ -524,20 +546,17 @@ function concatenate(mods, config) {
  */
 function concatenate_new(mod_groups, config) {
 	let destinations = {};
-	Object.keys(mod_groups).forEach(build_path => {
-	
+	objEach(mod_groups, (build_path, mods) => {
 		let cat = {},
-			mods = mod_groups[build_path],
 			dest_dirname = path.join(config.base, path.dirname(build_path));
 
 		// For each module, add on to the concatenated object,
 		// which will get a property named for each file extension 
-		Object.keys(mods).forEach(key => {
-			let base = path.join(config.base, key),
-				files = mods[key];
+		objEach(mods, (key, files) => {
+			let base = path.join(config.base, key);
 	
 			// For each type of file in the module...
-			Object.keys(files).forEach(ext => {
+			objEach(files, (ext, filename) => {
 				let real_ext = ext.split('.').pop();
 			
 				// Verify that we should be concatenating this file type...
@@ -553,7 +572,7 @@ function concatenate_new(mod_groups, config) {
 					}
 			
 					// Read the source file...
-					let file_path = path.join(base, files[ext]),
+					let file_path = path.join(base, filename),
 						content = fs.readFileSync(file_path, {encoding: 'utf8'}),
 						rewriter = config.file_types[real_ext].rewrite,
 						commenter = config.file_types[real_ext].comment;
@@ -695,16 +714,15 @@ function plan_files(cat, config) {
 function plan_files_new(cat_dests, config) {
 	let plan = {};
 	
-	Object.keys(cat_dests).forEach(dest_key => {
-		let cat = cat_dests[dest_key];
+	objEach(cat_dests, (dest_key, cat) => {
 	
-		Object.keys(cat).forEach(ext => {
+		objEach(cat, (ext, monolith) => {
 			let filename = path.join(
 					config.base, dest_key + '.' + ext
 				),
-				contents = cat[ext].contents.join('\n\n'),
+				contents = monolith.contents.join('\n\n'),
 			
-				tpl_dev_file = 'dev-' + cat[ext].real_ext + '.tpl',
+				tpl_dev_file = 'dev-' + monolith.real_ext + '.tpl',
 				tpl_dev_path = path.join(__dirname, tpl_dev_file),
 				tpl_dev_exists = fs.existsSync(tpl_dev_path);
 
@@ -715,7 +733,7 @@ function plan_files_new(cat_dests, config) {
 					filename_dev = path.join(
 						config.base, dest_key + '-dev.' + ext
 					),
-					urls_dev = cat[ext].manifest.map(name => {
+					urls_dev = monolith.manifest.map(name => {
 						let asset = path.join(
 							config.base, name, path.basename(name) + '.' + ext
 						);
@@ -741,12 +759,34 @@ function plan_files_new(cat_dests, config) {
 }
 
 /**
+ * Issue and/or stash a warning.
+ */
+function warn(msg) {
+	msg = 'WARNING: ' + msg;
+	warnings.push(msg);
+	if (!mojl.suppress_warnings) {
+		return console.warn(msg);
+	}
+}
+
+/**
+ * Get stashed warnings.
+ */
+function get_warnings() {
+	// to-do: test this.
+	// Turn off mojl.warn for tests, then read the stashed warnings.
+	return _.clone(warnings);
+}
+
+/**
  * Stuff to make public.
  */
 const mojl = {
+	suppress_warnings: false,
 	debug: false,
 	build,
 	simulate_build,
+	get_warnings,
 	commenters,
 	rewriters,
 };
@@ -759,7 +799,7 @@ const mojl = {
  */
 function debug() {
 	if (mojl.debug) {
-		return console.log.apply(console, arguments);
+		return console.log(...arguments);
 	}
 }
 
@@ -768,6 +808,7 @@ function debug() {
  * but we need to appease jshint in case it's not called anywhere else.
  */
 debug();
+
 
 // Export the public stuff.
 module.exports = mojl;
