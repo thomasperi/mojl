@@ -216,24 +216,22 @@ function simulate_build(config) {
 	// Generate the build map if that was the verdict above.
 	if (do_convert_legacy) {
 		convert_legacy(config);
-		
-		// to-do:
-		// Issue a warning about legacy parts being deprecated.
 	}
-	
-// 	console.log('\n\n======= config: =======');
-// 	console.log(JSON.stringify(config, null, 4));
 	
 	// Expand wildcards in the module lists.
 	expand_file_maps(config);
 	
-// 	console.log('\n------- expanded: -------');
-// 	console.log(JSON.stringify(config, null, 4));
 	
+	let mod_objs = build_module_objects(config);
+	console.log('===== build_module_objects =====');
+	console.log(JSON.stringify(mod_objs, null, 4));
 	
 	// Build the plan.
-	let mods = find_mods(config),
-		cat = concatenate(mods, config),
+	let mods = find_mods(config);
+	console.log('----- find_mods -----');
+	console.log(JSON.stringify(mods, null, 4));
+	
+	let cat = concatenate(mods, config),
 		plan = plan_files(cat, config);
 
 	return plan;
@@ -254,6 +252,9 @@ function convert_legacy(config) {
 			map(mod => path.join(config.modules_dir, mod))
 	}];
 	
+	// to-do:
+	// Issue a warning about legacy parts being deprecated.
+
 	// Delete the legacy properties to ensure that no other part of the code
 	// is relying on them instead of using config.file_maps.
 	//
@@ -274,10 +275,7 @@ function expand_file_maps(config) {
 
 	// Loop through the maps defined in config.
 	config.file_maps.forEach(map => {
-		// Discern the parts of this build path.
-		let build_dir = map.build,
-			build_basebame = path.basename(build_dir),
-			expanded_mods = [];
+		let expanded_mods = []; // The expanded list of modules for this map.
 		
 		// Loop through the modules in this map.
 		map.modules.forEach(mod_path => {
@@ -312,7 +310,9 @@ function expand_file_maps(config) {
 	});
 }
 
-// Find all the modules at the root of the given directory.
+/**
+ * Find all the modules at the root of the given directory.
+ */
 function find_mods_in_dir(config, parent_dir) {
 	let mods = [],
 		modules_dir = path.join(config.base, parent_dir);
@@ -333,6 +333,26 @@ function find_mods_in_dir(config, parent_dir) {
 	}
 
 	return mods;
+}
+
+/**
+ * Convert the module paths to objects describing the modules.
+ */
+function build_module_objects(config) {
+	let objs = {};
+	
+	config.file_maps.forEach(map => {
+		let mods = {};
+		map.modules.forEach(mod_path => {
+			// Add a new object to represent the module.
+			let thismod_dir = path.join(config.base, mod_path);
+			mods[mod_path] = find_pieces(thismod_dir, path.basename(mod_path));
+		});
+		
+		objs[map.build] = mods;
+	});
+	
+	return objs;
 }
 
 // Find all the modules.
@@ -363,8 +383,10 @@ function find_mods(config) {
 	return mods;
 }
 
-// Find all the files in a directory whose names without extension
-// are the directory name.
+/**
+ * Find all the files in a directory whose names without extension
+ * are the directory name.
+ */
 function find_pieces(thismod_dir, dirname) {
 	let pieces = {},
 		prefix = dirname + '.';
