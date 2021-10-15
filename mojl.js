@@ -221,18 +221,21 @@ function simulate_build(config) {
 	// Expand wildcards in the module lists.
 	expand_file_maps(config);
 	
+	// New Way
+	let mods_new = build_module_objects(config);
+	let cat_new = concatenate_new(mods_new, config);
+	let plan_new = plan_files_new(cat_new, config);
 	
-	let mod_objs = build_module_objects(config);
-	console.log('===== build_module_objects =====');
-	console.log(JSON.stringify(mod_objs, null, 4));
-	
-	// Build the plan.
+	// Old Way
 	let mods = find_mods(config);
-	console.log('----- find_mods -----');
-	console.log(JSON.stringify(mods, null, 4));
-	
-	let cat = concatenate(mods, config),
-		plan = plan_files(cat, config);
+	let cat = concatenate(mods, config);
+	let plan = plan_files(cat, config);
+
+	console.log('\n===== plan =====');
+	console.log(JSON.stringify(plan, null, 4));
+
+	console.log('\n----- plan_new -----');
+	console.log(JSON.stringify(plan_new, null, 4));
 
 	return plan;
 }
@@ -312,6 +315,7 @@ function expand_file_maps(config) {
 
 /**
  * Find all the modules at the root of the given directory.
+ * Returns an array of paths.
  */
 function find_mods_in_dir(config, parent_dir) {
 	let mods = [],
@@ -337,6 +341,25 @@ function find_mods_in_dir(config, parent_dir) {
 
 /**
  * Convert the module paths to objects describing the modules.
+ * Returns an object like this:
+ * {
+ *   "build/modules": {
+ *     "modules/nav": {
+ *       "css": "nav.css",
+ *       "html": "nav.html",
+ *       "ie.css": "nav.ie.css",
+ *       "ie.js": "nav.ie.js",
+ *       "js": "nav.js"
+ *     },
+ *     "modules/shell": {
+ *       "css": "shell.css",
+ *       "html": "shell.html",
+ *       "ie.css": "shell.ie.css",
+ *       "ie.js": "shell.ie.js",
+ *       "js": "shell.js"
+ *     }
+ *   }
+ * }
  */
 function build_module_objects(config) {
 	let objs = {};
@@ -496,6 +519,101 @@ function concatenate(mods, config) {
 	return cat;
 }
 
+/**
+ * Concatenate the module files into the build files.
+ */
+function concatenate_new(mod_groups, config) {
+	let destinations = {};
+	Object.keys(mod_groups).forEach(build_path => {
+	
+		let cat = {},
+			mods = mod_groups[build_path],
+			dest_dirname = path.join(config.base, path.dirname(build_path));
+
+		// For each module, add on to the concatenated object,
+		// which will get a property named for each file extension 
+		Object.keys(mods).forEach(key => {
+			let base = path.join(config.base, key),
+				files = mods[key];
+	
+			// For each type of file in the module...
+			Object.keys(files).forEach(ext => {
+				let real_ext = ext.split('.').pop();
+			
+				// Verify that we should be concatenating this file type...
+				if (config.file_types[real_ext]) {
+					// Add the property to the concatenation object
+					// if it doesn't already exist...
+					if (!cat[ext]) {
+						cat[ext] = {
+							real_ext: real_ext,
+							manifest: [],
+							contents: [],
+						};
+					}
+			
+					// Read the source file...
+					let file_path = path.join(base, files[ext]),
+						content = fs.readFileSync(file_path, {encoding: 'utf8'}),
+						rewriter = config.file_types[real_ext].rewrite,
+						commenter = config.file_types[real_ext].comment;
+				
+					// Rewrite urls
+					if (rewriter) {
+						if (typeof rewriter === 'string') {
+							rewriter = rewriters[rewriter];
+						}
+						if (typeof rewriter !== 'function') {
+							throw 'invalid rewriter';
+						}
+					
+						let src_dir = path.dirname(file_path),
+							rewrite_fn = function (url) {
+								// Don't rewrite absolute urls
+								if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
+									return url;
+								}
+
+								// Where is this file really?
+								let asset_path = path.join(src_dir, url);
+
+								// Return a timestamped relative path from the destination directory
+								// to the url's location in the source directory.
+								return path.relative(dest_dirname, asset_path) +
+									timestamp(asset_path);
+							};
+					
+						content = rewriter(content, rewrite_fn);
+					}
+			
+					// Push a comment indicating the module the content came from
+					if (commenter) {
+						if (typeof commenter === 'string') {
+							commenter = commenters[commenter];
+						}
+						if (typeof commenter === 'object') {
+							commenter = generate_commenter(commenter);
+						}
+						if (typeof commenter !== 'function') {
+							throw 'invalid commenter';
+						}
+						cat[ext].contents.push(commenter(key));
+					}
+
+					// Push the content onto the contents array
+					// and the key onto the manifest.
+					cat[ext].contents.push(content);
+					cat[ext].manifest.push(key);
+				}
+			});
+		});
+
+		destinations[build_path] = cat;
+	});
+
+	return destinations;
+}
+
 // Get the order of the modules using the config object.
 function get_order(mods, config) {
 	let order = config.module_order,
@@ -516,7 +634,9 @@ function get_order(mods, config) {
 	return [...head, ...Object.keys(mods_copy), ...tail];
 }
 
-// Get a timestamp URL query to append to asset URLs.
+/**
+ * Get a timestamp URL query to append to asset URLs.
+ */
 function timestamp(path) {
 	let stamp = fs.existsSync(path) ?
 		new Date(fs.statSync(path).mtime).getTime() :
@@ -568,6 +688,61 @@ function plan_files(cat, config) {
 	return plan;
 }
 
+/**
+ * Build a list of files that will hold the concatenated contents
+ * from the files in all the modules.
+ */
+function plan_files_new(cat_dests, config) {
+	let plan = {};
+	
+	Object.keys(cat_dests).forEach(dest_key => {
+		let cat = cat_dests[dest_key];
+	
+		Object.keys(cat).forEach(ext => {
+			let filename = path.join(
+					config.base, dest_key + '.' + ext
+				),
+				contents = cat[ext].contents.join('\n\n'),
+			
+				tpl_dev_file = 'dev-' + cat[ext].real_ext + '.tpl',
+				tpl_dev_path = path.join(__dirname, tpl_dev_file),
+				tpl_dev_exists = fs.existsSync(tpl_dev_path);
+
+			plan[filename] = contents;
+		
+			if (tpl_dev_exists) {
+				let tpl_dev = fs.readFileSync(tpl_dev_path, {encoding: 'utf8'}),
+					filename_dev = path.join(
+						config.base, dest_key + '-dev.' + ext
+					),
+					urls_dev = cat[ext].manifest.map(name => {
+						let asset = path.join(
+							config.base, name, path.basename(name) + '.' + ext
+						);
+						return path.relative(
+							path.dirname(filename_dev),
+							asset
+						) + timestamp(asset);
+					}),
+				
+					// Some quick-n-dirty templating.
+					contents_dev = tpl_dev ? tpl_dev.replace(
+						'/*{urls}*/', // <-- not a regex
+						() => JSON.stringify(urls_dev)
+					) : '';
+				plan[filename_dev] = contents_dev;
+			}
+		
+		});
+
+	});
+
+	return plan;
+}
+
+/**
+ * Stuff to make public.
+ */
 const mojl = {
 	debug: false,
 	build,
@@ -576,11 +751,23 @@ const mojl = {
 	rewriters,
 };
 
-function debug(val) {
+/**
+ * A debugging function that only sends output when mojl.debug is truthy.
+ * It's set up this way so that inside a test, you can set mojl.debug to true,
+ * do stuff that calls this debug function, then set it back to false. That way
+ * the debug function only does things for the test you're debugging.
+ */
+function debug() {
 	if (mojl.debug) {
-		return console.log(val);
+		return console.log.apply(console, arguments);
 	}
 }
+
+/**
+ * Calling it here doesn't do anything, because mojl.debug is false,
+ * but we need to appease jshint in case it's not called anywhere else.
+ */
 debug();
 
+// Export the public stuff.
 module.exports = mojl;
