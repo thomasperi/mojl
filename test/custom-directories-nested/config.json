@@ -1,4 +1,10 @@
 {
-	"modules_dir": "components/parts",
-	"build_dir": "assembled/put-together"
+	"dir_mappings": [
+		{
+			"build": "assembled/put-together/parts",
+			"modules": [
+				"components/parts/*"
+			]
+		}
+	]
 }

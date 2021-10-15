@@ -1,0 +1,12 @@
+{
+	"module_order": {
+		"head": [
+			"shell",
+			"nav"
+		],
+		"tail": [
+			"foot",
+			"contact"
+		]
+	}
+}

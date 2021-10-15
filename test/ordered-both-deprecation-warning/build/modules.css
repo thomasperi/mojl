@@ -1,0 +1,23 @@
+/***************************  modules/shell  **************************/
+
+.shell { background-color: green }
+
+/****************************  modules/nav  ***************************/
+
+nav { background-color: yellow }
+
+/****************************  modules/cta  ***************************/
+
+.cta { background-color: red }
+
+/**************************  modules/search  **************************/
+
+.search { background-color: yellow }
+
+/***************************  modules/foot  ***************************/
+
+.foot { background-color: red }
+
+/**************************  modules/contact  *************************/
+
+.contact { background-color: red }

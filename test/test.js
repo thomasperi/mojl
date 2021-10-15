@@ -63,7 +63,6 @@ function test(name, write) {
 	
 	if (write) {
 		mojl.debug = true;
-		mojl.suppress_warnings = false;
 		fs.writeFileSync(
 			expected_path,
 			JSON.stringify(
@@ -74,7 +73,6 @@ function test(name, write) {
 			)
 		);
 		mojl.debug = false;
-		mojl.suppress_warnings = true;
 		setTimeout(()=>warn(name), 500);
 	}
 
@@ -95,15 +93,28 @@ describe('Directory Comparison Tests', () => {
 
 	test('single-module');
 	test('multiple-modules');
-	test('ordered-head');
-	test('ordered-tail');
-	test('ordered-both');
-	test('custom-directories');
-	test('custom-directories-nested');
 	test('rewrite-image-paths');
 	test('multiple-asset-dirs');
 	test('custom-file-types');
 	test('sub-extensions');
+
+	// The same tests two ways each: one with the new config, and one with
+	// the legacy config which should trigger a warning.
+	
+	test('custom-directories');
+	test('custom-directories-deprecation-warning');
+	
+	test('custom-directories-nested');
+	test('custom-directories-nested-deprecation-warning');
+	
+	test('ordered-head');
+	test('ordered-head-deprecation-warning');
+
+	test('ordered-tail');
+	test('ordered-tail-deprecation-warning');
+
+	test('ordered-both');
+	test('ordered-both-deprecation-warning');
 
 // 	test('rewrite-image-paths-nested', true);
 

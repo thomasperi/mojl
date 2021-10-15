@@ -1,0 +1,8 @@
+{
+	"module_order": {
+		"head": [
+			"shell",
+			"nav"
+		]
+	}
+}

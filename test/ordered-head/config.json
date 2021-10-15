@@ -1,8 +1,12 @@
 {
-	"module_order": {
-		"head": [
-			"shell",
-			"nav"
-		]
-	}
+	"dir_mappings": [
+		{
+			"build": "build/modules",
+			"modules": [
+				"modules/shell",
+				"modules/nav",
+				"modules/*"
+			]
+		}
+	]
 }

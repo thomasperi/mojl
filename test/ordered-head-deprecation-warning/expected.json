@@ -1,0 +1,3 @@
+{
+  "/build/modules.css": "/***************************  modules/shell  **************************/\n\n.shell { background-color: green }\n\n/****************************  modules/nav  ***************************/\n\nnav { background-color: yellow }\n\n/**************************  modules/contact  *************************/\n\n.contact { background-color: red }\n\n/***************************  modules/foot  ***************************/\n\n.foot { background-color: red }\n\n/**************************  modules/search  **************************/\n\n.search { background-color: yellow }"
+}
