@@ -11,6 +11,7 @@
 /*global require, describe, it, __dirname, setTimeout, console */
 
 const mojl = require('../mojl.js');
+mojl.suppress_warnings = true;
 
 const fs = require('fs');
 const path = require('path');
@@ -62,6 +63,7 @@ function test(name, write) {
 	
 	if (write) {
 		mojl.debug = true;
+		mojl.suppress_warnings = false;
 		fs.writeFileSync(
 			expected_path,
 			JSON.stringify(
@@ -72,6 +74,7 @@ function test(name, write) {
 			)
 		);
 		mojl.debug = false;
+		mojl.suppress_warnings = true;
 		setTimeout(()=>warn(name), 500);
 	}
 

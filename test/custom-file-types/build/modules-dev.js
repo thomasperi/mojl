@@ -1,48 +1,70 @@
 /**
- * A dev loader for scripts that will be concatenated in production.
+ * A dev loader for individually loading the scripts
+ * that will be concatenated by mojl in production.
+ *
+ * Confirmed working in:
+ *   Chrome 15 +
+ *   Edge 15 +
+ *   Firefox 4 +
+ *   IE 10 +
+ *   Opera 11.5 +
+ *   Safari 4 +
+ *
  * (c) Thomas Peri <hello@thomasperi.net>
  * MIT License
  */
-/*global document, console, setTimeout */
+/*global document, console */
 (function (urls) {
-	// document.currentScript polyfill, doesn't work with async attribute.
-	// https://2ality.com/2014/05/current-script.html 
-	var currentScript = document.currentScript || (function () {
+	if (!urls) {
+		return;
+	}
+	
+	// Get the tag that loaded this very script.
+	var loader = document.currentScript || (function () {
+		// document.currentScript polyfill, doesn't work with async attribute.
+		// https://2ality.com/2014/05/current-script.html 
 		var tags = document.getElementsByTagName('script');
 		return tags[tags.length - 1];
 	})();
-	
+
 	// Find the path prefix for adding script urls relative to this one.
-	var relative = currentScript.getAttribute('src').replace(/[^\/]+$/, '');
+	var relative = loader.getAttribute('src').replace(/[^\/]+$/, '');
+
+	var a = document.createElement('a'),
+		url,
+		log = [],
+		html = [];
 	
-	// Add a URL as a script tag.
-	function load(url) {
-		var script = document.createElement('script');
-		
-		// Wait for each script to load before adding the next script tag,
-		// to ensure that they load in the intended order.
-		// It's slow, but it's not for production anyway.
-		script.onload = next;
-		
-		script.src = relative + url;
-		console.log(url + ' => ' + script.src);
-		currentScript.parentNode.insertBefore(script, currentScript);
-	}
+	// Start the console message.
+	log.push('=== mojl dev loader ===');
 	
-	// Add all the script urls passed in.
-	console.log('=== mojl dev mode : adding scripts ===');
-	var i = 0;
-	function next() {
-		if (i < urls.length) {
-			load(urls[i++]);
-		} else {
-			setTimeout(function () {
-				console.log('=== mojl dev mode : done adding scripts ===');
-			}, 0);
-		}
+	// Loop through the URLs.
+	while (urls.length > 0) {
+		// Normalize each URL and add it to the console message.
+		a.href = relative + urls.shift();
+		url = a.href;
+		log.push('* ' + url);
+		
+		// Encode the URL for use in HTML, then write the script tag.
+		html.push('<script src="' + (url
+			.replace(/&/g, '&amp;')
+			.replace(/'/g, '&apos;')
+			.replace(/"/g, '&quot;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+		) + '"></script>');
 	}
-	if (urls) {
-		next();
-	}
+
+	// Output the message.
+	console.log(log.join('\n'));
+	
+	// Instead of creating and inserting script elements, use document.write
+	// to simulate as closely as possible the synchronous loading of a
+	// concatenated script: Scripts are loaded in order and before the rest
+	// of the document is encountered by the parser.
+	// (Allow evil for this one part, because we know what we're doing.)
+	/* jshint evil: true */
+	document.write(html.join(''));
+	/* jshint evil: false */
 	
 }(["../modules/shell/shell.js?t=1590106038262"]));

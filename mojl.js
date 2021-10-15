@@ -60,16 +60,12 @@ const config_defaults = {
 	/*
 	An object describing which modules get built into which concatenated files.
 	
-	Each key in config.file_maps is a destination directory. The endpoint
+	Each key in config.dir_mappings is a destination directory. The endpoint
 	becomes the base name of the files generated inside that directory.
 
 	The value for that key is an array of paths to modules. Each of those 
 	module's files get copied into the files in the destination directory.
 	
-	to-do: (NOW) change dev-js.tpl so that multiple instances load in series
-		instead of in parallel. Currently multiple dev scripts will cause their
-		source scripts to load out of order.
-		
 	to-do: (NOW) Update tests to accommodate new module paths in comments
 	
 	to-do: (LATER) let modules require other modules
@@ -88,7 +84,7 @@ const config_defaults = {
 			not node packages necessarily.
 	
 	*/
-	"file_maps": [
+	"dir_mappings": [
 		{
 			"build": "build/modules",
 			// Creates files named:
@@ -221,9 +217,9 @@ function simulate_build(config) {
 	// Work with a copy of the config object, in case it's used outside.
 	config = _.cloneDeep(config);
 
-	// If file_maps wasn't supplied but any or all legacy parts were,
-	// then plan on generating the file_maps array from the legacy parts.
-	let do_convert_legacy = !config.file_maps && (
+	// If dir_mappings wasn't supplied but any or all legacy parts were,
+	// then plan on generating the dir_mappings array from the legacy parts.
+	let do_convert_legacy = !config.dir_mappings && (
 			config.build_dir || config.modules_dir || config.module_order
 		);
 
@@ -239,19 +235,11 @@ function simulate_build(config) {
 	expand_file_maps(config);
 	
 	// New Way
-	let mods_new = build_module_objects(config);
-	let cat_new = concatenate_new(mods_new, config);
-	let plan_new = plan_files_new(cat_new, config);
-	
-	// Old Way
-	let mods = find_mods(config);
+	let mods = build_module_objects(config);
 	let cat = concatenate(mods, config);
 	let plan = plan_files(cat, config);
 	
 	// to-do
-	// return the result of the new way instead of the old
-	// after tests are all passing:
-	// * remove old functions and vars, and rename the new ones
 	// * write new tests for the new functionality
 
 	return plan;
@@ -259,14 +247,14 @@ function simulate_build(config) {
 
 /**
  * Convert the legacy "build_dir", "modules_dir", and "module_order" values
- * to the new "file_maps" config value.
+ * to the new "dir_mappings" config value.
  * This function modifies the config object.
  */
 function convert_legacy(config) {
 	let order = config.module_order || {},
 		head = order.head || [],
 		tail = order.tail || [];
-	config.file_maps = [{
+	config.dir_mappings = [{
 		build: path.join(config.build_dir, path.basename(config.modules_dir)),
 		modules: head.concat(['*']).concat(tail).
 			map(mod => path.join(config.modules_dir, mod))
@@ -274,17 +262,13 @@ function convert_legacy(config) {
 	
 	// Issue a warning about legacy parts being deprecated.
 	// to-do: test this
-	warn('The `build_dir`, `modules_dir`, and `module_order` configuration options are deprecated. Use `file_maps` instead.');
+	warn('The `build_dir`, `modules_dir`, and `module_order` configuration options are deprecated. Use `dir_mappings` instead.');
 
 	// Delete the legacy properties to ensure that no other part of the code
-	// is relying on them instead of using config.file_maps.
-	//
-	// to-do:
-	// Uncomment these lines:
-	//
-	// delete config.build_dir;
-	// delete config.modules_dir;
-	// delete config.module_order;
+	// is relying on them instead of using config.dir_mappings.
+	delete config.build_dir;
+	delete config.modules_dir;
+	delete config.module_order;
 }
 
 /**
@@ -295,7 +279,7 @@ function expand_file_maps(config) {
 	let all_mods = []; // An array to tally all the mods loaded so far.
 
 	// Loop through the maps defined in config.
-	config.file_maps.forEach(map => {
+	config.dir_mappings.forEach(map => {
 		let expanded_mods = []; // The expanded list of modules for this map.
 		
 		// Loop through the modules in this map.
@@ -386,7 +370,7 @@ function find_mods_in_dir(config, parent_dir) {
 function build_module_objects(config) {
 	let objs = {};
 	
-	config.file_maps.forEach(map => {
+	config.dir_mappings.forEach(map => {
 		let mods = {};
 		map.modules.forEach(mod_path => {
 			// Add a new object to represent the module.
@@ -398,34 +382,6 @@ function build_module_objects(config) {
 	});
 	
 	return objs;
-}
-
-// Find all the modules.
-function find_mods(config) {
-	let mods = {},
-		modules_dir = path.join(config.base, config.modules_dir);
-
-	// Map all the modules.	
-	if (fs.lstatSync(modules_dir).isDirectory()) {
-		// Read the modules directory.
-		(fs.readdirSync(modules_dir, {withFileTypes: true})
-
-			// Only look at directories.
-			.filter(ent => ent.isDirectory())
-
-			// Add items to the mods object.
-			.forEach(dir => {
-				// Add a new object to represent the module.
-				let thismod_dir = path.join(modules_dir, dir.name);
-				mods[dir.name] = {
-					base: thismod_dir,
-					files: find_pieces(thismod_dir, dir.name),
-				};
-			})
-		);
-	}
-
-	return mods;
 }
 
 /**
@@ -453,98 +409,10 @@ function find_pieces(thismod_dir, dirname) {
 	return pieces;
 }
 
-// 
-function concatenate(mods, config) {
-	let cat = {},
-		dest_dir = path.join(config.base, config.build_dir),
-		names = get_order(mods, config);
-
-	// For each module, add on to the concatenated object,
-	// which will get a property named for each file extension 
-	names.forEach(key => {
-		let mod = mods[key],
-			base = mod.base,
-			files = mod.files;
-	
-		// For each type of file in the module...
-		Object.keys(files).forEach(ext => {
-			let real_ext = ext.split('.').pop();
-			
-			// Verify that we should be concatenating this file type...
-			if (config.file_types[real_ext]) {
-				// Add the property to the concatenation object
-				// if it doesn't already exist...
-				if (!cat[ext]) {
-					cat[ext] = {
-						real_ext: real_ext,
-						manifest: [],
-						files: [],
-					};
-				}
-			
-				// Read the source file...
-				let file_path = path.join(base, files[ext]),
-					content = fs.readFileSync(file_path, {encoding: 'utf8'}),
-					rewriter = config.file_types[real_ext].rewrite,
-					commenter = config.file_types[real_ext].comment;
-				
-				// Rewrite urls
-				if (rewriter) {
-					if (typeof rewriter === 'string') {
-						rewriter = rewriters[rewriter];
-					}
-					if (typeof rewriter !== 'function') {
-						throw 'invalid rewriter';
-					}
-					
-					let src_dir = path.dirname(file_path),
-						rewrite_fn = function (url) {
-							// Don't rewrite absolute urls
-							if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
-								return url;
-							}
-
-							// Where is this file really?
-							let asset_path = path.join(src_dir, url);
-
-							// Return a timestamped relative path from the destination directory
-							// to the url's location in the source directory.
-							return path.relative(dest_dir, asset_path) +
-								timestamp(asset_path);
-						};
-					
-					content = rewriter(content, rewrite_fn);
-				}
-			
-				// Push a comment indicating the module the content came from
-				if (commenter) {
-					if (typeof commenter === 'string') {
-						commenter = commenters[commenter];
-					}
-					if (typeof commenter === 'object') {
-						commenter = generate_commenter(commenter);
-					}
-					if (typeof commenter !== 'function') {
-						throw 'invalid commenter';
-					}
-					cat[ext].files.push(commenter(key));
-				}
-
-				// Push the content onto the files array
-				// and the key onto the manifest.
-				cat[ext].files.push(content);
-				cat[ext].manifest.push(key);
-			}
-		});
-	});
-
-	return cat;
-}
-
 /**
  * Concatenate the module files into the build files.
  */
-function concatenate_new(mod_groups, config) {
+function concatenate(mod_groups, config) {
 	let destinations = {};
 	objEach(mod_groups, (build_path, mods) => {
 		let cat = {},
@@ -633,26 +501,6 @@ function concatenate_new(mod_groups, config) {
 	return destinations;
 }
 
-// Get the order of the modules using the config object.
-function get_order(mods, config) {
-	let order = config.module_order,
-		mods_copy = {...mods},
-		head = [],
-		tail = [];
-
-	order.head.forEach(name => {
-		head.push(name);
-		delete mods_copy[name];
-	});
-
-	order.tail.forEach(name => {
-		tail.push(name);
-		delete mods_copy[name];
-	});
-
-	return [...head, ...Object.keys(mods_copy), ...tail];
-}
-
 /**
  * Get a timestamp URL query to append to asset URLs.
  */
@@ -663,55 +511,11 @@ function timestamp(path) {
 	return '?t=' + stamp;
 }
 
-// Build a list of files that will hold the concatenated contents
-// from the files in all the modules.
-function plan_files(cat, config) {
-	let plan = {},
-		basename = path.basename(config.modules_dir);
-	Object.keys(cat).forEach(ext => {
-		let filename = path.join(
-				config.base, config.build_dir, basename + '.' + ext
-			),
-			contents = cat[ext].files.join('\n\n'),
-			
-			tpl_dev_file = 'dev-' + cat[ext].real_ext + '.tpl',
-			tpl_dev_path = path.join(__dirname, tpl_dev_file),
-			tpl_dev_exists = fs.existsSync(tpl_dev_path);
-
-		plan[filename] = contents;
-		
-		if (tpl_dev_exists) {
-			let tpl_dev = fs.readFileSync(tpl_dev_path, {encoding: 'utf8'}),
-				filename_dev = path.join(
-					config.base, config.build_dir, basename + '-dev.' + ext
-				),
-				urls_dev = cat[ext].manifest.map(name => {
-					let asset = path.join(
-						config.base, config.modules_dir, name, name + '.' + ext
-					);
-					return path.relative(
-						path.dirname(filename_dev),
-						asset
-					) + timestamp(asset);
-				}),
-				
-				// Some quick-n-dirty templating.
-				contents_dev = tpl_dev ? tpl_dev.replace(
-					'/*{urls}*/', // <-- not a regex
-					() => JSON.stringify(urls_dev)
-				) : '';
-			plan[filename_dev] = contents_dev;
-		}
-		
-	});
-	return plan;
-}
-
 /**
  * Build a list of files that will hold the concatenated contents
  * from the files in all the modules.
  */
-function plan_files_new(cat_dests, config) {
+function plan_files(cat_dests, config) {
 	let plan = {};
 	
 	objEach(cat_dests, (dest_key, cat) => {
