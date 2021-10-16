@@ -4,6 +4,7 @@
   "description": "A simple content module repackager",
   "main": "mojl.js",
   "files": [
+    "dev-css.tpl",
     "dev-js.tpl"
   ],
   "scripts": {
