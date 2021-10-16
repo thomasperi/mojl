@@ -1,0 +1,26 @@
+{
+	"dir_mappings": [
+		{
+			"build": "build/zote",
+			"modules": [
+				"mods/shell",
+				"mods/nav",
+				"mods-foo/contact"
+			]
+		},
+		{
+			"build": "build/sbor",
+			"modules": [
+				"mods-bar/search",
+				"mods/cta"
+			]
+		},
+		{
+			"build": "build-thed/sneg",
+			"modules": [
+				"mods-foo/search",
+				"mods-bar/nav"
+			]
+		}
+	]
+}

@@ -1,0 +1,31 @@
+/****************************  mods/shell  ****************************/
+
+.shell { background-color: green }
+
+/*****************************  mods/nav  *****************************/
+
+nav { background-color: yellow }
+
+/***************************  mods-foo/nav  ***************************/
+
+nav.foo { background-color: yellow }
+
+/***************************  mods-foo/cta  ***************************/
+
+.cta-foo { background-color: red }
+
+/**************************  mods-foo/search  *************************/
+
+.search-foo { background-color: yellow }
+
+/**************************  mods-foo/shell  **************************/
+
+.shell-foo { background-color: green }
+
+/***************************  mods/contact  ***************************/
+
+.contact { background-color: red }
+
+/*************************  mods-foo/contact  *************************/
+
+.contact-foo { background-color: red }

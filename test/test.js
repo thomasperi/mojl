@@ -97,9 +97,14 @@ describe('Directory Comparison Tests', () => {
 	test('multiple-asset-dirs');
 	test('custom-file-types');
 	test('sub-extensions');
+	
+	test('multiple-mappings');
+	test('multiple-module-dirs');
+	test('multiple-mix-match');
 
 	// The same tests two ways each: one with the new config, and one with
 	// the legacy config which should trigger a warning.
+	// to-do: actually issue the warning and test for it
 	
 	test('custom-directories');
 	test('custom-directories-deprecation-warning');

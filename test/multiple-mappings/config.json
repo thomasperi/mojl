@@ -1,0 +1,20 @@
+{
+	"dir_mappings": [
+		{
+			"build": "build/zote",
+			"modules": [
+				"mods/shell",
+				"mods/nav",
+				"mods/foot",
+				"mods/contact"
+			]
+		},
+		{
+			"build": "build/sbor",
+			"modules": [
+				"mods/search",
+				"mods/cta"
+			]
+		}
+	]
+}
