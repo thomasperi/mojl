@@ -11,7 +11,7 @@
 /*global require, describe, it, __dirname, setTimeout, console */
 
 const mojl = require('../mojl.js');
-mojl.suppress_warnings = true;
+// mojl.suppress_warnings = true;
 
 const fs = require('fs');
 const path = require('path');

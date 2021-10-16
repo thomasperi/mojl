@@ -102,6 +102,10 @@ const config_defaults = {
 			]
 		}
 	]
+
+	// to-do
+	// * write new tests for the new functionality
+
 	/*
 	to-do: (LATER) let modules require other modules
 		for example, let foo/bar/bar.mojl.json specify
@@ -263,14 +267,11 @@ function simulate_build(config) {
 	// Expand wildcards in the module lists.
 	expand_file_maps(config);
 	
-	// New Way
+	// Build a plan for the files to build.
 	let mods = build_module_objects(config);
 	let cat = concatenate(mods, config);
 	let plan = plan_files(cat, config);
 	
-	// to-do
-	// * write new tests for the new functionality
-
 	return plan;
 }
 
@@ -291,7 +292,7 @@ function convert_legacy(config) {
 	
 	// Issue a warning about legacy parts being deprecated.
 	// to-do: test this
-	warn('The `build_dir`, `modules_dir`, and `module_order` configuration options are deprecated. Use `dir_mappings` instead.');
+// 	warn('The `build_dir`, `modules_dir`, and `module_order` configuration options are deprecated. Use `dir_mappings` instead.');
 
 	// Delete the legacy properties to ensure that no other part of the code
 	// is relying on them instead of using config.dir_mappings.
@@ -339,13 +340,12 @@ function expand_file_maps(config) {
 	// Issue a warning if any of the modules just added
 	// are already in another file mapping.
 	// to-do: test this
-	let dupes = all_mods.filter(
-		(mod, index) => all_mods.indexOf(mod) !== index
-	);
-	if (dupes.length > 0) {
-		warn('The following modules are loaded more than once: ' + 
-			dupes.join(', '));
-	}
+// 	let dupes = all_mods.filter(
+// 		(mod, index) => all_mods.indexOf(mod) !== index
+// 	);
+// 	if (dupes.length > 0) {
+// 		warn('The following modules are loaded more than once: ' + dupes.join(', '));
+// 	}
 }
 
 /**
@@ -600,13 +600,13 @@ function plan_files(cat_dests, config) {
 /**
  * Issue and/or stash a warning.
  */
-function warn(msg) {
-	msg = 'WARNING: ' + msg;
-	warnings.push(msg);
-	if (!mojl.suppress_warnings) {
-		return console.warn(msg);
-	}
-}
+// function warn(msg) {
+// 	msg = 'WARNING: ' + msg;
+// 	warnings.push(msg);
+// 	if (!mojl.suppress_warnings) {
+// 		return console.warn(msg);
+// 	}
+// }
 
 /**
  * Get stashed warnings.
