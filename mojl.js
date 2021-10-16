@@ -476,30 +476,9 @@ function concatenate(mod_groups, config) {
 				
 					// Rewrite urls
 					if (rewriter) {
-						if (typeof rewriter === 'string') {
-							rewriter = rewriters[rewriter];
-						}
-						if (typeof rewriter !== 'function') {
-							throw 'invalid rewriter';
-						}
-					
-						let src_dir = path.dirname(file_path),
-							rewrite_fn = function (url) {
-								// Don't rewrite absolute urls
-								if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
-									return url;
-								}
-
-								// Where is this file really?
-								let asset_path = path.join(src_dir, url);
-
-								// Return a timestamped relative path from the destination directory
-								// to the url's location in the source directory.
-								return path.relative(dest_dirname, asset_path) +
-									timestamp(asset_path);
-							};
-					
-						content = rewriter(content, rewrite_fn);
+						content = rewrite_urls(
+							rewriter, content, file_path, dest_dirname
+						);
 					}
 			
 					// Push a comment indicating the module the content came from
@@ -528,6 +507,37 @@ function concatenate(mod_groups, config) {
 	});
 
 	return destinations;
+}
+
+/**
+ * Rewrite URLs to work from the directory the concatenated file will be in
+ * instead of the directory the original file is in.
+ */
+function rewrite_urls(rewriter, content, file_path, dest_dirname) {
+	if (typeof rewriter === 'string') {
+		rewriter = rewriters[rewriter];
+	}
+	if (typeof rewriter !== 'function') {
+		throw 'invalid rewriter';
+	}
+
+	let src_dir = path.dirname(file_path),
+		rewrite_fn = function (url) {
+			// Don't rewrite absolute urls
+			if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
+				return url;
+			}
+
+			// Where is this file really?
+			let asset_path = path.join(src_dir, url);
+
+			// Return a timestamped relative path from the destination directory
+			// to the url's location in the source directory.
+			return path.relative(dest_dirname, asset_path) +
+				timestamp(asset_path);
+		};
+
+	return rewriter(content, rewrite_fn);
 }
 
 /**
