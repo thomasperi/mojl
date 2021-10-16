@@ -441,11 +441,10 @@ function find_pieces(thismod_dir, dirname) {
 /**
  * Concatenate the module files into the build files.
  */
-function concatenate(mod_groups, config) {
+function concatenate(monoliths, config) {
 	let destinations = {};
-	objEach(mod_groups, (build_path, mods) => {
-		let cat = {},
-			dest_dirname = path.join(config.base, path.dirname(build_path));
+	objEach(monoliths, (build_path, mods) => {
+		let cats = {};
 
 		// For each module, add on to the concatenated object,
 		// which will get a property named for each file extension 
@@ -458,86 +457,101 @@ function concatenate(mod_groups, config) {
 			
 				// Verify that we should be concatenating this file type...
 				if (config.file_types[real_ext]) {
-					// Read the source file...
-					let file_path = path.join(base, filename),
-						content = fs.readFileSync(file_path, {encoding: 'utf8'}),
-						rewriter = config.file_types[real_ext].rewrite,
-						commenter = config.file_types[real_ext].comment;
-				
 					// Add the property to the concatenation object
 					// if it doesn't already exist...
-					if (!cat[ext]) {
-						cat[ext] = {
-							real_ext: real_ext,
-							manifest: [],
-							contents: [],
-						};
-					}
-			
-					// Rewrite urls
-					if (rewriter) {
-						content = rewrite_urls(
-							rewriter, content, file_path, dest_dirname
-						);
-					}
-			
-					// Push a comment indicating the module the content came from
-					if (commenter) {
-						if (typeof commenter === 'string') {
-							commenter = commenters[commenter];
-						}
-						if (typeof commenter === 'object') {
-							commenter = generate_commenter(commenter);
-						}
-						if (typeof commenter !== 'function') {
-							throw 'invalid commenter';
-						}
-						cat[ext].contents.push(commenter(mod_path));
-					}
-
-					// Push the content onto the contents array
-					// and the module path onto the manifest.
-					cat[ext].contents.push(content);
-					cat[ext].manifest.push(mod_path);
+					let cat = cats[ext] = (cats[ext] || {
+						real_ext: real_ext,
+						manifest: [],
+						contents: [],
+					});
+					
+					// Add the path of this file's module
+					// to the manifest for this concatenated file.
+					cat.manifest.push(mod_path);
+					
+					// Add a comment naming this file's module
+					// to this concatenated file.
+					cat.contents.push(
+						build_comment(config, mod_path, real_ext) || ''
+					);
+					
+					// Rewrite any rewritable URLs in this file's content,
+					// and add the resulting content to this concatenated file.
+					cat.contents.push(
+						rewrite_urls(config, base, filename, real_ext, build_path)
+					);
 				}
 			});
 		});
 
-		destinations[build_path] = cat;
+		// Add the concatenated files for this build group to the plan.
+		destinations[build_path] = cats;
 	});
 
 	return destinations;
 }
 
 /**
+ * Push a comment indicating the module the content came from
+ */
+function build_comment(config, mod_path, real_ext) {
+	let commenter = config.file_types[real_ext].comment;
+	if (commenter) {
+		if (typeof commenter === 'string') {
+			commenter = commenters[commenter];
+		}
+		if (typeof commenter === 'object') {
+			commenter = generate_commenter(commenter);
+		}
+		if (typeof commenter !== 'function') {
+			throw 'invalid commenter';
+		}
+		return commenter(mod_path);
+	}
+}
+
+/**
  * Rewrite URLs to work from the directory the concatenated file will be in
  * instead of the directory the original file is in.
  */
-function rewrite_urls(rewriter, content, file_path, dest_dirname) {
-	if (typeof rewriter === 'string') {
-		rewriter = rewriters[rewriter];
+function rewrite_urls(config, base, filename, real_ext, build_path) {
+	// Read the source file...
+	let dest_dirname = path.join(config.base, path.dirname(build_path)),
+		file_path = path.join(base, filename),
+		content = fs.readFileSync(file_path, {encoding: 'utf8'}),
+		rewriter = config.file_types[real_ext].rewrite;
+
+	// Rewrite urls
+	if (rewriter) {
+		if (typeof rewriter === 'string') {
+			rewriter = rewriters[rewriter];
+		}
+		if (typeof rewriter !== 'function') {
+			throw 'invalid rewriter';
+		}
+
+		let src_dir = path.dirname(file_path),
+			rewrite_fn = function (url) {
+				// Don't rewrite absolute urls
+				if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
+					return url;
+				}
+
+				// Where is this file really?
+				let asset_path = path.join(src_dir, url);
+
+				// Return a timestamped relative path from the destination
+				// directory to the url's location in the source directory.
+				return path.relative(dest_dirname, asset_path) +
+					timestamp(asset_path);
+			};
+
+		content = rewriter(content, rewrite_fn);
 	}
-	if (typeof rewriter !== 'function') {
-		throw 'invalid rewriter';
-	}
 
-	let src_dir = path.dirname(file_path),
-		rewrite_fn = function (url) {
-			// Don't rewrite absolute urls
-			if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
-				return url;
-			}
-
-			// Where is this file really?
-			let asset_path = path.join(src_dir, url);
-
-			// Return a timestamped relative path from the destination directory
-			// to the url's location in the source directory.
-			return path.relative(dest_dirname, asset_path) +
-				timestamp(asset_path);
-		};
-
-	return rewriter(content, rewrite_fn);
+	// Push the content onto the contents array
+	// and the module path onto the manifest.
+	return content;
 }
 
 /**
