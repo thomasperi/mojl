@@ -91,6 +91,7 @@ function test(name, write) {
 
 describe('Directory Comparison Tests', () => {
 
+	// Tests for 1.0 functionality
 	test('single-module');
 	test('multiple-modules');
 	test('rewrite-image-paths');
@@ -98,28 +99,24 @@ describe('Directory Comparison Tests', () => {
 	test('custom-file-types');
 	test('sub-extensions');
 	
+	// Some more 1.0 tests modified to work the 1.1 way,
+	// with the old way preserved in the  "-legacy" files.
+	// to-do: eventually issue deprecation warnings and test for them
+	test('custom-directories');
+		test('custom-directories-legacy');
+	test('custom-directories-nested');
+		test('custom-directories-nested-legacy');
+	test('ordered-head');
+		test('ordered-head-legacy');
+	test('ordered-tail');
+		test('ordered-tail-legacy');
+	test('ordered-both');
+		test('ordered-both-legacy');
+
+	// Tests for 1.1 mappings
 	test('multiple-mappings');
 	test('multiple-module-dirs');
 	test('multiple-mix-match');
-
-	// The same tests two ways each: one with the new config, and one with
-	// the legacy config which should trigger a warning.
-	// to-do: actually issue the warning and test for it
-	
-	test('custom-directories');
-	test('custom-directories-deprecation-warning');
-	
-	test('custom-directories-nested');
-	test('custom-directories-nested-deprecation-warning');
-	
-	test('ordered-head');
-	test('ordered-head-deprecation-warning');
-
-	test('ordered-tail');
-	test('ordered-tail-deprecation-warning');
-
-	test('ordered-both');
-	test('ordered-both-deprecation-warning');
 
 // 	test('rewrite-image-paths-nested', true);
 
