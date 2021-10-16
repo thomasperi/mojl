@@ -449,8 +449,8 @@ function concatenate(mod_groups, config) {
 
 		// For each module, add on to the concatenated object,
 		// which will get a property named for each file extension 
-		objEach(mods, (key, files) => {
-			let base = path.join(config.base, key);
+		objEach(mods, (mod_path, files) => {
+			let base = path.join(config.base, mod_path);
 	
 			// For each type of file in the module...
 			objEach(files, (ext, filename) => {
@@ -458,6 +458,12 @@ function concatenate(mod_groups, config) {
 			
 				// Verify that we should be concatenating this file type...
 				if (config.file_types[real_ext]) {
+					// Read the source file...
+					let file_path = path.join(base, filename),
+						content = fs.readFileSync(file_path, {encoding: 'utf8'}),
+						rewriter = config.file_types[real_ext].rewrite,
+						commenter = config.file_types[real_ext].comment;
+				
 					// Add the property to the concatenation object
 					// if it doesn't already exist...
 					if (!cat[ext]) {
@@ -468,12 +474,6 @@ function concatenate(mod_groups, config) {
 						};
 					}
 			
-					// Read the source file...
-					let file_path = path.join(base, filename),
-						content = fs.readFileSync(file_path, {encoding: 'utf8'}),
-						rewriter = config.file_types[real_ext].rewrite,
-						commenter = config.file_types[real_ext].comment;
-				
 					// Rewrite urls
 					if (rewriter) {
 						content = rewrite_urls(
@@ -492,13 +492,13 @@ function concatenate(mod_groups, config) {
 						if (typeof commenter !== 'function') {
 							throw 'invalid commenter';
 						}
-						cat[ext].contents.push(commenter(key));
+						cat[ext].contents.push(commenter(mod_path));
 					}
 
 					// Push the content onto the contents array
-					// and the key onto the manifest.
+					// and the module path onto the manifest.
 					cat[ext].contents.push(content);
-					cat[ext].manifest.push(key);
+					cat[ext].manifest.push(mod_path);
 				}
 			});
 		});
