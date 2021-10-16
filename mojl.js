@@ -56,18 +56,53 @@ const config_defaults = {
 		"tail": []
 	},
 	
-	// to-do (in progress)
+	/**
+	 * An array of objects describing which modules get built into which
+	 * concatenated files.
+	 *
+	 * Each object in the array has two keys:
+	 *
+	 * > "build" (string)
+	 *
+	 *   The path to where the concatenated files will be saved.
+	 *   The endpoint of this path is not a directory, but the prefix
+	 *   of each concatenated file.
+	 *
+	 *   For example, "build": "build/modules" might create files named:
+	 *     {config.base}/build/modules-dev.css
+	 *     {config.base}/build/modules-dev.js
+	 *     {config.base}/build/modules.css
+	 *     {config.base}/build/modules.js
+	 *
+	 * > "modules" (array of strings)
+	 *
+	 *   Each string in this array refers to the path to a module,
+	 *   or a wildcard to load all modules in a certain directory
+	 *   in alphabetical order.
+	 *
+	 *   For example:
+	 *     "modules/nav" loads the "nav" module inside {config.base}/modules/
+	 *     "modules/*" loads ALL modules inside {config.base}/modules/
+	 *
+	 *   If a wildcard is listed in the same array as an explicit reference
+	 *   to a module matched by the wildcard, the item retains its position
+	 *   instead of expanding from the wildcard into a duplicate listing.
+	 *
+	 *   For example, if ["modules/*"] expands to:
+	 *     ["modules/contact", "modules/foot", "modules/nav", "modules/shell"]
+	 *
+	 *   Then ["modules/shell", "modules/*", "modules/foot"] expands to:
+	 *     ["modules/shell", "modules/contact", "modules/nav", "modules/foot"]
+	 */
+	"dir_mappings": [
+		{
+			"build": "build/modules",
+			"modules": [
+				"modules/*"
+			]
+		}
+	]
 	/*
-	An object describing which modules get built into which concatenated files.
-	
-	Each key in config.dir_mappings is a destination directory. The endpoint
-	becomes the base name of the files generated inside that directory.
-
-	The value for that key is an array of paths to modules. Each of those 
-	module's files get copied into the files in the destination directory.
-	
-	to-do: (NOW) Update tests to accommodate new module paths in comments
-	
 	to-do: (LATER) let modules require other modules
 		for example, let foo/bar/bar.mojl.json specify
 		that foo/zote needs to load too, which would cause it to be loaded
@@ -84,24 +119,6 @@ const config_defaults = {
 			not node packages necessarily.
 	
 	*/
-	"dir_mappings": [
-		{
-			"build": "build/modules",
-			// Creates files named:
-			// {config.base}/build/modules-dev.css
-			// {config.base}/build/modules-dev.js
-			// {config.base}/build/modules.css
-			// {config.base}/build/modules.js
-			
-			"modules": [
-				"modules/*"
-				// Uses all modules inside {config.base}/modules/
-				// This "*" wildcard can be omitted or used in conjunction with
-				// specific modules before and after. Multiple wildcards from 
-				// multiple directories can be used too.
-			]
-		}
-	]
 
 };
 
