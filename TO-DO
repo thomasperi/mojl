@@ -1,20 +1,10 @@
-Add dev-loader templates for CSS and SASS
+Let modules include other modules via a `<module>.mojl.json` file.
 
-That'll probably involve using a real template engine instead of just replacing a single token, so...
+Static site building feature with lodash templates.
 
-Add a templating feature, where modules can `include` one another and you can build a whole site with it.
+Feature for merging css and scss into the same file
 
-Add the option to set a pattern or function to determine whether to timestamp a given file during path rewriting.
-
-Add “superset” feature to node mojl for merging css and scss into the same file
-
-Allow modules in nested folders, for namespacing purposes
-
-Allow mojl modules to be npm packages (thereby being able to require other mojls), by checking for the presence of a `mojl.json` file. If present, read it to determine the path of the subdirectory that includes the module's files instead of the module's root directory. Should default to the same name as the endpoint.
-
-Discourage distributing them using composer and other package managers. Every mojl will be built with node-mojl, but only some mojls are for use with PHP, WP, or whatever else.
-
-Allow combining modules from multiple parent directories in the same build, so that composer and npm mojls can be used alongside each other.
+Option to set a pattern or function for determining whether to timestamp a given file during path rewriting, since not all files should be timestamped. For example, files imported with sass instead of css shouldn't be timestamped, because they're filesystem paths, not URLs.
 
 
 
