@@ -332,9 +332,6 @@ function expand_file_maps(config) {
 
 		// Replace the mapping's module list with the expanded one.
 		map.modules = exp_mods;
-
-		// Add the expanded modules to the running list of all modules in use.
-		all_mods = all_mods.concat(exp_mods);
 	});
 
 	// Issue a warning if any of the modules just added
@@ -389,6 +386,13 @@ function include_module(config, all_mods, mods, exp_mods, mod_path) {
 	if (all_mods.includes(mod_path)) {
 		return;
 	}
+
+	// Add the module to the running list of all modules included so far.
+	// It needs to be added here before calling `expand_requires` again,
+	// in order to stop infinite recursion.
+	// The order of all_mods doesn't matter.
+	// Only the order of exp_mods matters.
+	all_mods.push(mod_path);
 
 	// If the module has requirements, expand and include those first.
 	expand_requires(config, all_mods, mods, exp_mods, mod_path);
