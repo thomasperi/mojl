@@ -27,14 +27,11 @@ const config_defaults = {
 	// Required. (Don't uncomment)
 // 	"base": "./web/wp-content/themes/your-theme",
 
-	// The directory to find the modules in, relative to `base`.
-	// (The endpoint is also used as the basename for the build files.)
-	"modules_dir": "modules",
-
-	// The directory to build the monolithic files in, relative to `base`.
-	"build_dir": "build",
-	
-	// Describe how to handle files of each type.
+	/**
+	 * config.file_types
+	 *
+	 * Describe how to handle files of each type.
+	 */
 	"file_types": {
 		"css": {
 			"comment": "block",
@@ -45,20 +42,15 @@ const config_defaults = {
 		}
 	},
 	
-	// The order in which the modules should be loaded.
-	// `head` should contain the names of modules that should be loaded first,
-	// in the order in which they should be loaded.
-	// `tail` should contain the names of modules that should be loaded last,
-	// in the order in which they should be loaded.
-	// The rest of the modules are loaded alphabetically.
-	"module_order": {
-		"head": [],
-		"tail": []
-	},
-	
 	/**
-	 * An array of objects describing which modules get built into which
-	 * concatenated files.
+	 * config.dir_mappings
+	 * 
+	 * An array of objects describing the directories involved in the build.
+	 * Each object describes a set of concatenated files (a "build") and which
+	 * modules are used in building it.
+	 *
+	 * The order of the objects in the array should be the same order in which
+	 * you intend to load them on the site.
 	 *
 	 * Each object in the array has two keys:
 	 *
@@ -101,13 +93,10 @@ const config_defaults = {
 				"modules/*"
 			]
 		}
-	]
-
-	// to-do
-	// * write new tests for the new functionality
+	],
 
 	/*
-	to-do: (LATER) let modules require other modules
+	to-do: let modules require other modules
 		for example, let foo/bar/bar.mojl.json specify
 		that foo/zote needs to load too, which would cause it to be loaded
 		just before foo/bar unless it had already been loaded,
@@ -124,6 +113,31 @@ const config_defaults = {
 	
 	*/
 
+	// ### BEGIN LEGACY CONFIG ###
+	
+	// These three properties have been replaced by config.dir_mappings above.
+	// Their default values produce the same results as the default value of
+	// config.dir_mappings.
+
+	// The directory to find the modules in, relative to `base`.
+	// (The endpoint is also used as the basename for the build files.)
+	"modules_dir": "modules",
+
+	// The directory to build the monolithic files in, relative to `base`.
+	"build_dir": "build",
+	
+	// The order in which the modules should be loaded.
+	// `head` should contain the names of modules that should be loaded first,
+	// in the order in which they should be loaded.
+	// `tail` should contain the names of modules that should be loaded last,
+	// in the order in which they should be loaded.
+	// The rest of the modules are loaded alphabetically.
+	"module_order": {
+		"head": [],
+		"tail": []
+	}
+
+	// ### END LEGACY CONFIG ###
 };
 
 /**
