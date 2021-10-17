@@ -120,5 +120,15 @@ describe('Directory Comparison Tests', () => {
 
 	// Tests for 1.1 "require" feature
 	test('require-module');
+	test('require-wildcard');
+	test('require-from-wildcard');
+	test('require-nested');
+	test('require-recursive-stop');
+	test('require-recursive-stop-reversed');
+
+	// to-do: Write tests for various scenarios using require and wildcards:
+	// - wildcards expanding to modules that require others
+	// - require a few levels deep
+	// - require duplicates to test all_mods behavior
 
 });

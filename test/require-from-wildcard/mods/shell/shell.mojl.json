@@ -1,0 +1,6 @@
+{
+	"require": [
+		"../parts/nav",
+		"../parts/contact"
+	]
+}

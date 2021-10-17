@@ -1,0 +1,8 @@
+/**
+ * A dev loader for stylesheets that will be concatenated in production.
+ * (c) Thomas Peri <hello@thomasperi.net>
+ * MIT License
+ */
+@import "../mods/parts-foo/bar/bar.css?t=1634513195804";
+@import "../mods/parts-foo/zote/zote.css?t=1634513323744";
+@import "../mods/foo/foo.css?t=1634513745556";

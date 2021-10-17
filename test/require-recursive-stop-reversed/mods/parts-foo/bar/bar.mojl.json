@@ -1,5 +1,5 @@
 {
 	"require": [
-		"../nav"
+		"mods/foo"
 	]
 }
