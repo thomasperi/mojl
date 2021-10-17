@@ -316,7 +316,7 @@ function convert_legacy(config) {
 }
 
 /**
- * Expand module wild cards in file maps.
+ * Expand module wild cards and modules required modules encountered.
  * This function modifies the config object.
  */
 function expand_file_maps(config) {
@@ -324,31 +324,17 @@ function expand_file_maps(config) {
 
 	// Loop through the maps defined in config.
 	config.dir_mappings.forEach(map => {
-		let expanded_mods = []; // The expanded list of modules for this map.
+		// The expanded list of modules for this map.
+		let exp_mods = [];
 		
 		// Loop through the modules in this map.
-		map.modules.forEach(mod_path => {
-			// If it's a wildcard, find all the modules in that directory.
-			if (path.basename(mod_path) === '*') {
-				let wilds = find_mods_in_dir(config, path.dirname(mod_path));
-				wilds.forEach(wild => {
-					// Omit any of the modules the wildcard expanded into
-					// that are already explicitly referenced in map.modules.
-					if (!map.modules.includes(wild)) {
-						expanded_mods.push(wild);
-					}
-				});
-			} else {
-				// It's not a wildcard so just add it to the expanded list.
-				expanded_mods.push(mod_path);
-			}
-		});
+		expand_mod_array(config, all_mods, map.modules, exp_mods);
 
 		// Replace the mapping's module list with the expanded one.
-		map.modules = expanded_mods;
+		map.modules = exp_mods;
 
 		// Add the expanded modules to the running list of all modules in use.
-		all_mods = all_mods.concat(expanded_mods);
+		all_mods = all_mods.concat(exp_mods);
 	});
 
 	// Issue a warning if any of the modules just added
@@ -360,6 +346,88 @@ function expand_file_maps(config) {
 // 	if (dupes.length > 0) {
 // 		warn('The following modules are loaded more than once: ' + dupes.join(', '));
 // 	}
+}
+
+/**
+ * Expand a single list of modules,
+ * whether in a mapping or in a `require` array in a module's .mojl.json file.
+ */
+function expand_mod_array(config, all_mods, mods, exp_mods) {
+	// Loop through the modules in this map.
+	mods.forEach(mod_path => {
+		// If it's a wildcard, expand it.
+		if (path.basename(mod_path) === '*') {
+			expand_wilds(config, all_mods, mods, exp_mods, mod_path);
+		
+		// Otherwise, load the specified module along with any other
+		// modules it requires.
+		} else {
+			include_module(config, all_mods, mods, exp_mods, mod_path);
+		}
+	});
+}
+
+/**
+ * Expand wildcard entries.
+ */
+function expand_wilds(config, all_mods, mods, exp_mods, mod_path) {
+	let wilds = find_mods_in_dir(config, path.dirname(mod_path));
+	wilds.forEach(wild => {
+		// Omit any of the modules the wildcard expanded into
+		// that are already explicitly referenced in map.modules.
+		if (!mods.includes(wild)) {
+			include_module(config, all_mods, mods, exp_mods, wild);
+		}
+	});
+}
+
+/**
+ * Include a module and all its requirements.
+ */
+function include_module(config, all_mods, mods, exp_mods, mod_path) {
+	// Don't include this module if it's already been included.
+	if (all_mods.includes(mod_path)) {
+		return;
+	}
+
+	// If the module has requirements, expand and include those first.
+	expand_requires(config, all_mods, mods, exp_mods, mod_path);
+
+	// Add it to the expanded list.
+	exp_mods.push(mod_path);
+}
+
+/**
+ * Expand a module's requirements from its .mojl.json file.
+ */
+function expand_requires(config, all_mods, mods, exp_mods, mod_path) {
+	// If the module has a .mojl.json file...
+	let full_mod_path = path.join(config.base, mod_path),
+		endpoint = path.basename(full_mod_path),
+		json_path = path.join(full_mod_path, endpoint + '.mojl.json');
+	if (fs.existsSync(json_path)) {
+		// ...and if that json file has a `require` array...
+		let mojl_json = JSON.parse(fs.readFileSync(json_path, 'utf8')),
+			req_mods = mojl_json.require;
+		if (req_mods instanceof Array) {
+			// ...then expand that array.
+			
+			// But first, required modules's paths can be relative to the
+			// current module's own directory, using `./` or `../`.
+			// Make them relative to config.base instead.
+			req_mods = req_mods.map(req => {
+				let s = path.sep;
+				if (req.startsWith('.' + s) || req.startsWith('..' + s)) {
+					req = path.normalize(path.join(full_mod_path, req));
+					req = path.relative(config.base, req);
+				}
+				return req;
+			});
+			
+			// Okay, NOW expand the array.
+			expand_mod_array(config, all_mods, req_mods, exp_mods);
+		}
+	}
 }
 
 /**

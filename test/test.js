@@ -118,6 +118,7 @@ describe('Directory Comparison Tests', () => {
 	test('multiple-module-dirs');
 	test('multiple-mix-match');
 
-// 	test('rewrite-image-paths-nested', true);
+	// Tests for 1.1 "require" feature
+	test('require-module');
 
 });
