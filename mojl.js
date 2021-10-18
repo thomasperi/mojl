@@ -95,24 +95,6 @@ const config_defaults = {
 		}
 	],
 
-	/*
-	to-do: let modules require other modules
-		for example, let foo/bar/bar.mojl.json specify
-		that foo/zote needs to load too, which would cause it to be loaded
-		just before foo/bar unless it had already been loaded,
-		manually or by another module.
-		Problem: how to handle things if the dependency is loaded 
-			but in a separate monolith?
-			Maybe issue a warning if two separate monoliths both end up with
-			a shared dependency that isn't already satisfied in
-			yet a third monolith.
-		Maybe also don't call them dependencies,
-			since there won't be any version numbers and it refers to mojl
-			modules (just a pathname to whatever is there),
-			not node packages necessarily.
-	
-	*/
-
 	// ### BEGIN LEGACY CONFIG ###
 	
 	// These three properties have been replaced by config.dir_mappings above.
