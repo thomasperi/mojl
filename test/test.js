@@ -107,7 +107,7 @@ function test(name, write) {
 	Object.keys(actual).forEach(filename => {
 		// If the filename isn't expected, issue a test known to fail.
 		if (!expected.hasOwnProperty(filename)) {
-			it(name + ' should not have file: ' + filename, () => {
+			it(name + ': ' + filename + ' should not exist', () => {
 				expect(false);
 			});
 		}
@@ -116,7 +116,7 @@ function test(name, write) {
 	// Each file in expected should also be in actual.
 	Object.keys(expected).forEach(filename => {
 		let actual_has_file = actual.hasOwnProperty(filename);
-		it(name + ' should have file: ' + filename, () => {
+		it(name + ': ' + filename + ' should exist', () => {
 			expect(actual_has_file);
 		});
 
@@ -129,7 +129,7 @@ function test(name, write) {
 	
 	// The files they have in common should have the same contents.
 	common_files.forEach(filename => {
-		it(name + ' should have matching file contents: ' + filename, () => {
+		it(name + ': ' + filename + ' contents should match expected', () => {
 			expect(actual[filename]).to.eql(expected[filename]);
 		});
 	});
@@ -161,17 +161,17 @@ describe('Directory Comparison Tests', () => {
 // 		test('ordered-both-legacy');
 
 	// Tests for 1.1 mappings
-// 	test('multiple-mappings');
-// 	test('multiple-module-dirs');
-// 	test('multiple-mix-match');
+	test('multiple-mappings');
+	test('multiple-module-dirs');
+	test('multiple-mix-match');
 
 	// Tests for 1.1 "require" feature
-// 	test('require-module');
-// 	test('require-wildcard');
-// 	test('require-from-wildcard');
-// 	test('require-nested');
-// 	test('require-recursive-stop');
-// 	test('require-recursive-stop-reversed');
+	test('require-module');
+	test('require-wildcard');
+	test('require-from-wildcard');
+	test('require-nested');
+	test('require-recursive-stop');
+	test('require-recursive-stop-reversed');
 
 	// to-do: Write tests for various scenarios using require and wildcards:
 	// - wildcards expanding to modules that require others

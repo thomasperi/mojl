@@ -1,12 +1,8 @@
 {
-	"dir_mappings": [
-		{
-			"build": "build/modules",
-			"modules": [
-				"modules/*",
-				"modules/foot",
-				"modules/contact"
-			]
-		}
-	]
+	"module_order": {
+		"tail": [
+			"foot",
+			"contact"
+		]
+	}
 }

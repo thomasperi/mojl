@@ -67,4 +67,7 @@
 	document.write(html.join(''));
 	/* jshint evil: false */
 	
-}(["../modules/foot/foot.js?t=1590115642679","../modules/nav/nav.js?t=1590115484125"]));
+}([
+  "../modules/foot/foot.js?t=1590115642679",
+  "../modules/nav/nav.js?t=1590115484125"
+]));

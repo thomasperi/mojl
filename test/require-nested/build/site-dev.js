@@ -67,4 +67,11 @@
 	document.write(html.join(''));
 	/* jshint evil: false */
 	
-}(["../mods/parts-bar/sneg/sneg.js?t=1634513480996","../mods/parts-bar/thed/thed.js?t=1634513469131","../mods/parts-bar/sbor/sbor.js?t=1634513755195","../mods/parts-foo/bar/bar.js?t=1634513199986","../mods/parts-foo/zote/zote.js?t=1634513327098","../mods/foo/foo.js?t=1634513739700"]));
+}([
+  "../mods/parts-bar/sneg/sneg.js?t=1634671818698",
+  "../mods/parts-bar/thed/thed.js?t=1634671818700",
+  "../mods/parts-bar/sbor/sbor.js?t=1634671818697",
+  "../mods/parts-foo/bar/bar.js?t=1634671818702",
+  "../mods/parts-foo/zote/zote.js?t=1634671818705",
+  "../mods/foo/foo.js?t=1634671818693"
+]));

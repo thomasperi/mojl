@@ -67,4 +67,7 @@
 	document.write(html.join(''));
 	/* jshint evil: false */
 	
-}(["../mods/nav/nav.js?t=1634403717542","../mods/shell/shell.js?t=1634512259347"]));
+}([
+  "../mods/nav/nav.js?t=1634671818685",
+  "../mods/shell/shell.js?t=1634671818686"
+]));

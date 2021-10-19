@@ -67,4 +67,6 @@
 	document.write(html.join(''));
 	/* jshint evil: false */
 	
-}(["../modules/shell/shell.js?t=1590106038262"]));
+}([
+  "../modules/shell/shell.js?t=1590106038262"
+]));

@@ -1,4 +1,3 @@
 {
-  "/build/modules.css": "/***************************  modules/shell  **************************/\n\n.shell { background-image: url(../modules/shell/photos/photo.gif?t=1043302086000); }\n.shell p { background-image: url(../modules/shell/icons/icon.gif?t=1043302086000); }\n.shell li { background-image: url(../modules/shell/photos/photo.gif?t=1043302086000); }\n.shell a { background-image: url(../modules/shell/icons/icon.gif?t=1043302086000); }\n",
-  "/build/modules-dev.css": "/**\n * A dev loader for stylesheets that will be concatenated in production.\n * (c) Thomas Peri <hello@thomasperi.net>\n * MIT License\n */\n@import \"../modules/shell/shell.css?t=1590182864199\";"
+  "/build/modules.css": "/*******************************  shell  ******************************/\n\n.shell { background-image: url(../modules/shell/photos/photo.gif?t=1043302086000); }\n.shell p { background-image: url(../modules/shell/icons/icon.gif?t=1043302086000); }\n.shell li { background-image: url(../modules/shell/photos/photo.gif?t=1043302086000); }\n.shell a { background-image: url(../modules/shell/icons/icon.gif?t=1043302086000); }\n"
 }
