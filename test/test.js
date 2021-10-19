@@ -83,8 +83,26 @@ function test(name, write) {
 			fs.readFileSync(expected_path, utf8)
 		);
 	
+	// Convert all timestamps to a consistent string so that the tests
+	// don't rely on the actual timestamps of the files.
+	let actual_notimes = {},
+		expected_notimes = {};
+	Object.keys(actual).map(key => {
+		actual_notimes[key] = actual[key].replace(
+			/\?t=\d+/g,
+			'?t=TIMESTAMP_REMOVED_FOR_TESTING'
+		);
+	});
+	Object.keys(expected).map(key => {
+		expected_notimes[key] = expected[key].replace(
+			/\?t=\d+/g,
+			'?t=TIMESTAMP_REMOVED_FOR_TESTING'
+		);
+	});
+	
+	// Compare those converted lists.
 	it(name, () => {
-		expect(actual).to.eql(expected);
+		expect(actual_notimes).to.eql(expected_notimes);
 	});
 }
 
