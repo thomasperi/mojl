@@ -1,4 +1,4 @@
-Let modules include other modules via a `<module>.mojl.json` file.
+Mirroring feature: copy whole module directory structure except for concatenated files.
 
 Static site building feature with lodash templates.
 
@@ -13,7 +13,6 @@ PHP MOJL:
 
 Feature for reading a module’s output into a string instead of echoing.
 
-Feature to read and cache mojl.json for each module, to determine where to find its files.
 
 
 WP MOJL:
