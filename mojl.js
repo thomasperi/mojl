@@ -101,6 +101,12 @@ const config_defaults = {
 			]
 		}
 	],
+	
+	/**
+	 * An array of modules already loaded externally, not to be included in
+	 * any concatenated file.
+	 */
+	"external": [], // to-do: test this
 
 	// ### BEGIN LEGACY CONFIG ###
 	
@@ -233,6 +239,16 @@ function objEach(obj, fn) {
 }
 
 /**
+ * Wrap a configuration option in an array if it isn't already one.
+ */
+function array_wrap(config, option) {
+	if (!(config[option] instanceof Array)) {
+		config[option] = [config[option]];
+	}
+	return config[option];
+}
+
+/**
  * Write dev and production files based on the modules specified in config.
  */
 function build(config) {
@@ -254,7 +270,7 @@ function simulate_build(config) {
 	
 	// Work with a copy of the config object, in case it's used outside.
 	config = _.cloneDeep(config);
-
+	
 	// If dir_mappings wasn't supplied but any or all legacy parts were,
 	// then plan on generating the dir_mappings array from the legacy parts.
 	let do_convert_legacy = !config.dir_mappings && (
@@ -275,6 +291,10 @@ function simulate_build(config) {
 		convert_legacy(config);
 	}
 	
+	// Ensure array configs are arrays.
+	array_wrap(config, 'dir_mappings');
+	array_wrap(config, 'external');
+
 	// Expand wildcards in the module lists.
 	expand_file_maps(config);
 	
@@ -315,7 +335,9 @@ function convert_legacy(config) {
  * This function modifies the config object.
  */
 function expand_file_maps(config) {
-	let all_mods = []; // An array to tally all the mods loaded so far.
+	// An array to tally all the mods loaded so far.
+	// Start with a copy of the externally-loaded modules.
+	let all_mods = _.clone(config.external); 
 
 	// Loop through the maps defined in config.
 	config.dir_mappings.forEach(map => {
@@ -405,15 +427,16 @@ function expand_requires(config, all_mods, mods, exp_mods, mod_path) {
 		endpoint = path.basename(full_mod_path),
 		json_path = path.join(full_mod_path, endpoint + '.mojl.json');
 	if (fs.existsSync(json_path)) {
-		// ...and if that json file has a `require` array...
-		let mojl_json = JSON.parse(fs.readFileSync(json_path, 'utf8')),
-			req_mods = mojl_json.require;
-		if (req_mods instanceof Array) {
-			// ...then expand that array.
+		// ...and if that json file has a `require` value...
+		let mojl_json = JSON.parse(fs.readFileSync(json_path, 'utf8'));
+		if (mojl_json.require) {
+			// ...then make sure it's an array...
+			array_wrap(mojl_json, 'require');
 			
-			// But first, required modules's paths can be relative to the
-			// current module's own directory, using `./` or `../`.
-			// Make them relative to config.x.modules_base instead.
+			// ...rewrite any `./` or `../` paths to make them relative to
+			// config.x.modules_base instead of to the current module's own
+			// directory...
+			let req_mods = mojl_json.require;
 			req_mods = req_mods.map(req => {
 				let s = path.sep;
 				if (req.startsWith('.' + s) || req.startsWith('..' + s)) {
@@ -423,7 +446,7 @@ function expand_requires(config, all_mods, mods, exp_mods, mod_path) {
 				return req;
 			});
 			
-			// Okay, NOW expand the array.
+			// ...and expand the array into real paths.
 			expand_mod_array(config, all_mods, req_mods, exp_mods);
 		}
 	}

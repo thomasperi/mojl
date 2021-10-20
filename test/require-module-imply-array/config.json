@@ -1,0 +1,11 @@
+{
+	"modules_dir": ".",
+	"dir_mappings": [
+		{
+			"build": "build/site",
+			"modules": [
+				"mods/shell"
+			]
+		}
+	]
+}

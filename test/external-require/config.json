@@ -1,0 +1,14 @@
+{
+	"external": [
+		"mod-bar/contact"
+	],
+	"modules_dir": ".",
+	"dir_mappings": [
+		{
+			"build": "build/modules",
+			"modules": [
+				"mod-foo/*"
+			]
+		}
+	]
+}

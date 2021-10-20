@@ -137,6 +137,7 @@ function test(name, write) {
 
 
 describe('Directory Comparison Tests', () => {
+	// 1.0
 
 	// Tests for 1.0 functionality
 	test('single-module');
@@ -152,6 +153,8 @@ describe('Directory Comparison Tests', () => {
 	test('ordered-head');
 	test('ordered-tail');
 	test('ordered-both');
+	
+	// 1.1
 
 	// Those 1.0 tests modified for 1.1
 	test('custom-directories-mappings');
@@ -159,6 +162,10 @@ describe('Directory Comparison Tests', () => {
 	test('ordered-head-mappings');
 	test('ordered-tail-mappings');
 	test('ordered-both-mappings');
+	
+	// Same test but with mappings assigned to a single object
+	// instead of an array, to test the auto-wrapping inside an array.
+	test('ordered-both-mappings-imply-array');
 
 	// Tests for 1.1 mappings
 	test('multiple-mappings');
@@ -167,15 +174,17 @@ describe('Directory Comparison Tests', () => {
 
 	// Tests for 1.1 "require" feature
 	test('require-module');
+	test('require-module-imply-array'); // See other "-imply-array" tests
 	test('require-wildcard');
 	test('require-from-wildcard');
 	test('require-nested');
 	test('require-recursive-stop');
 	test('require-recursive-stop-reversed');
 
-	// to-do: Write tests for various scenarios using require and wildcards:
-	// - wildcards expanding to modules that require others
-	// - require a few levels deep
-	// - require duplicates to test all_mods behavior
-
+	// Tests for 1.1 config.external
+	test('external');
+	test('external-require');
+	test('external-require-imply-array'); // See other "-imply-array" tests
+	
+	
 });
