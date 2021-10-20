@@ -1,0 +1,11 @@
+{
+	"modules_dir": "components",
+	"dir_mappings": [
+		{
+			"build": "assembled/components",
+			"modules": [
+				"*"
+			]
+		}
+	]
+}

@@ -1,0 +1,14 @@
+{
+	"dir_mappings": [
+		{
+			"build": "build/modules",
+			"modules": [
+				"shell",
+				"nav",
+				"*",
+				"foot",
+				"contact"
+			]
+		}
+	]
+}

@@ -146,19 +146,19 @@ describe('Directory Comparison Tests', () => {
 	test('custom-file-types');
 	test('sub-extensions');
 	
-	// Some more 1.0 tests modified to work the 1.1 way,
-	// with the old way preserved in the  "-legacy" files.
-	// to-do: eventually issue deprecation warnings and test for them
+	// Some more 1.0 tests that are duplicated below with the 1.1 way.
 	test('custom-directories');
-// 		test('custom-directories-legacy');
 	test('custom-directories-nested');
-// 		test('custom-directories-nested-legacy');
 	test('ordered-head');
-// 		test('ordered-head-legacy');
 	test('ordered-tail');
-// 		test('ordered-tail-legacy');
 	test('ordered-both');
-// 		test('ordered-both-legacy');
+
+	// Those 1.0 tests modified for 1.1
+	test('custom-directories-mappings');
+	test('custom-directories-nested-mappings');
+	test('ordered-head-mappings');
+	test('ordered-tail-mappings');
+	test('ordered-both-mappings');
 
 	// Tests for 1.1 mappings
 	test('multiple-mappings');
