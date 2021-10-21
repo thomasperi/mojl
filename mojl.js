@@ -14,18 +14,18 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const glob = require('glob');
 const rewriteCssUrls = require('rewrite-css-urls');
-
-// Stashed warnings
-let warnings = [];
 
 /**
  * Default configuration options
  */
 const config_defaults = {
-	// The base directory for everything mojl does.
-	// Required. (Don't uncomment)
-// 	"base": "./web/wp-content/themes/your-theme",
+	/**
+	 * The absolute path to the base directory for everything mojl does.
+	 * Required.
+	 */
+	"base": "",
 
 	/**
 	 * config.file_types
@@ -74,7 +74,7 @@ const config_defaults = {
 	 * > "modules" (array of strings)
 	 *
 	 *   Each string in this array refers to the path to a module,
-	 *   or a wildcard to load all modules in a certain directory
+	 *   or a wildcard to load all modules in a certain directory (or any glob)
 	 *   in alphabetical order.
 	 *
 	 *   For example:
@@ -106,7 +106,7 @@ const config_defaults = {
 	 * An array of modules already loaded externally, not to be included in
 	 * any concatenated file.
 	 */
-	"external": [], // to-do: test this
+	"external": [],
 
 	// ### BEGIN LEGACY CONFIG ###
 	
@@ -320,10 +320,6 @@ function convert_legacy(config) {
 		modules: head.concat(['*']).concat(tail)
 	}];
 	
-	// Issue a warning about legacy parts being deprecated.
-	// to-do: test this
-// 	warn('The `build_dir`, `modules_dir`, and `module_order` configuration options are deprecated. Use `dir_mappings` instead.');
-
 	// Delete the legacy properties to ensure that no other part of the code
 	// is relying on them instead of using config.dir_mappings.
 	delete config.build_dir;
@@ -351,15 +347,6 @@ function expand_file_maps(config) {
 		map.modules = exp_mods;
 	});
 
-	// Issue a warning if any of the modules just added
-	// are already in another file mapping.
-	// to-do: test this
-// 	let dupes = all_mods.filter(
-// 		(mod, index) => all_mods.indexOf(mod) !== index
-// 	);
-// 	if (dupes.length > 0) {
-// 		warn('The following modules are loaded more than once: ' + dupes.join(', '));
-// 	}
 }
 
 /**
@@ -369,29 +356,29 @@ function expand_file_maps(config) {
 function expand_mod_array(config, all_mods, mods, exp_mods) {
 	// Loop through the modules in this map.
 	mods.forEach(mod_path => {
-		// If it's a wildcard, expand it.
-		if (path.basename(mod_path) === '*') {
-			expand_wilds(config, all_mods, mods, exp_mods, mod_path);
+	
+		// Expand any glob characters
+		let globbed_mods = glob.sync(mod_path, {
+			cwd: config.x.modules_base
+		});
 		
-		// Otherwise, load the specified module along with any other
-		// modules it requires.
-		} else {
-			include_module(config, all_mods, mods, exp_mods, mod_path);
-		}
-	});
-}
+		// Check each result in the glob for inclusion in the expanded array.
+		globbed_mods.forEach(globbed_mod => {
+			// Two conditions under which it should be included:
+			if (
+				// If it's the current item in the array we're expanding,
+				// which means the item was actually just a regular path and
+				// not really a glob after all...
+				mod_path === globbed_mod ||
+				
+				// Or -- if it was part of a real glob result -- include it if
+				// it's not already somewhere else in the list we're expanding.
+				!mods.includes(globbed_mod)
+			) {
+				include_module(config, all_mods, mods, exp_mods, globbed_mod);
+			}
+		});
 
-/**
- * Expand wildcard entries.
- */
-function expand_wilds(config, all_mods, mods, exp_mods, mod_path) {
-	let wilds = find_mods_in_dir(config, path.dirname(mod_path));
-	wilds.forEach(wild => {
-		// Omit any of the modules the wildcard expanded into
-		// that are already explicitly referenced in map.modules.
-		if (!mods.includes(wild)) {
-			include_module(config, all_mods, mods, exp_mods, wild);
-		}
 	});
 }
 
@@ -450,32 +437,6 @@ function expand_requires(config, all_mods, mods, exp_mods, mod_path) {
 			expand_mod_array(config, all_mods, req_mods, exp_mods);
 		}
 	}
-}
-
-/**
- * Find all the modules at the root of the given directory.
- * Returns an array of paths.
- */
-function find_mods_in_dir(config, parent_dir) {
-	let mods = [],
-		modules_dir = path.join(config.x.modules_base, parent_dir);
-
-	// Map all the modules.	
-	if (fs.lstatSync(modules_dir).isDirectory()) {
-		// Read the modules directory.
-		(fs.readdirSync(modules_dir, {withFileTypes: true})
-
-			// Only look at directories.
-			.filter(ent => ent.isDirectory())
-
-			// Add items to the mods array.
-			.forEach(dir => {
-				mods.push(path.join(parent_dir, dir.name));
-			})
-		);
-	}
-
-	return mods;
 }
 
 /**
@@ -728,26 +689,6 @@ function plan_files(cat_dests, config) {
 }
 
 /**
- * Issue and/or stash a warning.
- */
-// function warn(msg) {
-// 	msg = 'WARNING: ' + msg;
-// 	warnings.push(msg);
-// 	if (!mojl.suppress_warnings) {
-// 		return console.warn(msg);
-// 	}
-// }
-
-/**
- * Get stashed warnings.
- */
-function get_warnings() {
-	// to-do: test this.
-	// Turn off mojl.warn for tests, then read the stashed warnings.
-	return _.clone(warnings);
-}
-
-/**
  * Stuff to make public.
  */
 const mojl = {
@@ -755,7 +696,6 @@ const mojl = {
 	debug: false,
 	build,
 	simulate_build,
-	get_warnings,
 	commenters,
 	rewriters,
 };
