@@ -2,7 +2,7 @@
 	"modules_dir": ".",
 	"dir_mappings": [
 		{
-			"build": "build/site",
+			"build": "site",
 			"modules": [
 				"mods/shell"
 			]

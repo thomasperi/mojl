@@ -1,7 +1,7 @@
 {
 	"dir_mappings": [
 		{
-			"build": "build/modules",
+			"build": "modules",
 			"modules": [
 				"shell",
 				"nav",

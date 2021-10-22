@@ -43,10 +43,15 @@ const config_defaults = {
 	},
 	
 	/**
-	 * The directory to find the modules in, relative to `base`.
+	 * The directory to find the modules in, relative to `config.base`.
 	 */
 	"modules_dir": "modules",
 
+	/**
+	 * The directory to build into, relative to `config.base`.
+	 */
+	"build_dir": "build",
+	
 	/**
 	 * config.dir_mappings
 	 * 
@@ -61,15 +66,16 @@ const config_defaults = {
 	 *
 	 * > "build" (string)
 	 *
-	 *   The path to where the concatenated files will be saved.
+	 *   The path to where the concatenated files will be saved,
+	 *   relative to `config.build_dir`.
 	 *   The endpoint of this path is not a directory, but the prefix
 	 *   of each concatenated file.
 	 *
-	 *   For example, "build": "build/modules" might create files named:
-	 *     {config.base}/build/modules-dev.css
-	 *     {config.base}/build/modules-dev.js
-	 *     {config.base}/build/modules.css
-	 *     {config.base}/build/modules.js
+	 *   For example, "build": "foo/modules" might create files named:
+	 *     {config.base}/{config.build_dir}/foo/modules-dev.css
+	 *     {config.base}/{config.build_dir}/foo/modules-dev.js
+	 *     {config.base}/{config.build_dir}/foo/modules.css
+	 *     {config.base}/{config.build_dir}/foo/modules.js
 	 *
 	 * > "modules" (array of strings)
 	 *
@@ -95,7 +101,7 @@ const config_defaults = {
 	 */
 	"dir_mappings": [
 		{
-			"build": "build/modules",
+			"build": "modules",
 			"modules": [
 				"*"
 			]
@@ -110,13 +116,10 @@ const config_defaults = {
 
 	// ### BEGIN LEGACY CONFIG ###
 	
-	// These two properties have been replaced by config.dir_mappings above.
-	// Their default values produce the same results as the default value of
+	// This property has been replaced by config.dir_mappings above.
+	// Its default value produces the same result as the default value of
 	// config.dir_mappings.
 
-	// The directory to build the monolithic files in, relative to `base`.
-	"build_dir": "build",
-	
 	// The order in which the modules should be loaded.
 	// `head` should contain the names of modules that should be loaded first,
 	// in the order in which they should be loaded.
@@ -274,7 +277,8 @@ function simulate_build(config) {
 	// If dir_mappings wasn't supplied but any or all legacy parts were,
 	// then plan on generating the dir_mappings array from the legacy parts.
 	let do_convert_legacy = !config.dir_mappings && (
-			config.build_dir || config.modules_dir || config.module_order
+			// build_dir isn't needed for creating a mappings array.
+			config.modules_dir || config.module_order
 		);
 
 	// Superimpose the supplied config file over the defaults.
@@ -283,7 +287,8 @@ function simulate_build(config) {
 	// Extend the copy of the config object with derived properties
 	// that won't change.
 	config.x = {
-		"modules_base": path.join(config.base, config.modules_dir)
+		"modules_base": path.join(config.base, config.modules_dir),
+		"build_base": path.join(config.base, config.build_dir),
 	};
 
 	// Generate the build map if that was the verdict above.
@@ -316,13 +321,12 @@ function convert_legacy(config) {
 		head = order.head || [],
 		tail = order.tail || [];
 	config.dir_mappings = [{
-		build: path.join(config.build_dir, path.basename(config.modules_dir)),
+		build: path.basename(config.modules_dir),
 		modules: head.concat(['*']).concat(tail)
 	}];
 	
 	// Delete the legacy properties to ensure that no other part of the code
 	// is relying on them instead of using config.dir_mappings.
-	delete config.build_dir;
 	delete config.module_order;
 }
 
@@ -581,7 +585,7 @@ function build_comment(config, mod_path, real_ext) {
  */
 function rewrite_urls(config, base, filename, real_ext, build_path) {
 	// Read the source file...
-	let dest_dirname = path.join(config.base, path.dirname(build_path)),
+	let dest_dirname = path.join(config.x.build_base, path.dirname(build_path)),
 		file_path = path.join(base, filename),
 		content = fs.readFileSync(file_path, {encoding: 'utf8'}),
 		rewriter = config.file_types[real_ext].rewrite;
@@ -640,7 +644,7 @@ function plan_files(cat_dests, config) {
 	
 		objEach(cat, (ext, monolith) => {
 			let filename = path.join(
-					config.base, dest_key + '.' + ext
+					config.x.build_base, dest_key + '.' + ext
 				),
 				contents = monolith.contents.join('\n\n'),
 				real_ext = monolith.real_ext,
@@ -654,7 +658,7 @@ function plan_files(cat_dests, config) {
 			if (tpl_dev_exists) {
 				let tpl_dev = fs.readFileSync(tpl_dev_path, {encoding: 'utf8'}),
 					filename_dev = path.join(
-						config.base, dest_key + '-dev.' + ext
+						config.x.build_base, dest_key + '-dev.' + ext
 					),
 					dev_urls = monolith.manifest.map(name => {
 						let asset = path.join(

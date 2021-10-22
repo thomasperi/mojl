@@ -5,7 +5,7 @@
 	"modules_dir": ".",
 	"dir_mappings": [
 		{
-			"build": "build/modules",
+			"build": "modules",
 			"modules": [
 				"mod-foo/*"
 			]

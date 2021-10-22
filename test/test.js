@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 
 const chai = require('chai');
-// const assert = chai.assert;
+const assert = chai.assert;
 const expect = chai.expect;
 // const should = chai.should();
 
@@ -108,7 +108,7 @@ function test(name, write) {
 		// If the filename isn't expected, issue a test known to fail.
 		if (!expected.hasOwnProperty(filename)) {
 			it(name + ': ' + filename + ' should not exist', () => {
-				expect(false);
+				assert(false);
 			});
 		}
 	});
@@ -117,7 +117,7 @@ function test(name, write) {
 	Object.keys(expected).forEach(filename => {
 		let actual_has_file = actual.hasOwnProperty(filename);
 		it(name + ': ' + filename + ' should exist', () => {
-			expect(actual_has_file);
+			assert(actual_has_file);
 		});
 
 		// Stash the fact that this file is in both expected and actual,
