@@ -66,6 +66,12 @@ const config_defaults = {
 	"mirror_dir": false,
 	
 	/**
+	 * A glob describing which files in each module to mirror.
+	 * Relative to each module's main directory individually.
+	 */
+	"mirror_glob": "**/*.*",
+	
+	/**
 	 * config.dir_mappings
 	 * 
 	 * An array of objects describing the directories involved in the build.
@@ -492,10 +498,13 @@ function plan_mirror(config) {
 	if (config.mirror_dir) {
 		config.dir_mappings.forEach(mapping => {
 			mapping.modules.forEach(module_dir => {
-				// to-do: let user specify the glob
-				let files = glob.sync(path.join(module_dir, '**/*.*'), {
-					cwd: config.x.modules_base
-				});
+				let files = glob.sync(
+					path.join(
+						module_dir, config.mirror_glob
+					), {
+						cwd: config.x.modules_base
+					}
+				);
 				files.forEach(file => {
 					mirror[
 						path.join(config.x.build_base, config.mirror_dir, file)
