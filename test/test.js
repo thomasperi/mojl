@@ -38,12 +38,20 @@ function warn(name) {
 }
 
 function test(name, write) {
+	
+// 	console.log('=== ' + name + ' ===');
 
 	function relativize(plan) {
 		Object.keys(plan).forEach(abspath => {
 			let content = plan[abspath],
 				relpath = abspath.substr(base.length);
 			delete plan[abspath];
+			if (
+				typeof content === 'object' &&
+				content.hasOwnProperty('source')
+			) {
+				content.source = content.source.substr(base.length);
+			}
 			plan[relpath] = content;
 		});
 		return plan;
@@ -86,22 +94,28 @@ function test(name, write) {
 	// Convert all timestamps to a consistent string so that the tests
 	// don't rely on the actual timestamps of the files.
 	Object.keys(actual).map(key => {
-		actual[key] = actual[key].replace(
-			/\?t=\d+/g,
-			'?t=TIMESTAMP_REMOVED_FOR_TESTING'
-		);
+		if (typeof actual[key] === 'string') {
+			actual[key] = actual[key].replace(
+				/\?t=\d+/g,
+				'?t=TIMESTAMP_REMOVED_FOR_TESTING'
+			);
+		}
 	});
 	Object.keys(expected).map(key => {
-		expected[key] = expected[key].replace(
-			/\?t=\d+/g,
-			'?t=TIMESTAMP_REMOVED_FOR_TESTING'
-		);
+		if (typeof expected[key] === 'string') {
+			expected[key] = expected[key].replace(
+				/\?t=\d+/g,
+				'?t=TIMESTAMP_REMOVED_FOR_TESTING'
+			);
+		}
 	});
 	
 	// Compare results
 	
 	// An array of filenames in common between expected and actual results.
 	let common_files = [];
+	
+// 	console.log("actual:", JSON.stringify(actual, null, 2));
 	
 	// Each file in actual should also be in expected.
 	Object.keys(actual).forEach(filename => {
@@ -186,5 +200,7 @@ describe('Directory Comparison Tests', () => {
 	test('external-require');
 	test('external-require-imply-array'); // See other "-imply-array" tests
 	
-	
+	test('multiple-asset-dirs-mirror-true');
+	test('multiple-asset-dirs-mirror-name');
+	test('multiple-asset-dirs-mirror-dot');
 });

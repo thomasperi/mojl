@@ -53,6 +53,19 @@ const config_defaults = {
 	"build_dir": "build",
 	
 	/**
+	 * String or boolean.
+	 * 
+	 * If a string, it is used as a directory name relative to `build_dir`,
+	 * into which the modules will be copied. Only the modules included in the
+	 * build will be copied, and the directory structure will be preserved.
+	 *
+	 * If `true`, the value of `config.modules_dir` will be used.
+	 *`
+	 * If `false`, no mirroring will occur.
+	 */
+	"mirror_dir": false,
+	
+	/**
 	 * config.dir_mappings
 	 * 
 	 * An array of objects describing the directories involved in the build.
@@ -113,6 +126,7 @@ const config_defaults = {
 	 * any concatenated file.
 	 */
 	"external": [],
+
 
 	// ### BEGIN LEGACY CONFIG ###
 	
@@ -257,7 +271,17 @@ function array_wrap(config, option) {
 function build(config) {
 	let plan = simulate_build(config);
 	objEach(plan, (filename, contents) => {
-		fs.writeFileSync(filename, contents);
+		switch (typeof contents) {
+			case 'string':
+				fs.writeFileSync(filename, contents);
+			break;
+			case 'object':
+				if (contents && contents.hasOwnProperty('source')) {
+					fs.mkdirSync(path.dirname(filename), { recursive: true });
+					fs.copyFileSync(contents.source, filename);
+				}
+			break;
+		}
 	});
 	return plan;
 }
@@ -283,6 +307,11 @@ function simulate_build(config) {
 
 	// Superimpose the supplied config file over the defaults.
 	_.defaultsDeep(config, config_defaults);
+	
+	// Mirroring: true -> modules_dir
+	if (config.mirror_dir === true) {
+		config.mirror_dir = config.modules_dir;
+	}
 
 	// Extend the copy of the config object with derived properties
 	// that won't change.
@@ -302,11 +331,23 @@ function simulate_build(config) {
 
 	// Expand wildcards in the module lists.
 	expand_file_maps(config);
-	
+// 	console.log('----config----', JSON.stringify(config, null, 2));
+
+	// Build a list of files to mirror.
+	let mirror = plan_mirror(config);
+// 	if (Object.keys(mirror).length > 0) {
+// 		console.log('----mirror----', JSON.stringify(mirror, null, 2));
+// 	}
+
 	// Build a plan for the files to build.
 	let mods = build_module_objects(config);
-	let cat = concatenate(mods, config);
-	let plan = plan_files(cat, config);
+// 	console.log('----mods----', JSON.stringify(mods, null, 2));
+
+	let cat = concatenate(config, mods);
+// 	console.log('----cat----', JSON.stringify(cat, null, 2));
+
+	let plan = plan_files(config, cat, mirror);
+// 	console.log('----plan----', JSON.stringify(plan, null, 2));
 	
 	return plan;
 }
@@ -444,6 +485,31 @@ function expand_requires(config, all_mods, mods, exp_mods, mod_path) {
 }
 
 /**
+ * Plan which files to mirror and where.
+ */
+function plan_mirror(config) {
+	let mirror = {};
+	if (config.mirror_dir) {
+		config.dir_mappings.forEach(mapping => {
+			mapping.modules.forEach(module_dir => {
+				// to-do: let user specify the glob
+				let files = glob.sync(path.join(module_dir, '**/*.*'), {
+					cwd: config.x.modules_base
+				});
+				files.forEach(file => {
+					mirror[
+						path.join(config.x.build_base, config.mirror_dir, file)
+					] = {
+						"source": path.join(config.x.modules_base, file)
+					};
+				});
+			});
+		});
+	}
+	return mirror;
+}
+
+/**
  * Convert the module paths to objects describing the modules.
  * Returns an object like this:
  * {
@@ -510,16 +576,14 @@ function find_pieces(thismod_dir, dirname) {
 /**
  * Concatenate the module files into the build files.
  */
-function concatenate(monoliths, config) {
+function concatenate(config, monoliths) {
 	let destinations = {};
-	objEach(monoliths, (build_path, mods) => {
+	objEach(monoliths, (catfile_prefix, mods) => {
 		let cats = {};
 
 		// For each module, add on to the concatenated object,
 		// which will get a property named for each file extension 
 		objEach(mods, (mod_path, files) => {
-			let base = path.join(config.x.modules_base, mod_path);
-	
 			// For each type of file in the module...
 			objEach(files, (ext, filename) => {
 				let real_ext = ext.split('.').pop();
@@ -546,15 +610,15 @@ function concatenate(monoliths, config) {
 					
 					// Rewrite any rewritable URLs in this file's content,
 					// and add the resulting content to this concatenated file.
-					cat.contents.push(
-						rewrite_urls(config, base, filename, real_ext, build_path)
-					);
+					cat.contents.push(rewrite_urls(
+						config, mod_path, filename, real_ext, catfile_prefix
+					));
 				}
 			});
 		});
 
 		// Add the concatenated files for this build group to the plan.
-		destinations[build_path] = cats;
+		destinations[catfile_prefix] = cats;
 	});
 
 	return destinations;
@@ -583,14 +647,35 @@ function build_comment(config, mod_path, real_ext) {
  * Rewrite URLs to work from the directory the concatenated file will be in
  * instead of the directory the original file is in.
  */
-function rewrite_urls(config, base, filename, real_ext, build_path) {
+function rewrite_urls(config, mod_path, filename, real_ext, catfile_prefix) {
+// 	console.log('rewriting urls in ' + filename);
+//  	console.log('config: ' + JSON.stringify(config, null, 2));
+	
+	// The parent directory of the file that will contain
+	// the concatenated content.
+	let catfile_parent = path.join(
+			config.x.build_base,
+			path.dirname(catfile_prefix)
+		);
+	
+	// The parent directory of the file from which the content is being read.
+	let orig_parent = path.join(config.x.modules_base, mod_path);
+
+	// The file from which the content is being read.
+	let orig = path.join(orig_parent, filename);
+
+	// The directory to which the rewritten URLs will be considered relative
+	// prior to rewriting; either the parent of the original, or the parent of
+	// the mirror if it exists.
+	let rewrite_parent = config.mirror_dir ?
+			path.join(config.x.build_base, config.mirror_dir, mod_path) :
+			orig_parent;
+
 	// Read the source file...
-	let dest_dirname = path.join(config.x.build_base, path.dirname(build_path)),
-		file_path = path.join(base, filename),
-		content = fs.readFileSync(file_path, {encoding: 'utf8'}),
-		rewriter = config.file_types[real_ext].rewrite;
+	let content = fs.readFileSync(orig, {encoding: 'utf8'});
 
 	// Rewrite urls
+	let rewriter = config.file_types[real_ext].rewrite;
 	if (rewriter) {
 		if (typeof rewriter === 'string') {
 			rewriter = rewriters[rewriter];
@@ -598,24 +683,26 @@ function rewrite_urls(config, base, filename, real_ext, build_path) {
 		if (typeof rewriter !== 'function') {
 			throw 'invalid rewriter';
 		}
+		content = rewriter(content, url => {
+			// Don't rewrite absolute urls
+			if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
+				return url;
+			}
+			
+			// The timestamp of the original file -- not the mirror --
+			// whose URL is being rewritten.
+			let stamp = timestamp(path.join(orig_parent, url));
 
-		let src_dir = path.dirname(file_path),
-			rewrite_fn = function (url) {
-				// Don't rewrite absolute urls
-				if (/^(\/|[-+.a-z]+:)/i.test(url.trim())) {
-					return url;
-				}
+			// The path of the ultimate location of the file -- the mirror
+			// if it exists, otherwise the original.
+			let asset_path = path.join(rewrite_parent, url);
+			
+			// Return a timestamped relative path from the destination
+			// directory to the url's location in the source directory.
+			let rewritten = path.relative(catfile_parent, asset_path) + stamp;
 
-				// Where is this file really?
-				let asset_path = path.join(src_dir, url);
-
-				// Return a timestamped relative path from the destination
-				// directory to the url's location in the source directory.
-				return path.relative(dest_dirname, asset_path) +
-					timestamp(asset_path);
-			};
-
-		content = rewriter(content, rewrite_fn);
+			return rewritten;
+		});
 	}
 
 	// Push the content onto the contents array
@@ -637,8 +724,8 @@ function timestamp(path) {
  * Build a list of files that will hold the concatenated contents
  * from the files in all the modules.
  */
-function plan_files(cat_dests, config) {
-	let plan = {};
+function plan_files(config, cat_dests, mirror) {
+	let plan = _.cloneDeep(mirror);
 	
 	objEach(cat_dests, (dest_key, cat) => {
 	
@@ -661,15 +748,21 @@ function plan_files(cat_dests, config) {
 						config.x.build_base, dest_key + '-dev.' + ext
 					),
 					dev_urls = monolith.manifest.map(name => {
-						let asset = path.join(
-							config.x.modules_base,
-							name,
-							path.basename(name) + '.' + ext
-						);
+						let asset_orig = path.join(
+								config.x.modules_base,
+								name,
+								path.basename(name) + '.' + ext
+							),
+							asset_mirror = config.mirror_dir ? path.join(
+								config.x.build_base,
+								config.mirror_dir,
+								name,
+								path.basename(name) + '.' + ext
+							) : null;
 						return path.relative(
 							path.dirname(filename_dev),
-							asset
-						) + timestamp(asset);
+							asset_mirror || asset_orig
+						) + timestamp(asset_orig);
 					}),
 				
 					// Choose template settings based on real extension.
