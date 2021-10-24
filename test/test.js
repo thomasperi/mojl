@@ -200,7 +200,10 @@ describe('Directory Comparison Tests', () => {
 	test('external-require');
 	test('external-require-imply-array'); // See other "-imply-array" tests
 	
+	// Tests for 1.1 config.mirror_dir
 	test('multiple-asset-dirs-mirror-true');
 	test('multiple-asset-dirs-mirror-name');
 	test('multiple-asset-dirs-mirror-dot');
+	test('dont-mirror-unused-modules');
+
 });

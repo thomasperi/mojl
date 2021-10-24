@@ -65,11 +65,15 @@ const config_defaults = {
 	 */
 	"mirror_dir": false,
 	
-	/**
-	 * A glob describing which files in each module to mirror.
-	 * Relative to each module's main directory individually.
-	 */
-	"mirror_glob": "**/*.*",
+//  To-do: Determine if there's a good way to make this work intuitively.
+//  Problem: Files that aren't mirrored still might be referenced from other
+//  files. Probably better to let users sort out deleting or restricting any
+//  files they don't want mirrored.
+// 	/**
+// 	 * A glob describing which files in each module to mirror.
+// 	 * Relative to each module's main directory individually.
+// 	 */
+// 	"mirror_glob": "**/*.*", // All files with dot extensions, recursively.
 	
 	/**
 	 * config.dir_mappings
@@ -156,7 +160,8 @@ const config_defaults = {
 
 	// An object for tacking on calculated properties that won't change.
 	// "x": {
-	//   "modules_base": {config.base}/{config.modules_dir}
+	//   "modules_base": {config.base}/{config.modules_dir},
+	//   "build_base": {config.base}/{config.build_dir},
 	// }
 };
 
@@ -498,13 +503,9 @@ function plan_mirror(config) {
 	if (config.mirror_dir) {
 		config.dir_mappings.forEach(mapping => {
 			mapping.modules.forEach(module_dir => {
-				let files = glob.sync(
-					path.join(
-						module_dir, config.mirror_glob
-					), {
-						cwd: config.x.modules_base
-					}
-				);
+				let files = glob.sync(path.join(module_dir, '**/*.*'), {
+					cwd: config.x.modules_base
+				});
 				files.forEach(file => {
 					mirror[
 						path.join(config.x.build_base, config.mirror_dir, file)

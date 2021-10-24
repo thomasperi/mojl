@@ -1,0 +1,12 @@
+{
+	"mirror_dir": true,
+	"dir_mappings": [
+		{
+			"build": "site",
+			"modules": [
+				"shell",
+				"nav"
+			]
+		}
+	]
+}
