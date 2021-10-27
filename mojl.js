@@ -176,7 +176,7 @@ const config_defaults = {
 /**
  * Warnings that could get issued.
  */
-const all_warnings = {
+const warnings = {
 	"MODULE_ORDER_DEPRECATED": "config.module_order is deprecated and may not be available in future versions. Use config.dir_mappings instead."
 };
 
@@ -831,7 +831,6 @@ const mojl = {
 	simulate_build,
 	commenters,
 	rewriters,
-	all_warnings,
 };
 
 /**
@@ -839,7 +838,7 @@ const mojl = {
  */
 function warn(config, key) {
 	// Put the warning's key in brackets so the tests can parse it out.
-	var msg = 'WARNING: [' + key + '] ' + all_warnings[key];
+	var msg = 'WARNING: [' + key + '] ' + warnings[key];
 
 	var w = config.warn;
 	if (w === true) {
