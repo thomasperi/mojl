@@ -58,9 +58,18 @@ function test(name, write) {
 	}
 
 	let base = path.join(__dirname, name),
+		expected_warnings_path = path.join(base, 'expected-warnings.json'),
 		expected_path = path.join(base, 'expected.json'),
 		config_path = path.join(base, 'config.json'),
-		config = { base };
+		config = { base },
+		actual,
+		expected,
+		actual_warnings,
+		expected_warnings;
+
+	config.warn = msg => {
+		actual_warnings.push(msg.replace(/^.*\[(\w+)\].*$/g, "$1"));
+	};
 	
 	if (fs.existsSync(config_path)) {
 		Object.assign(
@@ -71,6 +80,7 @@ function test(name, write) {
 	
 	if (write) {
 		mojl.debug = true;
+		actual_warnings = [];
 		fs.writeFileSync(
 			expected_path,
 			JSON.stringify(
@@ -80,16 +90,29 @@ function test(name, write) {
 				null, 2
 			)
 		);
+		fs.writeFileSync(
+			expected_warnings_path,
+			JSON.stringify(
+				actual_warnings,
+				null, 2
+			)
+		);
 		mojl.debug = false;
 		setTimeout(()=>warn(name), 500);
 	}
 
-	let actual = relativize(
-			mojl.simulate_build(config)
-		),
-		expected = JSON.parse(
-			fs.readFileSync(expected_path, utf8)
-		);
+	actual_warnings = [];
+	actual = relativize(
+		mojl.simulate_build(config)
+	);
+
+	expected_warnings = fs.existsSync(expected_warnings_path) ?
+		JSON.parse(
+			fs.readFileSync(expected_warnings_path, utf8)
+		) : [];
+	expected = JSON.parse(
+		fs.readFileSync(expected_path, utf8)
+	);
 	
 	// Convert all timestamps to a consistent string so that the tests
 	// don't rely on the actual timestamps of the files.
@@ -114,8 +137,6 @@ function test(name, write) {
 	
 	// An array of filenames in common between expected and actual results.
 	let common_files = [];
-	
-// 	console.log("actual:", JSON.stringify(actual, null, 2));
 	
 	// Each file in actual should also be in expected.
 	Object.keys(actual).forEach(filename => {
@@ -147,6 +168,11 @@ function test(name, write) {
 			expect(actual[filename]).to.eql(expected[filename]);
 		});
 	});
+	
+	// Compare actual warnings to expected warnings.
+	it(name + ': expected warnings should match actual warnings', () => {
+		expect(actual_warnings).to.eql(expected_warnings);
+	});
 }
 
 
@@ -164,9 +190,9 @@ describe('Directory Comparison Tests', () => {
 	// Some more 1.0 tests that are duplicated below with the 1.1 way.
 	test('custom-directories');
 	test('custom-directories-nested');
-	test('ordered-head');
-	test('ordered-tail');
-	test('ordered-both');
+	test('ordered-head'); // (modified for 1.1 deprecation warning)
+	test('ordered-tail'); // (modified for 1.1 deprecation warning)
+	test('ordered-both'); // (modified for 1.1 deprecation warning)
 	
 	// 1.1
 
@@ -176,6 +202,9 @@ describe('Directory Comparison Tests', () => {
 	test('ordered-head-mappings');
 	test('ordered-tail-mappings');
 	test('ordered-both-mappings');
+	
+	// 1.0 test modified to suppress the 1.1 deprecation warning
+	test('ordered-head-no-warning');
 	
 	// Same test but with mappings assigned to a single object
 	// instead of an array, to test the auto-wrapping inside an array.

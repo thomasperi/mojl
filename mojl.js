@@ -136,6 +136,14 @@ const config_defaults = {
 	 * any concatenated file.
 	 */
 	"external": [],
+	
+	/**
+	 * By default, warnings will be sent to the console (true).
+	 * To suppress warnings, assign false to this value.
+	 * To send warnings somewhere other than console.warn,
+	 * assign a different function here.
+	 */
+	"warn": true,
 
 
 	// ### BEGIN LEGACY CONFIG ###
@@ -163,6 +171,13 @@ const config_defaults = {
 	//   "modules_base": {config.base}/{config.modules_dir},
 	//   "build_base": {config.base}/{config.build_dir},
 	// }
+};
+
+/**
+ * Warnings that could get issued.
+ */
+const all_warnings = {
+	"MODULE_ORDER_DEPRECATED": "config.module_order is deprecated and may not be available in future versions. Use config.dir_mappings instead."
 };
 
 /**
@@ -309,6 +324,18 @@ function simulate_build(config) {
 	// Work with a copy of the config object, in case it's used outside.
 	config = _.cloneDeep(config);
 	
+	// Most configuration defaults will be copied below using _.defaultsDeep,
+	// but the `warn` option needs to be present before potentially warning
+	// about module_order.
+	if (!config.hasOwnProperty('warn')) {
+		config.warn = config_defaults.warn;
+	}
+
+	// Check for deprecated configurations.
+	if (config.module_order) {
+		warn(config, 'MODULE_ORDER_DEPRECATED');
+	}
+
 	// If dir_mappings wasn't supplied but any or all legacy parts were,
 	// then plan on generating the dir_mappings array from the legacy parts.
 	let do_convert_legacy = !config.dir_mappings && (
@@ -799,13 +826,30 @@ function plan_files(config, cat_dests, mirror) {
  * Stuff to make public.
  */
 const mojl = {
-	suppress_warnings: false,
 	debug: false,
 	build,
 	simulate_build,
 	commenters,
 	rewriters,
+	all_warnings,
 };
+
+/**
+ * Issue a warning.
+ */
+function warn(config, key) {
+	// Put the warning's key in brackets so the tests can parse it out.
+	var msg = 'WARNING: [' + key + '] ' + all_warnings[key];
+
+	var w = config.warn;
+	if (w === true) {
+		console.warn(msg);
+	} else if (w instanceof Function) {
+		w(msg);
+	} else if (w !== false) {
+		throw 'config.warn is neither true, false, nor a function';
+	}
+}
 
 /**
  * A debugging function that only sends output when mojl.debug is truthy.
