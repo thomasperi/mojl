@@ -16,17 +16,17 @@
   "author": "Thomas Peri <hello@thomasperi.net>",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "gulp": "^4.0.2",
     "gulp-jshint": "^2.1.0",
     "gulp-mocha": "^7.0.2",
     "gulp-watch": "^5.0.1",
     "gulp4-run-sequence": "^1.0.1",
-    "jshint": "^2.11.1"
+    "jshint": "^2.13.1"
   },
   "dependencies": {
     "glob": "^7.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "rewrite-css-urls": "^1.0.4"
   }
 }
