@@ -1,0 +1,4 @@
+{
+	"mirror_dir": true,
+	"mirror_exclude": "\\.gif$"
+}

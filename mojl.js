@@ -60,20 +60,22 @@ const config_defaults = {
 	 * build will be copied, and the directory structure will be preserved.
 	 *
 	 * If `true`, the value of `config.modules_dir` will be used.
-	 *`
+	 *
 	 * If `false`, no mirroring will occur.
 	 */
 	"mirror_dir": false,
 	
-//  To-do: Determine if there's a good way to make this work intuitively.
-//  Problem: Files that aren't mirrored still might be referenced from other
-//  files. Probably better to let users sort out deleting or restricting any
-//  files they don't want mirrored.
-// 	/**
-// 	 * A glob describing which files in each module to mirror.
-// 	 * Relative to each module's main directory individually.
-// 	 */
-// 	"mirror_glob": "**/*.*", // All files with dot extensions, recursively.
+	/**
+     * A glob describing which files in each module to mirror.
+     * Relative to each module's main directory individually.
+     */
+	"mirror_glob": "**",
+	
+	/**
+	 * An array of strings to use as regular expression for refining the
+	 * results of mirror_glob.
+	 */
+	"mirror_exclude": [],
 	
 	/**
 	 * config.dir_mappings
@@ -366,6 +368,7 @@ function simulate_build(config) {
 	// Ensure array configs are arrays.
 	array_wrap(config, 'dir_mappings');
 	array_wrap(config, 'external');
+	array_wrap(config, 'mirror_exclude');
 
 	// Expand wildcards in the module lists.
 	expand_file_maps(config);
@@ -528,16 +531,31 @@ function expand_requires(config, all_mods, mods, exp_mods, mod_path) {
 function plan_mirror(config) {
 	let mirror = {};
 	if (config.mirror_dir) {
+		let mirbase = path.join(config.x.build_base, config.mirror_dir),
+			modbase = config.x.modules_base;
 		config.dir_mappings.forEach(mapping => {
 			mapping.modules.forEach(module_dir => {
-				let files = glob.sync(path.join(module_dir, '**/*.*'), {
-					cwd: config.x.modules_base
+				let files = glob.sync(path.join(module_dir, config.mirror_glob), {
+					cwd: modbase
 				});
 				files.forEach(file => {
-					mirror[
-						path.join(config.x.build_base, config.mirror_dir, file)
-					] = {
-						"source": path.join(config.x.modules_base, file)
+					let filepath = path.join(modbase, file);
+					
+					// Skip files that...
+					if (
+						// are not files
+						!fs.lstatSync(filepath).isFile() ||
+						
+						// are excluded by a pattern
+						config.mirror_exclude.some(
+							pattern => new RegExp(pattern).test(file)
+						)
+					) {
+						return;
+					}
+
+					mirror[path.join(mirbase, file)] = {
+						"source": filepath
 					};
 				});
 			});

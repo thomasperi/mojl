@@ -233,6 +233,9 @@ describe('Directory Comparison Tests', () => {
 	test('multiple-asset-dirs-mirror-true');
 	test('multiple-asset-dirs-mirror-name');
 	test('multiple-asset-dirs-mirror-dot');
+	test('multiple-asset-dirs-mirror-nodots');
+	test('multiple-asset-dirs-mirror-exclude');
+	test('multiple-asset-dirs-mirror-exclude-imply-array');
 	test('dont-mirror-unused-modules');
 
 });
