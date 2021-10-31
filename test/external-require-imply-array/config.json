@@ -1,5 +1,5 @@
 {
-	"external": "mod-bar/contact",
+	"external_modules": "mod-bar/contact",
 	"modules_dir": ".",
 	"dir_mappings": [
 		{

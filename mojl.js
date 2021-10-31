@@ -137,7 +137,7 @@ const config_defaults = {
 	 * An array of modules already loaded externally, not to be included in
 	 * any concatenated file.
 	 */
-	"external": [],
+	"external_modules": [],
 	
 	/**
 	 * By default, warnings will be sent to the console (true).
@@ -367,7 +367,7 @@ function simulate_build(config) {
 	
 	// Ensure array configs are arrays.
 	array_wrap(config, 'dir_mappings');
-	array_wrap(config, 'external');
+	array_wrap(config, 'external_modules');
 	array_wrap(config, 'mirror_exclude');
 
 	// Expand wildcards in the module lists.
@@ -419,7 +419,7 @@ function convert_legacy(config) {
 function expand_file_maps(config) {
 	// An array to tally all the mods loaded so far.
 	// Start with a copy of the externally-loaded modules.
-	let all_mods = _.clone(config.external); 
+	let all_mods = _.clone(config.external_modules);
 
 	// Loop through the maps defined in config.
 	config.dir_mappings.forEach(map => {
