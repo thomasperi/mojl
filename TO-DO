@@ -1,3 +1,4 @@
+Load a single file as a module instead of requiring it to be a directory with same-named files.
 
 Static site building feature with lodash templates.
 
