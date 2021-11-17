@@ -440,16 +440,22 @@ function expand_file_maps(config) {
  * whether in a mapping or in a `require` array in a module's .mojl.json file.
  */
 function expand_mod_array(config, all_mods, mods, exp_mods) {
+	let cwd = config.x.modules_base;
+	
 	// Loop through the modules in this map.
 	mods.forEach(mod_path => {
 	
 		// Expand any glob characters
-		let globbed_mods = glob.sync(mod_path, {
-			cwd: config.x.modules_base
-		});
+		let globbed_mods = glob.sync(mod_path, { cwd });
 		
 		// Check each result in the glob for inclusion in the expanded array.
 		globbed_mods.forEach(globbed_mod => {
+	
+			// If the globbed_mod is not a directory, it's not a module.
+			if (!fs.lstatSync(path.join(cwd, globbed_mod)).isDirectory()) {
+				return;
+			}
+
 			// Two conditions under which it should be included:
 			if (
 				// If it's the current item in the array we're expanding,
@@ -856,7 +862,7 @@ const mojl = {
  */
 function warn(config, key) {
 	// Put the warning's key in brackets so the tests can parse it out.
-	var msg = 'WARNING: [' + key + '] ' + warnings[key];
+	var msg = 'WARNING: [' + key + '] mojl: ' + warnings[key];
 
 	var w = config.warn;
 	if (w === true) {
