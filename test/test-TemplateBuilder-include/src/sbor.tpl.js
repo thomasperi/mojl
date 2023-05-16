@@ -1,0 +1,1 @@
+module.exports = (mojl, props) => mojl.template`sbor(${mojl.include('./foo', props)})`;

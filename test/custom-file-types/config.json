@@ -1,9 +1,0 @@
-{
-	"file_types": {
-		"css": null,
-		"scss": {
-			"comment": "block",
-			"rewrite": "css"
-		}
-	}
-}

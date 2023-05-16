@@ -1,0 +1,1 @@
+module.exports = (mojl) => mojl.template`sbor`;

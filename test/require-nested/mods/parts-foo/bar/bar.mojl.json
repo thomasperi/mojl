@@ -1,6 +1,0 @@
-{
-	"require": [
-		"../../parts-bar/*",
-		"../../parts-bar/sbor"
-	]
-}

@@ -1,9 +1,0 @@
-{
-	"module_order": {
-		"head": [
-			"shell",
-			"nav"
-		]
-	},
-	"warn": false
-}

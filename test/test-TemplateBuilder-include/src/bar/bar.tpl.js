@@ -1,0 +1,1 @@
+module.exports = (mojl, props) => mojl.template`bar(${mojl.include('src/foo', props)})`;

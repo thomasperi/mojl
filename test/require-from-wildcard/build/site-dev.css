@@ -1,8 +1,0 @@
-/**
- * A dev loader for stylesheets that will be concatenated in production.
- * (c) Thomas Peri <hello@thomasperi.net>
- * MIT License
- */
-@import "../mods/parts/nav/nav.css?t=1634671818679";
-@import "../mods/parts/contact/contact.css?t=1634671818678";
-@import "../mods/shell/shell.css?t=1634671818680";

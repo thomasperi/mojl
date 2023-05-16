@@ -1,2 +1,2 @@
 # mojl
-A simple content module repackager
+A bundler for vanilla websites

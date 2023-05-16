@@ -1,32 +1,23 @@
 {
   "name": "mojl",
   "version": "1.1.0",
-  "description": "A simple content module repackager",
-  "main": "mojl.js",
+  "description": "A bundler for vanilla websites",
+  "main": "index.js",
   "files": [
-    "dev-css.tpl",
-    "dev-js.tpl"
+    "src/*.css",
+    "src/*.js"
   ],
   "scripts": {
-    "test": "gulp test",
-    "preversion": "npm test",
-    "postversion": "git push && git push --tags"
+    "test": "npx mocha"
   },
+  "keywords": [],
   "repository": "github:thomasperi/mojl",
   "author": "Thomas Peri <hello@thomasperi.net>",
-  "license": "MIT",
+  "license": "ISC",
   "devDependencies": {
-    "chai": "^4.3.4",
-    "gulp": "^4.0.2",
-    "gulp-jshint": "^2.1.0",
-    "gulp-mocha": "^7.0.2",
-    "gulp-watch": "^5.0.1",
-    "gulp4-run-sequence": "^1.0.1",
-    "jshint": "^2.13.1"
-  },
-  "dependencies": {
-    "glob": "^7.2.0",
-    "lodash": "^4.17.21",
-    "rewrite-css-urls": "^1.0.4"
+    "chokidar": "^3.5.3",
+    "eslint": "^8.37.0",
+    "mocha": "^10.2.0",
+    "sandbox-clone": "^1.0.2"
   }
 }

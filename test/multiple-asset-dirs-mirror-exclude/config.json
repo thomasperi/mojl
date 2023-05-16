@@ -1,7 +1,0 @@
-{
-	"mirror_dir": true,
-	"mirror_exclude": [
-		"\\.gif$",
-		"([^/]+?)/\\1\\.html$"
-	]
-}

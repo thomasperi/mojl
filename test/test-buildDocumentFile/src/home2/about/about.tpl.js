@@ -1,0 +1,1 @@
+module.exports = (mojl, props) => mojl.template`(about 2)`;

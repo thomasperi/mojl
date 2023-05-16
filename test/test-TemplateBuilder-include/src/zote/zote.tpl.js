@@ -1,0 +1,1 @@
+module.exports = (mojl, props) => mojl.template`zote(${mojl.include('./foo', props)})`;
