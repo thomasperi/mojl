@@ -1,11 +1,13 @@
 # Mojl
 A bundler for vanilla websites
 
+**NOT FOR PRODUCTION USE**
+
 ![The Mojl logo in landscape format](docs/mojl-logo-landscape.svg)
 
 Mojl lets you modularize the code for websites that aren't apps, without many of the complexities of modern webapp development.
 
-The CSS and JavaScript code you write is the same code that gets deployed. In a development build, the source files are loaded individually. On production they're concatenated into a single file. Optionally (and recommendedly) you can minify the resulting JS and CSS files.
+The CSS and JavaScript code you write is essentially the same code that gets deployed. In a development build, the source files are loaded individually. On production they're concatenated into a single file. Optionally (and recommendedly) you can minify the resulting JS and CSS files.
 
 You can also use Mojl as a static site generator or use it to build templates for the SSG or backend framework of your choice.
 
@@ -18,7 +20,7 @@ A Mojl "module" is a directory containing files with the same base name as the d
 site-nav/
   site-nav.css      <-- The CSS for the nav
   site-nav.js       <-- The JS for the nav
-  site-nav.tpl.js   <-- The HTML for the nav; more on this later.
+  site-nav.tpl.js   <-- The HTML for the nav; see "Templates" below.
 ```
 
 
@@ -64,7 +66,7 @@ done
 $
 ```
 
-Mojl creates a `dist` subdirectory (removing it if it already exists), concatenates all the CSS into `scripts.css` and all the JavaScript into `styles.js`, and mirrors any other files (the site logo in this case) into an `assets` subdirectory:
+Mojl creates a `dist` subdirectory (removing it if it already exists), concatenates all the CSS and JavaScript into `styles.css` and `scripts.js`, and mirrors any other files (the site logo in this case) into an `assets` subdirectory:
 
 ```
 your-project/
@@ -81,18 +83,18 @@ your-project/
 ```
 
 
-## URLs in CSS files
+## Relative URLs
 
-URLs in CSS files are automatically rewritten to be relative to the concatenated file, and appended with a hash for cache-busting.
+Relative URLs in CSS files are automatically rewritten to be relative to the concatenated file, and appended with a hash for cache-busting.
 
 A snippet of the header.css source file:
 ```css
 .header__site-logo {
-  background-image: url(images/logo.svg)
+  background-image: url(images/logo.svg);
 }
 ```
 
-The corresponding part of styles.css concatenated file:
+The corresponding part of the concatenated styles.css file:
 ```css
 .header__site-logo {
   background-image: url(assets/header/images/logo.svg?h=C*7Hteo!D9vJXQ3UfzxbwnXaijM~);
