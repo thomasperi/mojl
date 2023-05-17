@@ -197,7 +197,8 @@ module.exports = (mojl, props) => mojl.template`
     <footer>Made with Mojl</footer>
   </body>
 </html>
-`;```
+`;
+```
 
 *`src/home/home.tpl.js`*
 ```javascript
