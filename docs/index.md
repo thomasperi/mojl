@@ -1,5 +1,12 @@
+**A bundler for vanilla websites**
+| [github](https://github.com/thomasperi/mojl)
+| [npm](https://www.npmjs.com/package/mojl)
+
 <img src="https://thomasperi.github.io/mojl/mojl-logo-landscape.svg"
-  alt="Mojl - Vanilla Bundler" style="width: 100%; border-bottom: 1px solid #eee">
+  alt="Mojl - Vanilla Bundler" 
+  style="width: 100%; border-top: 1px solid #eee; border-bottom: 1px solid #eee">
+
+## Overview
 
 This documentation is for the not-yet-stable 2.0.0-alpha.
 
@@ -26,7 +33,7 @@ site-nav/
 
 By default, Mojl uses all the modules that it finds, recursively, inside the `src` subdirectory of the current working directory.
 
-Your project:
+Example project directory:
 ```
 your-project/
   build.js
