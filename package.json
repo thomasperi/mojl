@@ -12,6 +12,7 @@
   },
   "keywords": [],
   "repository": "github:thomasperi/mojl",
+  "homepage": "https://thomasperi.github.io/mojl/",
   "author": "Thomas Peri <hello@thomasperi.net>",
   "license": "ISC",
   "devDependencies": {
