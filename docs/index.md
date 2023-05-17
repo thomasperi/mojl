@@ -1,14 +1,16 @@
 **A bundler for vanilla websites**
+
+View On:
 | [github](https://github.com/thomasperi/mojl)
 | [npm](https://www.npmjs.com/package/mojl)
 
-<img src="https://thomasperi.github.io/mojl/mojl-logo-landscape.svg"
-  alt="Mojl - Vanilla Bundler" 
-  style="width: 100%; border-top: 1px solid #eee; border-bottom: 1px solid #eee">
+This documentation is for the not-yet-stable 2.0.0-alpha.
+
+<img alt="Mojl - Vanilla Bundler"
+  src="https://thomasperi.github.io/mojl/mojl-logo-landscape.svg"
+  style="width: 100%; border: 1px solid #eee; background: #fafbfc">
 
 ## Overview
-
-This documentation is for the not-yet-stable 2.0.0-alpha.
 
 Mojl lets you modularize the code for websites that aren't apps, without many of the complexities of modern webapp development.
 
