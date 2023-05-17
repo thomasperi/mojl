@@ -123,8 +123,8 @@ mojl.build({isDev: true}).then(() => {
 
 |              | Production   | Development
 |--------------|--------------|-------------
-| CSS & JS     | Concatenated | Original files are loaded
-| Other Assets | Mirrored     | Symlinked (breaks on Windows without admin privs)
+| CSS & JS     | Concatenated | Original files are loaded via symlinks
+| Other Assets | Mirrored     | Loaded via symlinks
 
 
 ## Templates
