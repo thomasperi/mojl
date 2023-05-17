@@ -1,7 +1,5 @@
-A bundler for vanilla websites
-
 <img src="https://thomasperi.github.io/mojl/mojl-logo-landscape.svg"
-  alt="Mojl Logo in Landscape Format" style="width:100%">
+  alt="Mojl - Vanilla Bundler" style="width: 100%; border-bottom: 1px solid #eee">
 
 This documentation is for the not-yet-stable 2.0.0-alpha.
 
