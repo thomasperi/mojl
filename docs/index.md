@@ -10,7 +10,7 @@ Mojl lets you modularize the code for websites that aren't apps, without many of
 
 The CSS and JavaScript code you write is essentially the same code that gets deployed. In a development build, the source files are loaded individually. On production they're concatenated into a single file. Optionally (and recommendedly) you can minify the resulting JS and CSS files.
 
-You can also use Mojl as a static site generator or use it to build templates for the SSG or backend framework of your choice.
+You can use Mojl as a static site generator directly, or use it to build templates for the SSG or backend framework of your choice.
 
 
 ## Modules
