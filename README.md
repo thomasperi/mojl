@@ -1,7 +1,7 @@
 # Mojl
 A bundler for vanilla websites
 
-**NOT FOR PRODUCTION USE**
+**NOT YET READY FOR PRODUCTION USE**
 
 ![The Mojl logo in landscape format](docs/mojl-logo-landscape.svg)
 
