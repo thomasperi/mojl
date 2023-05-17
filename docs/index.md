@@ -1,8 +1,7 @@
-# Mojl
 A bundler for vanilla websites
 
-[github](https://github.com/thomasperi/mojl)
-[npm](https://www.npmjs.com/package/mojl)
+<img src="https://thomasperi.github.io/mojl/mojl-logo-landscape.svg"
+  alt="Mojl Logo in Landscape Format" style="width:100%">
 
 This documentation is for the not-yet-stable 2.0.0-alpha.
 
