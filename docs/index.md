@@ -1,9 +1,5 @@
 **A bundler for vanilla websites**
 
-View On:
-| [github](https://github.com/thomasperi/mojl)
-| [npm](https://www.npmjs.com/package/mojl)
-
 This documentation is for the not-yet-stable 2.0.0-alpha.
 
 <img alt="Mojl - Vanilla Bundler"
@@ -11,6 +7,10 @@ This documentation is for the not-yet-stable 2.0.0-alpha.
   style="width: 100%; border: 1px solid #eee; background: #fafbfc">
 
 ## Overview
+
+```console
+$ npm i -D mojl
+```
 
 Mojl lets you modularize the code for websites that aren't apps, without many of the complexities of modern webapp development.
 
@@ -65,12 +65,11 @@ mojl.build().then(() => {
 });
 ```
 
-Navigate to the project directory and run the build script:
+Navigate to your project's directory and run your build script:
 ```console
 $ cd your-project
 $ node build.js
 done
-$
 ```
 
 Mojl creates a `dist` subdirectory (removing it if it already exists), concatenates all the CSS and JavaScript into `styles.css` and `scripts.js`, and mirrors any other files (the site logo in this case) into an `assets` subdirectory:
@@ -108,6 +107,26 @@ The corresponding part of the concatenated styles.css file:
 }
 ```
 
+## Dev Build
+
+Mojl builds for production by default. To build a development site, set the `isDev` option to `true`:
+
+```javascript
+mojl.build({isDev: true}).then(() => {
+  console.log('done');
+});
+```
+
+(You could pass the option to the constructor instead, but if you pass different values to the constructor and the `build` method, the one passed to the method wins.)
+
+### Differences Between a Prod and Dev Build
+
+                | Production     | Development
+----------------|----------------|---
+CSS & JS        | Concatenated   | Original files are loaded
+Other Assets    | Mirrored       | Symlinked (won't work on Windows)
+
+
 ## Templates
 
 A module's `.tpl.js` file outputs the HTML code for the module. It's easier to start with what it looks like and then explain what's going on:
@@ -143,11 +162,6 @@ module.exports = (mojl, props) => mojl.template`
 `;
 ```
 
-## Dev Build
-
-to-do
-
-
 ## CSS Transpilers
 
 to-do
@@ -156,6 +170,11 @@ to-do
 ## Options
 
 to-do
+
+
+## GitHub
+
+https://github.com/thomasperi/mojl
 
 
 ## Pronunciation
