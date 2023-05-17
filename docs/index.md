@@ -121,10 +121,10 @@ mojl.build({isDev: true}).then(() => {
 
 ### Differences Between a Prod and Dev Build
 
-|                 | Production     | Development
-|-----------------|----------------|-------------
-| CSS & JS        | Concatenated   | Original files are loaded
-| Other Assets    | Mirrored       | Symlinked (won't work on Windows)
+|              | Production   | Development
+|--------------|--------------|-------------
+| CSS & JS     | Concatenated | Original files are loaded
+| Other Assets | Mirrored     | Symlinked (breaks on Windows without admin privs)
 
 
 ## Templates
