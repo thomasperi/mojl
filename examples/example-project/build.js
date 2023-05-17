@@ -1,5 +1,5 @@
-let Mojl = require('../../');
+const Mojl = require('../..');
 
-new Mojl().build({isDev: true}).then(() => {
+new Mojl().build().then(() => {
 	console.log('done');
 });
