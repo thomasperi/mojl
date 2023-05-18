@@ -14,9 +14,9 @@ $ npm i -D mojl
 
 Mojl lets you modularize the code for websites that aren't apps, without many of the complexities of modern webapp development.
 
-The CSS and JavaScript code you write is essentially the same code that gets deployed. In a development build, the source files are loaded individually. For production they're concatenated into a single file. Optionally (and recommendedly) you can minify the resulting JS and CSS files.
+The CSS and JavaScript code you write is essentially the same code that gets deployed. In a development build, the source files are loaded individually. For production they're concatenated into a single file. Optionally (and recommendedly) you can minify the resulting JS and CSS files using the minifiers of your choice.
 
-You can use Mojl as a static site generator directly, or use it to build templates for the SSG or backend framework of your choice.
+You can use Mojl as a static site generator directly, or use it to build templates for another SSG or backend framework.
 
 
 ## Modules
@@ -109,7 +109,7 @@ The corresponding part of the concatenated `styles.css` file:
 
 ## Dev Builds
 
-Mojl builds for production by default (except for minification). To build a development site, set the `isDev` option to `true`:
+Mojl builds for production by default (except for minification). To build a development site, pass in an object with the `isDev` property to `true`:
 
 ```javascript
 mojl.build({isDev: true}).then(() => {
