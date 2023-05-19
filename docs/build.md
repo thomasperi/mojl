@@ -1,6 +1,6 @@
 ## Build
 
-Your build script should be located at the top level of your project. It can be a plain Node.js script, a gulpfile, or whatever you like. Here we'll just use a standalone script:
+Your build script should be located at the top level of your project. It can be a plain Node.js script, a gulpfile, or whatever you like.
 
 ```javascript
 /*** example-project/build.js ***/
@@ -13,59 +13,42 @@ mojl.build().then(() => {
 });
 ```
 
-Navigate to your project's directory and run your build script:
+Navigate to your project's directory (that `cd` is important, because Mojl uses the working directory as the project root by default) and run your build script:
+
 ```console
 $ cd example-project
 $ node build.js
 done
 ```
 
-Mojl creates a `dist` subdirectory (removing it first if it already exists), concatenates all the CSS and JavaScript into `styles.css` and `scripts.js`, and copies any other files (the site logo in this case) into an `assets` subdirectory:
+Mojl creates a `dist` subdirectory (removing it first if it already exists), concatenates all the `<module>.css` and `<module>.js` files into `styles.css` and `scripts.js`, and copies any other files into an `assets` subdirectory:
 
 Before and after build:
 ```
-BEFORE                  :    AFTER
-======                  :    =====
-                        :
-example-project/        :    example-project/
-+ build.js              :    + build.js
-+ src/                  :    + src/                  <--
-  + header/             :    | + header/             <--
-  | + header.css        :    | | + header.css        <--
-  | + header.tpl.js     :    | | + header.tpl.js     <--
-  | + images/           :    | | + images/           <--
-  |   + logo.svg        :    | |   + logo.svg        <--
-  |   + bg.jpg          :    | |   + bg.jpg          <--
-  |                     :    | |                     <--   originals
-  + home/               :    | + home/               <--   unchanged
-    + home.css          :    |   + home.css          <--
-    + home.js           :    |   + home.js           <--
-    + home.tpl.js       :    |   + home.tpl.js       <--
-    + about/            :    |   + about/            <--
-      + about.css       :    |     + about.css       <--
-      + about.js        :    |     + about.js        <--
-      + about.tpl.js    :    |     + about.tpl.js    <--
-                        :    |
-                        :    + dist/
-                        :      + scripts.js  <-- concatenated .js files
-                        :      + styles.css  <-- concatenated .css files
-                        :      + index.html    <-- built from home.tpl.js
-                        :      + about/
-                        :      | + index.html  <-- built from about.tpl.js
-                        :      |
-                        :      + assets/
-                        :        + src/
-                        :          + header/
-                        :            + images/
-                        :              + logo.svg  <-- copied from src
-                        :              + bg.jpg    <-- copied from src
+example-project/        >   example-project/
+  build.js              >     build.js
+  src/                  >     src/
+    shell/              >       (src files unchanged)
+      shell.css         >     dist/
+      shell.tpl.js      >       scripts.js     -- concatenated .js files
+      images/           >       styles.css     -- concatenated .css files
+        logo.svg        >       index.html     -- built from home.tpl.js
+        bg.jpg          >       about/
+    home/               >         index.html   -- built from about.tpl.js
+      home.css          >       assets/
+      home.js           >         src/
+      home.tpl.js       >           shell/
+      about/            >             images/
+        about.css       >               logo.svg    -- copied
+        about.js        >               bg.jpg      -- copied
+        about.tpl.js    >
 ```
 
 ### Relative URLs
 
 Relative URLs in CSS files are automatically rewritten to be relative to the concatenated file, and appended with a hash for cache-busting.
 
-A snippet of the `header.css` source file:
+A snippet of the `shell.css` source file:
 ```css
 .header__logo {
   background-image: url(images/logo.svg);
@@ -75,7 +58,7 @@ A snippet of the `header.css` source file:
 The corresponding part of the concatenated `styles.css` file:
 ```css
 .header__logo {
-  background-image: url(assets/header/images/logo.svg?h=C*7Hteo!D9vJXQ3UfzxbwnXaijM~);
+  background-image: url(assets/shell/images/logo.svg?h=C*7Hteo!D9vJXQ3UfzxbwnXaijM~);
 }
 ```
 
