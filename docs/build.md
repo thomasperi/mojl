@@ -37,14 +37,14 @@ example-project/        :    example-project/
   |   + logo.svg        :    | |   + logo.svg        <--
   |   + bg.jpg          :    | |   + bg.jpg          <--
   |                     :    | |                     <--   originals
-	+ home/               :    | + home/               <--   unchanged
-		+ home.css          :    |   + home.css          <--
-		+ home.js           :    |   + home.js           <--
-		+ home.tpl.js       :    |   + home.tpl.js       <--
-		+ about/            :    |   + about/            <--
-			+ about.css       :    |     + about.css       <--
-			+ about.js        :    |     + about.js        <--
-			+ about.tpl.js    :    |     + about.tpl.js    <--
+  + home/               :    | + home/               <--   unchanged
+    + home.css          :    |   + home.css          <--
+    + home.js           :    |   + home.js           <--
+    + home.tpl.js       :    |   + home.tpl.js       <--
+    + about/            :    |   + about/            <--
+      + about.css       :    |     + about.css       <--
+      + about.js        :    |     + about.js        <--
+      + about.tpl.js    :    |     + about.tpl.js    <--
                         :    |
                         :    + dist/
                         :      + scripts.js  <-- concatenated .js files
