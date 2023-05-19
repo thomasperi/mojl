@@ -1,48 +1,28 @@
 ## Templates
 
-Templates generate output. You can either use Mojl as a static site generator by writing your templates to output whole HTML pages, or you can write them to output templates for another SSG or backend framework.
+Templates generate output. You can either use Mojl as a static site generator by having your templates output whole HTML pages, or you can have them output templates for another SSG or backend framework.
 
-Templates found in the `src/home` directory, recursively, are used as entry points for building output files. The output files are written inside `dist` or `dev`, using the  same paths as their modules' locations inside `src/home`.
+Mojl templates are written in JavaScript using native features instead of in a separate template language:
 
-```
-your-project/
-  build.js
-  dist/
-    index.html          <-- Built from src/home/home.tpl.js
-    about/index.html    <-- Built from src/home/about/about.tpl.js
-    contact/index.html  <-- Built from src/home/contact/contact.tpl.js
-    scripts.js
-    styles.css
-  src/
-    home/
-      home.css
-      home.tpl.js
-      about/
-        about.css
-        about.tpl.js
-      contact/
-        contact.css
-        contact.tpl.js
-```
-
-### Native JS Templates
-
-Mojl templates are written using native JS features instead of in a separate template language:
-
-*`your-project/src/hello/hello.tpl.js`*
 ```javascript
+/*** src/hello/hello.tpl.js ***/
+
 module.exports = (mojl, props) => mojl.template`
   <h1>Hello, ${props.name}!</h1>
-`;
+`; // don't forget the closing backtick!
 ```
 
-It's pretty straightforward, but there are a few non-obvious details:
+If you're not familiar with what's going on there, I recommend reading about [tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates).
 
-* The `mojl` argument is an object with template-specific methods, not to be confused with a `Mojl` instance.
-* The `mojl.template` tag function returns a Promise that resolves to a string. This is so that you can do asynchronous operations inside the template.
+There are also a few non-obvious details that you might find handy:
+
+* The `mojl` argument is a helper object with template-specific methods, not to be confused with a `Mojl` instance.
+* The `mojl.template` tag function returns a Promise that resolves to a string. This lets you do asynchronous operations inside the template.
 * The `props` argument contains whatever value is passed to the template when it is included. By convention this is an object with named properties, but it doesn't have to be.
 
 ### Including a Template
+
+You include a template using the `include` method on the `mojl` helper object. The path is relative to the project root, and only needs to include the name of the module directory (`src/hello`), not the template file.
 
 ```javascript
 mojl.include('src/hello', {name: 'World'})
@@ -51,10 +31,11 @@ mojl.include('src/hello', {name: 'World'})
 
 ### "Shell" Pattern
 
-To have multiple pages use the same outer shell, you can simply include the shell and pass the page content to it, along with any other properties that are needed, like the page title.
+To have multiple pages use the same outer shell, you can simply include the shell and pass the page content to it, along with any other properties it will need, like the page title.
 
-*`src/shell/shell.tpl.js`*
 ```javascript
+/*** src/shell/shell.tpl.js ***/
+
 module.exports = (mojl, props) => mojl.template`
 <!DOCTYPE html>
 <html>
@@ -73,8 +54,9 @@ module.exports = (mojl, props) => mojl.template`
 `;
 ```
 
-*`src/home/home.tpl.js`*
 ```javascript
+/*** src/home/home.tpl.js ***/
+
 module.exports = (mojl, props) => mojl.include('src/shell', {
   title: 'Home',
   content: mojl.template`
@@ -83,8 +65,9 @@ module.exports = (mojl, props) => mojl.include('src/shell', {
 });
 ```
 
-*`src/home/about/about.tpl.js`*
 ```javascript
+/*** src/home/about/about.tpl.js ***/
+
 module.exports = (mojl, props) => mojl.include('src/shell', {
   title: 'About',
   content: mojl.template`

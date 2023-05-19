@@ -2,8 +2,9 @@
 
 Your build script should be located at the top level of your project. It can be a plain Node.js script, a gulpfile, or whatever you like. Here we'll just use a standalone script:
 
-*`example-project/build.js`*
 ```javascript
+/*** example-project/build.js ***/
+
 const Mojl = require('mojl');
 const mojl = new Mojl();
 
