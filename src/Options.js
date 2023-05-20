@@ -11,7 +11,7 @@
 const Options = {
 
 	/**
-	 * *Constructor only*
+	 * *constructor only*
 	 *
 	 * The root directory of the project. If relative, this path is resolved
 	 * relative to the current working directory of the process. Thus the empty
@@ -23,6 +23,8 @@ const Options = {
 	base: '',
 
 	/**
+	 * *constructor only*
+	 *
 	 * An array of module directory names and/or wildcards to collate into the output
 	 * files. Supports `*` and `**` which behave roughly like glob, but other glob
 	 * features are not supported.

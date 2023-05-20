@@ -27,6 +27,8 @@ You can use Mojl as a static site generator directly, or use it to build templat
 
 ## Navigation
 
+Each page in this documentation is listed here, and at the bottom of each page is a link that leads back to this list.
+
 * [Modules](modules.md)
 * [Build](build.md)
 * [Templates](templates.md)
