@@ -444,17 +444,17 @@ to-do
 
 ### Table of Contents
 
-* [`new Mojl([options])`](#mojl-constructor);
-  * [`.build([options])`](#build);
-  * [`.buildScripts([options])`](#buildscripts);
-  * [`.buildStyles([options])`](#buildstyles);
-  * [`.buildTemplates([options])`](#buildtemplates);
-  * [`.deleteBuild([options])`](#deletebuild);
-  * [`.getBase()`](#getbase);
-  * [`.getModuleList()`](#getmodulelist);
-  * [`.mirrorAssets([options])`](#mirrorassets);
+* [`new Mojl([options])`](#mojl-constructor)
+  * [`.build([options])`](#build)
+  * [`.buildScripts([options])`](#buildscripts)
+  * [`.buildStyles([options])`](#buildstyles)
+  * [`.buildTemplates([options])`](#buildtemplates)
+  * [`.deleteBuild([options])`](#deletebuild)
+  * [`.getBase()`](#getbase)
+  * [`.getModuleList()`](#getmodulelist)
+  * [`.mirrorAssets([options])`](#mirrorassets)
 
-* [`Options`](#options);
+* [`Options`](#options)
   * [`base`](#base)
   * [`buildAssetsDir`](#buildassetsdir)
   * [`buildCssFile`](#buildcssfile)
@@ -463,7 +463,7 @@ to-do
   * [`buildJsFile`](#buildjsfile)
   * [`buildTempDir`](#buildtempdir)
   * [`cssMinifierAdaptor`](#cssminifieradaptor)
-  * [`cssTranspilerAdaptor`(#csstranspileradaptor)
+  * [`cssTranspilerAdaptor`](#csstranspileradaptor)
   * [`excludeFileTypesFromMirror`](#excludefiletypesfrommirror)
   * [`isDev`](#isdev)
   * [`jsMinifierAdaptor`](#jsminifieradaptor)
@@ -474,10 +474,10 @@ to-do
   * [`symlinkDistAssets`](#symlinkdistassets)
   * [`templateHomeModule`](#templatehomemodule)
   * [`templateOutputDir`](#templateoutputdir)
-  * [`templateOutputSuffix`(#templateoutputsuffix)
+  * [`templateOutputSuffix`](#templateoutputsuffix)
   * [`trimIncludes`](#trimincludes)
 
-* [`TemplateHelper`](#templatehelper);
+* [`TemplateHelper`](#templatehelper)
 
 ---
 
