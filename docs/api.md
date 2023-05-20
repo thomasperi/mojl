@@ -394,33 +394,13 @@ The string to append to each module in (and including) `templateHomeModule` in o
 |--------|-----------------
 | string | `'/index.html'`
 
-The default `/index.html` builds for "friendly" urls without file extensions. For example, the module `src/home/products/widgets` would output the file `dist/products/widgets/index.html` so that the URL of the page can be `example.com/products/widgets/`.
+There are two ways of using this, and each way has its advantages.
 
-```
-<base>/src/home/about -> <base>/dist/about/index.html -> https://example.com/about/
-                                          ^^^^^^^^^^^
-```
+1. If the suffix is a slash plus a filename (as in the default `/index.html`) each output file will be given that filename and written inside a directory named after the module that produced it. This gives you pretty URLs without file extensions.
 
-If the suffix is set to `.html` instead, just the extension with no leading slash, then the file gets the name of the module instead.
+2. If the suffix is a dot plus an extension, such as `.html`, each output file itself will be named after the module that produced it, with the file extension added. This is the better choice when you're outputting templates for another SSG or framework, or when you're building a site that will be loaded directly from disk and not from a web server.
 
-```
-<base>/src/home/about -> <base>/dist/about.html -> https://example.com/about.html
-                                          ^^^^^
-```
-
-**Important:** When the output suffix begins with anything other than a slash, the `home` module's own template is ignored and no output is written, because otherwise the output file would be outside the output root.
-
-A suffix with a leading slash produces a file inside `dist`:
-```
-<base>/src/home -> <base>/dist/index.html -> https://example.com/
-                              ^^^^^^^^^^^
-```
-
-A suffix without a leading slash produces a home page that is outside `dist`:
-```
-<base>/src/home -> <base>/dist.html -> Unreachable on the web
-                              ^^^^^
-```
+In case #2, the `home` module will be ignored and no output file will be written, because the file would fall outside the web root. (`example-project/dist/index.html` is inside the `dist` directory, but `example-project/dist.html` is outside it.)
 
 
 #### `trimIncludes`
