@@ -28,7 +28,7 @@ Before and after build:
 example-project/        >   example-project/
   build.js              >     build.js
   src/                  >     src/
-    shell/              >       (src files unchanged)
+    shell/              >       (src files are unchanged)
       shell.css         >     dist/
       shell.tpl.js      >       scripts.js     -- concatenated .js files
       images/           >       styles.css     -- concatenated .css files
