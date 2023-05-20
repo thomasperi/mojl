@@ -418,7 +418,98 @@ Trim whitespace from head and tail of each include.
 
 ### `TemplateHelper`
 
-to-do
+An instance of `TemplateHelper` is passed as the first argument the function exported by a Mojl template. You should never need to instantiate a `TemplateHelper` yourself.
+
+The convention used in this documentation is to call that parameter `mojl`, but be aware that it isn't a reference to the `Mojl` instance.
+
+Example Usage:
+
+```javascript
+module.exports = (mojl, props) => mojl.template`
+  <p>Lorem ${props.ipsum} dolor sit amet</p>
+`;
+```
+
+
+#### `exists`
+
+> `.exists(module)`
+
+Check whether a given module exists and has a template.
+
+| Parameter | Type   | Description
+|-----------|--------|-------------
+| `module`  | string | The name of the module to check, relative to the project's `base`
+
+**Returns:** Boolean
+
+
+### `file`
+
+> `.file(filePath, [options])`
+
+Get a URL for the specified file path.
+
+| Parameter       | Type    | Description
+|-----------------|---------|-------------
+| `filePath`      | string  | The path of the file to get a URL for
+| `options`       | object  | (Optional) Options affecting the behavior of this method
+| `options.hash`  | boolean | Append a cache-busting hash to the URL. (default `true`)
+
+If `filePath` is a relative path, it is relative to the current template's parent directory.
+
+**Returns:** Promise
+**Resolves:** String
+
+
+#### `include`
+
+> `.include(module, [props])`
+
+Include the named module's template.
+
+| Parameter | Type   | Description
+|-----------|--------|-------------
+| `module`  | string | The name of the module to include, relative to the project's `base`
+| `props`   | object | (Optional) The object for passing properties to the module.
+
+**Returns:** Promise
+**Resolves:** String
+
+
+#### `link`
+
+> `.link(linkPath)`
+
+Potentially transform the specified link URL.
+
+| Parameter  | Type   | Description
+|------------|--------|-------------
+| `linkPath` | string | The link to potentially transform.
+
+Full URLs with scheme (`http://example.com`), as well as scheme-relative URLs (`//example.com`), are returned as-is.
+
+Page-relative URLs (`./foo/bar`, `../foo/bar`, `foo/bar`) and site-relative URLs (`/foo/bar`) are potentially transformed according to the [`pageRelativeUrls`](#pagerelativeurls) Mojl setting:
+
+| `pageRelativeUrls` | Behavior
+|--------------------|----------
+| `false` (default)  | Page-relative URLs are converted to site-relative
+| `true`             | Site-relative URLs are converted to page-relative
+
+
+**Returns:** Promise
+**Resolves:** String
+
+
+#### `template`
+
+A tag function for building the output string for the template.
+
+See [example usage](#templatehelper) above.
+
+**Returns:** Promise
+**Resolves:** String
+
 
 ---
 
@@ -458,6 +549,11 @@ to-do
   * [`trimIncludes`](#trimincludes)
 
 * [`TemplateHelper`](#templatehelper)
+  * [`exists`](#exists)
+  * [`file`](#file)
+  * [`include`](#include)
+  * [`link`](#link)
+  * [`template`](#template)
 
 ---
 
