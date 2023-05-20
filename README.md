@@ -9,13 +9,8 @@ Mojl lets you modularize the code and assets for websites that aren't apps, with
 ## Docs
 <https://thomasperi.github.io/mojl/>
 
-### npm
+## npm
 <https://www.npmjs.com/package/mojl>
 
-### Pronunciation
-/ˈmɑdʒəl/ (MODGE-ul)
-
-
 ## Pronunciation
-
 /ˈmɑdʒəl/ (MODGE-ul)
