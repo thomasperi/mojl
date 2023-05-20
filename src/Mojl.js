@@ -8,6 +8,8 @@ const mirrorAssets = require('./mirrorAssets.js');
 
 const has = Object.prototype.hasOwnProperty;
 
+const nonOverridables = ['base', 'modules'];
+
 class Mojl {
 	#optionsPromise;
 	#busyDelete = false;
@@ -21,10 +23,13 @@ class Mojl {
 		this.#optionsPromise = expandOptions(options);
 	}
 	
-	async #overrideWith(options = {}, ...keys) {
+	async #overrideWith(options = {}) {
 		const result = {...(await this.#optionsPromise)};
-		keys.forEach(key => {
+		Object.keys(result).forEach(key => {
 			if (has.call(options, key)) {
+				if (nonOverridables.includes(key)) {
+					throw `can't override '${key}' option`;
+				}
 				result[key] = options[key];
 			}
 		});
@@ -62,21 +67,38 @@ class Mojl {
 		}
 	}
 	
-	async listModules() {
-		return [...(await this.#optionsPromise).modules];
+	async base() {
+		return (await this.#optionsPromise).base;
 	}
 	
-	async deleteBuild(options) {
-		this.#noOther('deleteBuild');
-		options = await this.#overrideWith(options, 'isDev');
-		await this.#busyTry('#busyDelete', async () => {
-			await deleteBuild(options);
+	async build(options) {
+		this.#noOther('build');
+		await this.#busyTry('#busyBuild', async () => {
+			await this.deleteBuild(options);
+			await Promise.all([
+				this.buildStyles(options),
+				this.buildScripts(options),
+				this.mirrorAssets(options),
+				this.buildTemplates(options)
+			]);
+		});
+	}
+
+	async buildScripts(options) {
+		this.#noSame(this.#busyScripts, 'buildScripts');
+		options = await this.#overrideWith(options);
+		await this.#busyTry('#busyScripts', async () => {
+			if (options.isDev) {
+				await buildDevLoaderFile(options, 'js');
+			} else {
+				await buildMonolithFile(options, 'js');
+			}
 		});
 	}
 	
 	async buildStyles(options) {
 		this.#noSame(this.#busyStyles, 'buildStyles');
-		options = await this.#overrideWith(options, 'isDev');
+		options = await this.#overrideWith(options);
 		await this.#busyTry('#busyStyles', async () => {
 			if (options.cssTranspilerAdaptor) {
 				await buildTranspilerFile(options);
@@ -88,21 +110,9 @@ class Mojl {
 		});
 	}
 
-	async buildScripts(options) {
-		this.#noSame(this.#busyScripts, 'buildScripts');
-		options = await this.#overrideWith(options, 'isDev');
-		await this.#busyTry('#busyScripts', async () => {
-			if (options.isDev) {
-				await buildDevLoaderFile(options, 'js');
-			} else {
-				await buildMonolithFile(options, 'js');
-			}
-		});
-	}
-	
 	async buildTemplates(options) {
 		this.#noSame(this.#busyTemplates, 'buildTemplates');
-		options = await this.#overrideWith(options, 'isDev');
+		options = await this.#overrideWith(options);
 		await this.#busyTry('#busyTemplates', async () => {
 			if (options.templateHomeModule) {
 				await buildDocumentFilesAll(options);
@@ -110,24 +120,28 @@ class Mojl {
 		});
 	}
 	
-	async mirrorAssets(options) {
-		this.#noSame(this.#busyMirror, 'mirrorAssets');
-		options = await this.#overrideWith(options, 'isDev');
-		await this.#busyTry('#busyMirror', async () => {
-			await mirrorAssets(options);
+	async deleteBuild(options) {
+		this.#noOther('deleteBuild');
+		options = await this.#overrideWith(options);
+		await this.#busyTry('#busyDelete', async () => {
+			await deleteBuild(options);
 		});
 	}
-
-	async build(options) {
-		this.#noOther('build');
+	
+	async listModules() {
+		return [...(await this.#optionsPromise).modules];
+	}
+	
+	// to-do
+	// async buildDocument(mod, doc, options) {
+	//   Modify buildDocumentFile to allow specifying the document to be built
+	// }
+	
+	async mirrorAssets(options) {
+		this.#noSame(this.#busyMirror, 'mirrorAssets');
+		options = await this.#overrideWith(options);
 		await this.#busyTry('#busyMirror', async () => {
-			await this.deleteBuild(options);
-			await Promise.all([
-				this.buildStyles(options),
-				this.buildScripts(options),
-				this.mirrorAssets(options),
-				this.buildTemplates(options)
-			]);
+			await mirrorAssets(options);
 		});
 	}
 }
