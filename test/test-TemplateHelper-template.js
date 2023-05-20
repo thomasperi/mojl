@@ -6,7 +6,7 @@ const DirectoryTester = require('../dev/DirectoryTester.js');
 const { name, cloneRun } = new DirectoryTester(__filename);
 
 const expandOptions = require('../src/expandOptions.js');
-const TemplateBuilder = require('../src/TemplateBuilder.js');
+const TemplateHelper = require('../src/TemplateHelper.js');
 
 describe(name, async () => {
 
@@ -14,7 +14,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
 			let log = [];
-			let builder = new TemplateBuilder(settings);
+			let builder = new TemplateHelper(settings);
 			let actual = await builder.include('src/foo', {log});
 			let expected = 'foo zote sbor';
 			assert.equal(actual, expected);
@@ -26,7 +26,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
 			let log = [];
-			let builder = new TemplateBuilder(settings);
+			let builder = new TemplateHelper(settings);
 			let actual = await builder.include('src/bar', {log});
 			let expected = 'bar zote sbor';
 			assert.equal(actual, expected);

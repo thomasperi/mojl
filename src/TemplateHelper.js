@@ -6,7 +6,7 @@ const linkUrl = require('./linkUrl.js');
 const templateTagFn = require('./templateTagFn.js');
 const ctimeCache = require('./ctimeCache.js');
 
-function TemplateBuilder(settings, urlDocument = '/index.html') {
+function TemplateHelper(settings, urlDocument = '/index.html') {
 	const {
 		base,
 		maxIncludeDepth,
@@ -109,4 +109,4 @@ function fileExists(file) {
 	return fs.existsSync(file) && fs.statSync(file).isFile();
 }
 
-module.exports = TemplateBuilder;
+module.exports = TemplateHelper;

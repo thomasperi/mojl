@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path").posix;
 
-const TemplateBuilder = require('./TemplateBuilder.js');
+const TemplateHelper = require('./TemplateHelper.js');
 
 async function buildDocumentFile(settings, module) {
 	let {
@@ -19,7 +19,7 @@ async function buildDocumentFile(settings, module) {
 		path.join('/', module + templateOutputSuffix)
 	);
 	
-	let builder = new TemplateBuilder(settings, document);
+	let builder = new TemplateHelper(settings, document);
 	
 	// to-do: If module template doesn't exist,
 	// back out one directory at a time to find one that does,
