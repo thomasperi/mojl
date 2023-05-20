@@ -6,7 +6,7 @@
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | See [#options](`Options`) below.
+| `options` | object | See [`Options`](#options) below.
 
 Creates a new Mojl instance with methods for building a project.
 
@@ -27,7 +27,7 @@ The full filesystem path to the project's base directory.
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [#options](`Options`)
+| `options` | object | Optional overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -46,7 +46,7 @@ Performs all build tasks:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [#options](`Options`)
+| `options` | object | Optional overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -70,7 +70,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [#options](`Options`)
+| `options` | object | Optional overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -94,7 +94,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [#options](`Options`)
+| `options` | object | Optional overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -120,7 +120,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [#options](`Options`)
+| `options` | object | Optional overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -151,7 +151,7 @@ The array of module paths (relative to the project's base directory) this `Mojl`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [#options](`Options`)
+| `options` | object | Optional overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
