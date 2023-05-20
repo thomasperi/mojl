@@ -78,3 +78,8 @@ mojl.build({isDev: true}).then(() => {
 2. The `scripts.js` and `styles.css` files each contain code that load the original source files, instead of the concatenated code. This helps ease debugging.
 3. Since the original files are used, URLs in CSS files are not rewritten.
 4. Other assets are symlinked instead of copied.
+
+
+---
+
+[< Back to Navigation](index.md#navigation)

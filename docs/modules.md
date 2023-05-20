@@ -49,3 +49,8 @@ example-project/
       foo/
         foo.tpl.js --> not inside home, so doesn't generate a page
 ```
+
+
+---
+
+[< Back to Navigation](index.md#navigation)
