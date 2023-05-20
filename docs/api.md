@@ -444,7 +444,7 @@ Check whether a given module exists and has a template.
 **Returns:** Boolean
 
 
-### `file`
+#### `file`
 
 > `.file(filePath, [options])`
 
