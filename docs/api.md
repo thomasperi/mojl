@@ -33,11 +33,11 @@ The full filesystem path to the project's base directory.
 
 Performs all build tasks:
 
-* [#deleteBuild](`.deleteBuild`)
-* [#buildStyles](`.buildStyles`)
-* [#buildScripts](`.buildScripts`)
-* [#mirrorAssets](`.mirrorAssets`)
-* [#buildTemplates](`.buildTemplates`)
+* [`.deleteBuild`](#deleteBuild)
+* [`.buildStyles`](#buildStyles)
+* [`.buildScripts`](#buildScripts)
+* [`.mirrorAssets`](#mirrorAssets)
+* [`.buildTemplates`](#buildTemplates)
 
 
 #### `buildScripts`
@@ -56,11 +56,11 @@ By default, it concatenates all the `.js` files into one file named `scripts.js`
 
 The following options can potentially change the default behavior:
 
-* [#buildDevDir](`buildDevDir`)
-* [#buildDistDir](`buildDistDir`)
-* [#buildJsFile](`buildJsFile`)
-* [#isDev](`isDev`)
-* [#jsMinifierAdaptor](`jsMinifierAdaptor`)
+* [`buildDevDir`](#buildDevDir)
+* [`buildDistDir`](#buildDistDir)
+* [`buildJsFile`](#buildJsFile)
+* [`isDev`](#isDev)
+* [`jsMinifierAdaptor`](#jsMinifierAdaptor)
 
 
 
@@ -80,12 +80,12 @@ By default, it concatenates all the `.css` files into one file named `styles.css
 
 The following options can potentially change the default behavior:
 
-* [#buildDevDir](`buildDevDir`)
-* [#buildDistDir](`buildDistDir`)
-* [#buildCssFile](`buildCssFile`)
-* [#cssMinifierAdaptor](`cssMinifierAdaptor`)
-* [#cssTranspilerAdaptor](`cssTranspilerAdaptor`)
-* [#isDev](`isDev`)
+* [`buildDevDir`](#buildDevDir)
+* [`buildDistDir`](#buildDistDir)
+* [`buildCssFile`](#buildCssFile)
+* [`cssMinifierAdaptor`](#cssMinifierAdaptor)
+* [`cssTranspilerAdaptor`](#cssTranspilerAdaptor)
+* [`isDev`](#isDev)
 
 
 #### `buildTemplates`
@@ -106,12 +106,12 @@ By default:
 
 The following options can potentially change the default behavior:
 
-* [#buildDevDir](`buildDevDir`)
-* [#buildDistDir](`buildDistDir`)
-* [#isDev](`isDev`)
-* [#templateHomeModule](`templateHomeModule`)
-* [#templateOutputDir](`templateOutputDir`)
-* [#templateOutputSuffix](`templateOutputSuffix`)
+* [`buildDevDir`](#buildDevDir)
+* [`buildDistDir`](#buildDistDir)
+* [`isDev`](#isDev)
+* [`templateHomeModule`](#templateHomeModule)
+* [`templateOutputDir`](#templateOutputDir)
+* [`templateOutputSuffix`](#templateOutputSuffix)
 
 
 #### `deleteBuild`
@@ -130,9 +130,9 @@ By default, it deletes the `dist` directory at the project's base.
 
 The following options can potentially change the default behavior:
 
-* [#buildDevDir](`buildDevDir`)
-* [#buildDistDir](`buildDistDir`)
-* [#isDev](`isDev`)
+* [`buildDevDir`](#buildDevDir)
+* [`buildDistDir`](#buildDistDir)
+* [`isDev`](#isDev)
 
 
 #### `listModules`
@@ -161,13 +161,13 @@ By default, it copies assets other than JS and CSS files, from all the modules t
 
 The following options can potentially change the default behavior:
 
-* [#buildAssetsDir](`buildAssetsDir`)
-* [#buildDevDir](`buildDevDir`)
-* [#buildDistDir](`buildDistDir`)
-* [#excludeFileTypesFromMirror](`excludeFileTypesFromMirror`)
-* [#isDev](`isDev`)
-* [#symlinkDevAssets](`symlinkDevAssets`)
-* [#symlinkDistAssets](`symlinkDistAssets`)
+* [`buildAssetsDir`](#buildAssetsDir)
+* [`buildDevDir`](#buildDevDir)
+* [`buildDistDir`](#buildDistDir)
+* [`excludeFileTypesFromMirror`](#excludeFileTypesFromMirror)
+* [`isDev`](#isDev)
+* [`symlinkDevAssets`](#symlinkDevAssets)
+* [`symlinkDistAssets`](#symlinkDistAssets)
 
 
 ### `Options`

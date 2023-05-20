@@ -32,4 +32,4 @@ You can use Mojl as a static site generator directly, or use it to build templat
 * [Build](build.md)
 * [Templates](templates.md)
 * [Transpilers](transpilers.md)
-* [Options](options.md)
+* [API](api.md)
