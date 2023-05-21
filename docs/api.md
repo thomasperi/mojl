@@ -104,7 +104,6 @@ The following options can potentially change the default behavior:
 * [`buildDistDir`](#builddistdir)
 * [`isDev`](#isdev)
 * [`templateHomeModule`](#templatehomemodule)
-* [`templateOutputDir`](#templateoutputdir)
 * [`templateOutputSuffix`](#templateoutputsuffix)
 
 
@@ -377,15 +376,6 @@ The path of the module that acts as the root directory for finding templates to 
 | string | `'src/home'` | Relative to `base`
 
 
-#### `templateOutputDir`
-
-The path of the directory where the output of the template files will be written.
-
-| Type   | Default             | Notes
-|--------|---------------------|-----------
-| string | `''` (empty string) | Relative to `buildDevDir` or `buildDistDir`
-
-
 #### `templateOutputSuffix`
 
 The string to append to each module in (and including) `templateHomeModule` in order to produce the filename where the template output will be written.
@@ -578,7 +568,6 @@ See [example usage](#templatehelper) above.
   * [`symlinkDevAssets`](#symlinkdevassets)
   * [`symlinkDistAssets`](#symlinkdistassets)
   * [`templateHomeModule`](#templatehomemodule)
-  * [`templateOutputDir`](#templateoutputdir)
   * [`templateOutputSuffix`](#templateoutputsuffix)
   * [`trimIncludes`](#trimincludes)
 

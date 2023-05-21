@@ -151,16 +151,6 @@ const Options = {
 	templateHomeModule: 'src/home',
 
 	/**
-	 * The path of the directory where the output of the template files will be written.
-	 *
-	 * Relative to `buildDevDir` and `buildDistDir`
-	 *
-	 * @type string
-	 * @default #value
-	 */
-	templateOutputDir: '', // to-do: remove this option
-
-	/**
 	 * The string to append to each module in (and including) `templateHomeModule`
 	 * in order to produce the filename where the template output will be written.
 	 *

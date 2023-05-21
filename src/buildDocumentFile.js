@@ -9,7 +9,6 @@ async function buildDocumentFile(settings, module) {
 		buildDevDir,
 		buildDistDir,
 		templateHomeModule,
-		templateOutputDir,
 		templateOutputSuffix,
 		isDev,
 	} = settings;
@@ -32,7 +31,6 @@ async function buildDocumentFile(settings, module) {
 	let outputFile = path.join(
 		base,
 		buildDir,
-		templateOutputDir,
 		document
 	);
 	

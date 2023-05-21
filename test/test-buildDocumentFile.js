@@ -58,25 +58,6 @@ describe(name, async () => {
 		});
 	});
 	
-	it('should honor the templateOutputDir option', async () => {
-		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let before = box.snapshot();
-			
-			let settings = await expandOptions({
-				templateOutputDir: 'deeper/directory',
-				isDev: true,
-			});
-			let module = 'src/home';
-			await buildDocumentFile(settings, module);
-			
-			let after = box.snapshot();
-			let {created} = box.diff(before, after);
-
-			assert.deepEqual(created, ['dev/deeper/directory/index.html']);
-			assert.equal(after['dev/deeper/directory/index.html'], '(home)');
-		});
-	});
-	
 	it('should honor the templateHomeModule option', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
