@@ -10,6 +10,9 @@ const has = Object.prototype.hasOwnProperty;
 
 const nonOverridables = ['base', 'modules'];
 
+// to-do:
+// test new methods
+
 class Mojl {
 	#optionsPromise;
 	#busyDelete = false;
@@ -67,10 +70,6 @@ class Mojl {
 		}
 	}
 	
-	async base() {
-		return (await this.#optionsPromise).base;
-	}
-	
 	async build(options) {
 		this.#noOther('build');
 		await this.#busyTry('#busyBuild', async () => {
@@ -83,6 +82,11 @@ class Mojl {
 			]);
 		});
 	}
+
+	// to-do
+	// async buildDocument(mod, doc, options) {
+	//   Modify buildDocumentFile to allow specifying the document to be built
+	// }
 
 	async buildScripts(options) {
 		this.#noSame(this.#busyScripts, 'buildScripts');
@@ -128,14 +132,13 @@ class Mojl {
 		});
 	}
 	
-	async listModules() {
-		return [...(await this.#optionsPromise).modules];
+	async getBase() {
+		return (await this.#optionsPromise).base;
 	}
 	
-	// to-do
-	// async buildDocument(mod, doc, options) {
-	//   Modify buildDocumentFile to allow specifying the document to be built
-	// }
+	async getModuleList() {
+		return [...(await this.#optionsPromise).modules];
+	}
 	
 	async mirrorAssets(options) {
 		this.#noSame(this.#busyMirror, 'mirrorAssets');

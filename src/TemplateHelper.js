@@ -4,6 +4,8 @@ const path = require('path').posix;
 const fileUrl = require('./fileUrl.js');
 const linkUrl = require('./linkUrl.js');
 const templateTagFn = require('./templateTagFn.js');
+const scriptTag = require('./scriptTag.js');
+const styleTag = require('./styleTag.js');
 const ctimeCache = require('./ctimeCache.js');
 
 function TemplateHelper(settings, urlDocument = '/index.html') {
@@ -48,12 +50,22 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		return outputPromise;
 	};
 	
-	this.file = (filePath, options) => {
+	this.file = (filePath, options = {}) => {
 		return fileUrl(settings, peek(stack).templatePath, urlDocument, filePath, options);
 	};
 	
 	this.link = (linkPath) => {
 		return linkUrl(settings, urlDocument, linkPath);
+	};
+	
+	this.script = (options) => {
+		// to-do: require `file` option to be given as a site-relative URL
+		return scriptTag(settings, urlDocument, options);
+	};
+
+	this.style = (options) => {
+		// to-do: require `file` option to be given as a site-relative URL
+		return styleTag(settings, urlDocument, options);
 	};
 }
 

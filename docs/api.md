@@ -501,6 +501,40 @@ Page-relative URLs (`./foo/bar`, `../foo/bar`, `foo/bar`) and site-relative URLs
 **Resolves:** String
 
 
+#### `script`
+
+> `.script([options])`
+
+Get an HTML tag for loading a JavaScript file on the current page.
+
+| Parameter       | Type   | Description
+|-----------------|--------|-------------
+| `options`       | object | (Optional) Options affecting the behavior of this method
+| `options.file`  | string | The site-relative path to a specific file to load
+
+If `options.file` is omitted, the tag will load `/scripts.js` or the script specified in the [`buildJsFile`](#buildjsfile) Mojl option.
+
+**Returns:** Promise
+**Resolves:** String
+
+
+#### `style`
+
+> `.style([options])`
+
+Get an HTML tag for loading a stylesheet file on the current page.
+
+| Parameter       | Type   | Description
+|-----------------|--------|-------------
+| `options`       | object | (Optional) Options affecting the behavior of this method
+| `options.file`  | string | The site-relative path to a specific file to load
+
+If `options.file` is omitted, the tag will load `/styles.css` or the stylesheet specified in the [`buildCssFile`](#buildcssfile) Mojl option.
+
+**Returns:** Promise
+**Resolves:** String
+
+
 #### `template`
 
 A tag function for building the output string for the template.

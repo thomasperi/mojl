@@ -158,7 +158,7 @@ const Options = {
 	 * @type string
 	 * @default #value
 	 */
-	templateOutputDir: '',
+	templateOutputDir: '', // to-do: remove this option
 
 	/**
 	 * The string to append to each module in (and including) `templateHomeModule`
