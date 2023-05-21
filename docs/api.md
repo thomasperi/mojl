@@ -587,6 +587,8 @@ See [example usage](#templatehelper) above.
   * [`file`](#file)
   * [`include`](#include)
   * [`link`](#link)
+  * [`script`](#script)
+  * [`style`](#style)
   * [`template`](#template)
 
 ---
