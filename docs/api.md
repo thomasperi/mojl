@@ -4,13 +4,13 @@
 
 ---
 
-### `Mojl` Constructor
+### `Mojl`
 
 > `new Mojl([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | See [`Options`](#options) below.
+| `options` | object | (optional) See [`Options`](#options) below.
 
 Creates a new Mojl instance with methods for building a project.
 
@@ -21,17 +21,17 @@ Creates a new Mojl instance with methods for building a project.
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
 Performs all build tasks:
 
-* [`.deleteBuild`](#deletebuild)
-* [`.buildStyles`](#buildstyles)
-* [`.buildScripts`](#buildscripts)
-* [`.mirrorAssets`](#mirrorassets)
-* [`.buildTemplates`](#buildtemplates)
+* [`deleteBuild`](#deletebuild)
+* [`buildStyles`](#buildstyles)
+* [`buildScripts`](#buildscripts)
+* [`mirrorAssets`](#mirrorassets)
+* [`buildTemplates`](#buildtemplates)
 
 
 #### `buildScripts`
@@ -40,7 +40,7 @@ Performs all build tasks:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -64,7 +64,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -88,7 +88,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -113,7 +113,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -132,8 +132,7 @@ The following options can potentially change the default behavior:
 
 > `.getBase()`
 
-**Returns:** Promise
-**Resolves:** String
+**Returns:** Promise -> String
 
 The full filesystem path to the project's base directory.
 
@@ -142,8 +141,7 @@ The full filesystem path to the project's base directory.
 
 > `.getModuleList()`
 
-**Returns:** Promise
-**Resolves:** Array
+**Returns:** Promise -> Array
 
 The array of module paths (relative to the project's base directory) this `Mojl` instance is working from.
 
@@ -154,7 +152,7 @@ The array of module paths (relative to the project's base directory) this `Mojl`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | Optional overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [`Options`](#options)
 
 **Returns:** Promise
 
@@ -176,7 +174,7 @@ The following options can potentially change the default behavior:
 
 ### `Options`
 
-These options can be passed to the [`Mojl`](#mojl-constructor) constructor, or to any instance method that accepts options. Some options (noted individually below as "constructor only") are ignored by methods other than the constructor.
+These options can be passed to the [`Mojl`](#mojl) constructor, or to any instance method that accepts options. Some options (noted individually below as "constructor only") are ignored by methods other than the constructor.
 
 An option passed to the constructor persists for the life of the instance.
 
@@ -443,13 +441,12 @@ Get a URL for the specified file path.
 | Parameter       | Type    | Description
 |-----------------|---------|-------------
 | `filePath`      | string  | The path of the file to get a URL for
-| `options`       | object  | (Optional) Options affecting the behavior of this method
+| `options`       | object  | (optional) Options affecting the behavior of this method
 | `options.hash`  | boolean | Append a cache-busting hash to the URL. (default `true`)
 
 If `filePath` is a relative path, it is relative to the current template's parent directory.
 
-**Returns:** Promise
-**Resolves:** String
+**Returns:** Promise -> String
 
 
 #### `include`
@@ -461,10 +458,9 @@ Include the named module's template.
 | Parameter | Type   | Description
 |-----------|--------|-------------
 | `module`  | string | The name of the module to include, relative to the project's `base`
-| `props`   | object | (Optional) The object for passing properties to the module.
+| `props`   | object | (optional) The object for passing properties to the module.
 
-**Returns:** Promise
-**Resolves:** String
+**Returns:** Promise -> String
 
 
 #### `link`
@@ -487,8 +483,7 @@ Page-relative URLs (`./foo/bar`, `../foo/bar`, `foo/bar`) and site-relative URLs
 | `true`             | Site-relative URLs are converted to page-relative
 
 
-**Returns:** Promise
-**Resolves:** String
+**Returns:** Promise -> String
 
 
 #### `script`
@@ -499,13 +494,12 @@ Get an HTML tag for loading a JavaScript file on the current page.
 
 | Parameter       | Type   | Description
 |-----------------|--------|-------------
-| `options`       | object | (Optional) Options affecting the behavior of this method
+| `options`       | object | (optional) Options affecting the behavior of this method
 | `options.file`  | string | The site-relative path to a specific file to load
 
 If `options.file` is omitted, the tag will load `/scripts.js` or the script specified in the [`buildJsFile`](#buildjsfile) Mojl option.
 
-**Returns:** Promise
-**Resolves:** String
+**Returns:** Promise -> String
 
 
 #### `style`
@@ -516,13 +510,12 @@ Get an HTML tag for loading a stylesheet file on the current page.
 
 | Parameter       | Type   | Description
 |-----------------|--------|-------------
-| `options`       | object | (Optional) Options affecting the behavior of this method
+| `options`       | object | (optional) Options affecting the behavior of this method
 | `options.file`  | string | The site-relative path to a specific file to load
 
 If `options.file` is omitted, the tag will load `/styles.css` or the stylesheet specified in the [`buildCssFile`](#buildcssfile) Mojl option.
 
-**Returns:** Promise
-**Resolves:** String
+**Returns:** Promise -> String
 
 
 #### `template`
@@ -531,15 +524,14 @@ A tag function for building the output string for the template.
 
 See [example usage](#templatehelper) above.
 
-**Returns:** Promise
-**Resolves:** String
+**Returns:** Promise -> String
 
 
 ---
 
 ### Table of Contents
 
-* [`new Mojl([options])`](#mojl-constructor)
+* [`new Mojl([options])`](#mojl)
   * [`.build([options])`](#build)
   * [`.buildScripts([options])`](#buildscripts)
   * [`.buildStyles([options])`](#buildstyles)
