@@ -13,19 +13,19 @@ async function buildDocumentFile(settings, module) {
 		isDev,
 	} = settings;
 	
-	let document = path.relative(
+	let document = path.join('/', path.relative(
 		path.join('/', templateHomeModule), 
 		path.join('/', module + templateOutputSuffix)
-	);
+	));
 	
-	let builder = new TemplateHelper(settings, document);
+	let helper = new TemplateHelper(settings, document);
 	
 	// to-do: If module template doesn't exist,
 	// back out one directory at a time to find one that does,
 	// and pass the extra path nodes as a prop.
 	// But maybe do that in a new `produceDocument` method.
 
-	let content = await builder.include(module);
+	let content = await helper.include(module);
 	
 	let buildDir = isDev ? buildDevDir : buildDistDir;
 	let outputFile = path.join(

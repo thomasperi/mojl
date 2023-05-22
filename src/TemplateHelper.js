@@ -15,6 +15,10 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		trimIncludes,
 	} = settings;
 	
+	if (!urlDocument.startsWith('/')) {
+		throw 'TemplateHelper: `urlDocument` must begin with a slash';
+	}
+	
 	const stack = [];
 
 	this.template = (strings, ...values) => {
