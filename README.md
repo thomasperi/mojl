@@ -2,7 +2,7 @@
 
 *A bundler for vanilla websites*
 
-![Mojl Logo](docs/mojl-logo-square.svg)
+![Mojl Logo](https://thomasperi.github.io/mojl/mojl-logo-square.svg)
 
 Mojl lets you modularize the code and assets for websites that aren't apps, without many of the complexities of modern webapp development.
 
