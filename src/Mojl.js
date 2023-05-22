@@ -78,8 +78,8 @@ class Mojl {
 				this.buildStyles(options),
 				this.buildScripts(options),
 				this.mirrorAssets(options),
-				this.buildTemplates(options)
 			]);
+			await this.buildTemplates(options);
 		});
 	}
 
