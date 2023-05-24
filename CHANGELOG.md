@@ -8,9 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.0.0-alpha.2] - 2023-05-24
+
 ### Fixed
 - `urlDocument` + `pageRelativeUrls` bug
 - `build()` now builds templates last instead of in parallel (for style and script hashes)
+
 
 ## [2.0.0-alpha.1] - 2023-05-22
 
@@ -49,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-changelog
 
 
-[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.1...2.0.0-alpha
+[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.2...2.0.0-alpha
+[2.0.0-alpha.2]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
 [2.0.0-alpha.1]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.0...v2.0.0-alpha.1
 [2.0.0-alpha.0]: https://github.com/thomasperi/mojl/compare/v1.1.0...v2.0.0-alpha.0
 [1.1.0]: https://github.com/thomasperi/mojl/releases/tag/v1.1.0
