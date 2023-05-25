@@ -112,6 +112,22 @@ describe(name, async () => {
 		});
 	});
 
+	it('should use props and document when specified', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let before = box.snapshot();
+			
+			let settings = await expandOptions({isDev: true});
+			let module = 'src/home3/sbor';
+			await buildDocumentFile(settings, module, {foo: 'bar'}, 'zote/sbor.html');
+			
+			let after = box.snapshot();
+			let {created} = box.diff(before, after);
+
+			assert.deepEqual(created, ['dev/zote/sbor.html']);
+			assert.equal(after['dev/zote/sbor.html'], '>>>bar<<<');
+		});
+	});
+
 });
 
 

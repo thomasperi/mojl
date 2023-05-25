@@ -3,8 +3,8 @@ const path = require("path").posix;
 
 const TemplateHelper = require('./TemplateHelper.js');
 
-async function buildDocumentFile(settings, module) {
-	let {
+async function buildDocumentFile(settings, module, props = null, document = null) {
+	const {
 		base,
 		buildDevDir,
 		buildDistDir,
@@ -13,22 +13,19 @@ async function buildDocumentFile(settings, module) {
 		isDev,
 	} = settings;
 	
-	let document = path.join('/', path.relative(
+	document = document || path.relative(
 		path.join('/', templateHomeModule), 
 		path.join('/', module + templateOutputSuffix)
-	));
+	);
 	
-	let helper = new TemplateHelper(settings, document);
+	document = path.join('/', document);
 	
-	// to-do: If module template doesn't exist,
-	// back out one directory at a time to find one that does,
-	// and pass the extra path nodes as a prop.
-	// But maybe do that in a new `produceDocument` method.
-
-	let content = await helper.include(module);
+	const helper = new TemplateHelper(settings, document);
 	
-	let buildDir = isDev ? buildDevDir : buildDistDir;
-	let outputFile = path.join(
+	const content = await helper.include(module, props);
+	
+	const buildDir = isDev ? buildDevDir : buildDistDir;
+	const outputFile = path.join(
 		base,
 		buildDir,
 		document
