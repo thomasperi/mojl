@@ -2,6 +2,7 @@ const expandOptions = require('./expandOptions.js');
 const buildDevLoaderFile = require('./buildDevLoaderFile.js');
 const buildMonolithFile = require('./buildMonolithFile.js');
 const buildTranspilerFile = require('./buildTranspilerFile.js');
+const buildDocumentFile = require('./buildDocumentFile.js');
 const buildDocumentFilesAll = require('./buildDocumentFilesAll.js');
 const deleteBuild = require('./deleteBuild.js');
 const mirrorAssets = require('./mirrorAssets.js');
@@ -52,10 +53,14 @@ class Mojl {
 		}
 	}
 	
-	#noSame(flag, method) {
+	#noDelete(method) {
 		if (this.#busyDelete) {
 			throw `Can't call ${method} while deleting a previous build`;
 		}
+	}
+	
+	#noSame(flag, method) {
+		this.#noDelete(method);
 		if (flag) {
 			throw `Can't call ${method} while it's already running`;
 		}
@@ -83,10 +88,11 @@ class Mojl {
 		});
 	}
 
-	// to-do
-	// async buildDocument(mod, doc, options) {
-	//   Modify buildDocumentFile to allow specifying the document to be built
-	// }
+	async buildDocument(document, module, props, options) {
+		this.#noDelete('buildDocument');
+		options = await this.#overrideWith(options);
+		await buildDocumentFile(options, module, props, document);
+	}
 
 	async buildScripts(options) {
 		this.#noSame(this.#busyScripts, 'buildScripts');
