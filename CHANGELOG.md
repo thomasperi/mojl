@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `buildDocumentFile` can now accept props to pass to the module, and an explicit document to write to.
+
 
 ## [2.0.0-alpha.2] - 2023-05-24
 
