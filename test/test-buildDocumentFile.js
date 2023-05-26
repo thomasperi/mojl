@@ -128,6 +128,21 @@ describe(name, async () => {
 		});
 	});
 
+	it('should not write a file when template returns false', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let before = box.snapshot();
+			
+			let settings = await expandOptions();
+			let module = 'src/home3/thed';
+			await buildDocumentFile(settings, module, null, 'zote/sbor');
+			
+			let after = box.snapshot();
+			let {created} = box.diff(before, after);
+
+			assert.deepEqual(created, []);
+		});
+	});
+
 });
 
 

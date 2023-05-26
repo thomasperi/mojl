@@ -111,8 +111,8 @@ function includeTemplate(templatePath, mojlBuilder, props) {
 		throw `Template must export a function (${templatePath})`;
 	}
 	let outputPromise = fn(mojlBuilder, props);
-	if (!(outputPromise instanceof Promise)) {
-		throw `Template function must return "mojl.template\`...\`" or other Promise (${templatePath})`;
+	if (outputPromise !== false && !(outputPromise instanceof Promise)) {
+		throw `Template function must return false or a Promise such as "mojl.template\`...\`" (${templatePath})`;
 	}
 	return outputPromise;
 }

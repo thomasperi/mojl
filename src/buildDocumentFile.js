@@ -24,15 +24,18 @@ async function buildDocumentFile(settings, module, props = null, prefix = null) 
 	
 	const content = await helper.include(module, props);
 	
-	const buildDir = isDev ? buildDevDir : buildDistDir;
-	const outputFile = path.join(
-		base,
-		buildDir,
-		document
-	);
+	if (content !== false) {
+		const buildDir = isDev ? buildDevDir : buildDistDir;
+		const outputFile = path.join(
+			base,
+			buildDir,
+			document
+		);
 	
-	await fs.promises.mkdir(path.dirname(outputFile), {recursive: true});
-	await fs.promises.writeFile(outputFile, content, 'utf8');
+		await fs.promises.mkdir(path.dirname(outputFile), {recursive: true});
+		await fs.promises.writeFile(outputFile, content, 'utf8');
+	}
+	
 }
 
 module.exports = buildDocumentFile;
