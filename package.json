@@ -10,7 +10,7 @@
   "scripts": {
     "test": "npx mocha"
   },
-  "keywords": [],
+  "keywords": ["bundler", "vanilla", "static site generator", "ssg"],
   "repository": "github:thomasperi/mojl",
   "homepage": "https://thomasperi.github.io/mojl/",
   "author": "Thomas Peri <hello@thomasperi.net>",
