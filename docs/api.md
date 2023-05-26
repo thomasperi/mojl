@@ -416,7 +416,7 @@ The string to append to a path prefix when writing template output files.
 |--------|-----------------
 | string | `'/index.html'`
 
-There are two ways of using this, and each way has its advantages.
+There are two ways of using this, each for its own purpose:
 
 1. If the suffix is a slash plus a filename (as in the default `/index.html`) the prefix is used as a directory (because of the slash) and the output file will be given that filename inside it. This gives you pretty URLs without file extensions.
 
@@ -424,7 +424,7 @@ There are two ways of using this, and each way has its advantages.
 
 **Caveat for Pattern #2:**
 
-You shouldn't attempt to build a document at the root prefix (empty or single slash) when using just an extension, because a file will be built using only the extension, effectively creating a file that begins with a dot, which is probably not desirable.
+You shouldn't attempt to build a document at the root of the build directory (i.e., with an empty string or single slash for the prefix) when using just an extension, because the output file will be named using only the extension beginning with with a dot, which is probably not desirable. (e.g. `https://example.com/.html`)
 
 This means that if you've got modules automatically being built from [`templateHomeModule`](#templatehomemodule), the home module should not have a template of its own when `templateOutputSuffix` follows pattern #2. Instead, if you're building a static site this way, you can create an `index` module inside the `home` module.
 
