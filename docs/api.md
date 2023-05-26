@@ -84,7 +84,7 @@ The following options can potentially change the default behavior:
 
 #### `buildTemplate`
 
-> `mojl.buildTemplate(docPrefix, module[, props, options])`
+> `mojl.buildTemplate(docPrefix, module[, props[, options]])`
 
 | Parameter   | Type   | Description
 |-------------|--------|-------------
@@ -95,7 +95,7 @@ The following options can potentially change the default behavior:
 
 **Returns:** Promise
 
-Builds output files based on the `.tpl.js` template file for the specified `module`. 
+Builds an output file based on the `.tpl.js` template file for the specified `module`. 
 
 The `docPrefix` argument plus the [`templateOutputSuffix`](#templateoutputsuffix) option determine the file to be written. For example:
 

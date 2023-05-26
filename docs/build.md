@@ -27,9 +27,9 @@ Before and after build:
 ```
 example-project/        >   example-project/
   build.js              >     build.js
-  src/                  >     src/
-    shell/              >       (src files are unchanged)
-      shell.css         >     dist/
+  src/                  >     src/    -- existing src directory, unchanged
+    shell/              >       
+      shell.css         >     dist/   -- new build directory
       shell.tpl.js      >       scripts.js     -- concatenated .js files
       images/           >       styles.css     -- concatenated .css files
         logo.svg        >       index.html     -- built from home.tpl.js
