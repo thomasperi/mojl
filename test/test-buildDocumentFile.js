@@ -116,15 +116,15 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 			
-			let settings = await expandOptions({isDev: true});
+			let settings = await expandOptions();
 			let module = 'src/home3/sbor';
-			await buildDocumentFile(settings, module, {foo: 'bar'}, 'zote/sbor.html');
+			await buildDocumentFile(settings, module, {foo: 'bar'}, 'zote/sbor');
 			
 			let after = box.snapshot();
 			let {created} = box.diff(before, after);
 
-			assert.deepEqual(created, ['dev/zote/sbor.html']);
-			assert.equal(after['dev/zote/sbor.html'], '>>>bar<<<');
+			assert.deepEqual(created, ['dist/zote/sbor/index.html']);
+			assert.equal(after['dist/zote/sbor/index.html'], '>>>bar<<<');
 		});
 	});
 

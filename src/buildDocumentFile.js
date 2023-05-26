@@ -3,7 +3,7 @@ const path = require("path").posix;
 
 const TemplateHelper = require('./TemplateHelper.js');
 
-async function buildDocumentFile(settings, module, props = null, document = null) {
+async function buildDocumentFile(settings, module, props = null, prefix = null) {
 	const {
 		base,
 		buildDevDir,
@@ -13,12 +13,12 @@ async function buildDocumentFile(settings, module, props = null, document = null
 		isDev,
 	} = settings;
 	
-	document = document || path.relative(
+	prefix = prefix || path.relative(
 		path.join('/', templateHomeModule), 
-		path.join('/', module + templateOutputSuffix)
+		path.join('/', module)
 	);
 	
-	document = path.join('/', document);
+	const document = path.join('/', prefix + templateOutputSuffix);
 	
 	const helper = new TemplateHelper(settings, document);
 	

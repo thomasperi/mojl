@@ -14,16 +14,35 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildDocument('foo-page.html', 'src/foo');
+			await mojl.buildDocument('foo-page', 'src/foo');
 
 			let after = box.snapshot();
 			let diff = box.diff(before, after);
 			
 			assert.deepEqual(diff.created, [
-				'dist/foo-page.html'
+				'dist/foo-page/index.html'
 			]);
 
-			assert.equal(after['dist/foo-page.html'], 'foo-content');
+			assert.equal(after['dist/foo-page/index.html'], 'foo-content');
+			
+		});
+	});
+
+	it('should build document with leading slash', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let before = box.snapshot();
+
+			let mojl = new Mojl();
+			await mojl.buildDocument('/foo-page', 'src/foo');
+
+			let after = box.snapshot();
+			let diff = box.diff(before, after);
+			
+			assert.deepEqual(diff.created, [
+				'dist/foo-page/index.html'
+			]);
+
+			assert.equal(after['dist/foo-page/index.html'], 'foo-content');
 			
 		});
 	});
@@ -33,16 +52,16 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildDocument('bar-page.html', 'src/bar', {zote: 'sbor'});
+			await mojl.buildDocument('bar-page', 'src/bar', {zote: 'sbor'});
 
 			let after = box.snapshot();
 			let diff = box.diff(before, after);
 			
 			assert.deepEqual(diff.created, [
-				'dist/bar-page.html'
+				'dist/bar-page/index.html'
 			]);
 
-			assert.equal(after['dist/bar-page.html'], 'bar-sbor');
+			assert.equal(after['dist/bar-page/index.html'], 'bar-sbor');
 			
 		});
 	});
@@ -52,18 +71,19 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildDocument('bar-page-2.html', 'src/bar', {zote: 'thed'}, {
-				isDev: true
+			await mojl.buildDocument('bar-page-2', 'src/bar', {zote: 'thed'}, {
+				isDev: true,
+				templateOutputSuffix: '.md'
 			});
 
 			let after = box.snapshot();
 			let diff = box.diff(before, after);
 			
 			assert.deepEqual(diff.created, [
-				'dev/bar-page-2.html'
+				'dev/bar-page-2.md'
 			]);
 
-			assert.equal(after['dev/bar-page-2.html'], 'bar-thed');
+			assert.equal(after['dev/bar-page-2.md'], 'bar-thed');
 			
 		});
 	});

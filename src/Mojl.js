@@ -88,10 +88,10 @@ class Mojl {
 		});
 	}
 
-	async buildDocument(document, module, props, options) {
+	async buildDocument(documentPrefix, module, props, options) {
 		this.#noDelete('buildDocument');
 		options = await this.#overrideWith(options);
-		await buildDocumentFile(options, module, props, document);
+		await buildDocumentFile(options, module, props, documentPrefix);
 	}
 
 	async buildScripts(options) {
