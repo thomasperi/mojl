@@ -16,7 +16,7 @@ If you're not familiar with what's going on there, I recommend reading about [ta
 
 There are also a few non-obvious details that you might find handy:
 
-* The `mojl` argument is a helper object with template-specific methods, not to be confused with a `Mojl` instance.
+* The `mojl` argument is a [helper object](api.md#templatehelper) with template-specific methods, not to be confused with a `Mojl` instance.
 * The `mojl.template` tag function returns a Promise that resolves to a string. This lets you do asynchronous operations inside the template.
 * The `props` argument contains whatever value is passed to the template when it is included. By convention this is an object with named properties, but it doesn't have to be.
 
