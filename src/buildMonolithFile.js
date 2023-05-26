@@ -42,7 +42,7 @@ async function buildMonolithFile(settings, type) {
 	}
 	
 	if (minifierFn) {
-		outputCode = minifierFn(outputCode);
+		outputCode = await minifierFn(outputCode);
 	}
 	
 	await fs.promises.mkdir(path.dirname(outputPath), {recursive: true});
