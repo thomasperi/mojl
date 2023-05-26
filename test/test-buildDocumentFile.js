@@ -133,7 +133,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 			
 			let settings = await expandOptions();
-			let module = 'src/home3/thed';
+			let module = 'src/home3/sbor';
 			await buildDocumentFile(settings, module, null, 'zote/sbor');
 			
 			let after = box.snapshot();

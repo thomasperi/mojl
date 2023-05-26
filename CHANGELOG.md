@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `buildDocumentFile` can now accept props to pass to the module, and an explicit document to write to.
 - `Mojl` class now has `buildDocument` method
 - `Mojl.buildTemplates` test
+- Allow templates to decline to write output by returning false
 
 ### Changed
 - Renamed `Mojl` methods: `buildDocument` -> `buildTemplate`, `buildTemplates` -> `buildTemplatesAuto`
