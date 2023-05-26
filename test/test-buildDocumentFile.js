@@ -143,6 +143,30 @@ describe(name, async () => {
 		});
 	});
 
+	it('should handle no-slash-suffix edge case in an arbitrary but predictable way', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let before = box.snapshot();
+			
+			let settings = await expandOptions({
+				templateOutputSuffix: '.html'
+			});
+			let module = 'src/home3/sbor';
+			await buildDocumentFile(settings, module, {foo: 'bar'}, '');
+			await buildDocumentFile(settings, module, {foo: 'zote'}, 'sbor');
+			
+			let after = box.snapshot();
+			let {created} = box.diff(before, after);
+
+			// The home page gets rendered as the suffix itself even if it starts with a dot.
+			assert.deepEqual(created, [
+				'dist/.html',
+				'dist/sbor.html',
+			]);
+			assert.equal(after['dist/.html'], '>>>bar<<<');
+			assert.equal(after['dist/sbor.html'], '>>>zote<<<');
+		});
+	});
+
 });
 
 

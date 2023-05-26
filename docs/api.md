@@ -82,6 +82,36 @@ The following options can potentially change the default behavior:
 * [`isDev`](#isdev)
 
 
+#### `buildTemplate`
+
+> `.buildTemplate(docPrefix, module[, props, options])`
+
+| Parameter   | Type   | Description
+|-------------|--------|-------------
+| `docPrefix` | string | The prefix for determining where to write the output document.
+| `module`    | string | The module whose template will build the document.
+| `props`     | object | (optional) An props object to pass to the module.
+| `options`   | object | (optional) Overrides to the instance [`Options`](#options)
+
+**Returns:** Promise
+
+Builds output files based on the `.tpl.js` template file for the specified `module`. 
+
+The `docPrefix` argument plus the [`templateOutputSuffix`](#templateoutputsuffix) option determine the file to be written. For example:
+
+| `docPrefix`  | `templateOutputSuffix`    | Output File
+|--------------|---------------------------|-------------
+| `'/'`        | `'/index.html'` (default) | `(build dir)/index.html`
+| `'foo/bar'`  | `'.html'`                 | `(build dir)/foo/bar.html`
+
+The following options influence the file path that gets written:
+
+* [`buildDevDir`](#builddevdir)
+* [`buildDistDir`](#builddistdir)
+* [`isDev`](#isdev)
+* [`templateOutputSuffix`](#templateoutputsuffix)
+
+
 #### `buildTemplatesAuto`
 
 > `.buildTemplatesAuto([options])`
@@ -376,7 +406,7 @@ The path of the module that acts as the root directory for finding templates to 
 
 #### `templateOutputSuffix`
 
-The string to append to each module in (and including) `templateHomeModule` in order to produce the filename where the template output will be written.
+The string to append to a path prefix when writing template output files.
 
 | Type   | Default
 |--------|-----------------
@@ -384,11 +414,15 @@ The string to append to each module in (and including) `templateHomeModule` in o
 
 There are two ways of using this, and each way has its advantages.
 
-1. If the suffix is a slash plus a filename (as in the default `/index.html`) each output file will be given that filename and written inside a directory named after the module that produced it. This gives you pretty URLs without file extensions.
+1. If the suffix is a slash plus a filename (as in the default `/index.html`) the prefix is used as a directory (because of the slash) and the output file will be given that filename inside it. This gives you pretty URLs without file extensions.
 
-2. If the suffix is a dot plus an extension, such as `.html`, each output file itself will be named after the module that produced it, with the file extension added. This is the better choice when you're outputting templates for another SSG or framework, or when you're building a site that will be loaded directly from disk and not from a web server.
+2. If the suffix is a dot plus an extension, such as `.html`, the prefix is used as the name of the file, with the file extension added. This is the better choice when you're outputting templates for another SSG or framework, or when you're building a site that will be loaded directly from disk and not from a web server.
 
-In case #2, the `home` module will be ignored and no output file will be written, because the file would fall outside the web root. (`example-project/dist/index.html` is inside the `dist` directory, but `example-project/dist.html` is outside it.)
+**Caveat for Pattern #2:**
+
+You shouldn't attempt to build a document at the root prefix (empty or single slash) when using just an extension, because a file will be built using only the extension, effectively creating a file that begins with a dot, which is probably not desirable.
+
+This means that if you've got modules automatically being built from [`templateHomeModule`](#templatehomemodule), the home module should not have a template of its own when `templateOutputSuffix` follows pattern #2. Instead, if you're building a static site this way, you can create an `index` module inside the `home` module.
 
 
 #### `trimIncludes`
@@ -535,6 +569,7 @@ See [example usage](#templatehelper) above.
   * [`.build([options])`](#build)
   * [`.buildScripts([options])`](#buildscripts)
   * [`.buildStyles([options])`](#buildstyles)
+  * [`.buildTemplate(docPrefix, module[, props, options])`](#buildtemplate)
   * [`.buildTemplatesAuto([options])`](#buildtemplatesauto)
   * [`.deleteBuild([options])`](#deletebuild)
   * [`.getBase()`](#getbase)
