@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - home dotfile considerations
 
+### Changed
+- TemplateHelper now returns a function
+
 
 ## [2.0.0-alpha.3] - 2023-05-25
 
