@@ -104,6 +104,8 @@ The `docPrefix` argument plus the [`templateOutputSuffix`](#templateoutputsuffix
 | `'/'`        | `'/index.html'` (default) | `(build dir)/index.html`
 | `'foo/bar'`  | `'.html'`                 | `(build dir)/foo/bar.html`
 
+> See the caveat under [`templateOutputSuffix`](#templateoutputsuffix).
+
 The following options influence the file path that gets written:
 
 * [`buildDevDir`](#builddevdir)
@@ -127,6 +129,8 @@ Builds output files based on the `.tpl.js` template files for the home module an
 By default:
 * The `src/home/home.tpl.js` template outputs to `dist/index.html`.
 * Modules inside `src/home` output to paths determined by the path of the module. For example, `src/home/about/about.tpl.js` outputs to `dist/about/index.html`.
+
+> See the caveat under [`templateOutputSuffix`](#templateoutputsuffix).
 
 The following options can potentially change the default behavior:
 
