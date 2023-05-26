@@ -6,7 +6,7 @@ Each Mojl module can optionally contain a template for generating output. The na
 2. Output in another template language for another SSG or backend framework to use; or
 3. Choose not to use Mojl's templates at all, and instead write templates directly in another language to be dealt with separately.
 
-This documentation explores only the first case.
+This documentation currently explores only the first case.
 
 ### Format
 
