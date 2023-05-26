@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.0.0-alpha.4] - 2023-05-25
+
 ### Fixed
 - home dotfile considerations
 
@@ -71,7 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-changelog
 
 
-[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.3...2.0.0-alpha
+[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.4...2.0.0-alpha
+[2.0.0-alpha.4]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.3...v2.0.0-alpha.4
 [2.0.0-alpha.3]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
 [2.0.0-alpha.2]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
 [2.0.0-alpha.1]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.0...v2.0.0-alpha.1
