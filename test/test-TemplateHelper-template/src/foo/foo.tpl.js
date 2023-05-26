@@ -1,4 +1,4 @@
-module.exports = (mojl, props) => mojl.template`foo ${
+module.exports = (tpl, props) => tpl`foo ${
 	new Promise(resolve => {
 		setTimeout(() => {
 			props.log.push('zote');

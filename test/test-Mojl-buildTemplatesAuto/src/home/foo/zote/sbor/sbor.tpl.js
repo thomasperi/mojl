@@ -1,1 +1,1 @@
-module.exports = (mojl) => mojl.template`sbor`;
+module.exports = (tpl) => tpl`sbor`;

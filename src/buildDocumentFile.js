@@ -29,7 +29,7 @@ async function buildDocumentFile(settings, module, props = null, prefix = null) 
 	// 	throw `Can't create a document outside build directory (${document})`;
 	// }
 	
-	const helper = new TemplateHelper(settings, document);
+	const helper = TemplateHelper(settings, document);
 	const content = await helper.include(module, props);
 	
 	if (content !== false) {

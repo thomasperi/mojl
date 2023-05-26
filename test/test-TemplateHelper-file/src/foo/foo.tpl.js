@@ -1,3 +1,3 @@
-module.exports = (mojl, props) => mojl.template`foo(${
-	mojl.file('icon.gif', props.options)
+module.exports = (tpl, props) => tpl`foo(${
+	tpl.file('icon.gif', props.options)
 })`;

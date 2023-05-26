@@ -1,3 +1,3 @@
-module.exports = (mojl, props) => mojl.template`thed ${props.a} ( ${
-	(props.a >= 5) ? 'end' : mojl.include('./thed', {a: props.a + 1})
+module.exports = (tpl, props) => tpl`thed ${props.a} ( ${
+	(props.a >= 5) ? 'end' : tpl.include('./thed', {a: props.a + 1})
 } )`;

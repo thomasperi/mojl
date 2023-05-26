@@ -1,2 +1,2 @@
 let count = 0;
-module.exports = (mojl) => mojl.template`sneg(${count++})`;
+module.exports = (tpl) => tpl`sneg(${count++})`;

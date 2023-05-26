@@ -1,1 +1,1 @@
-module.exports = (mojl) => mojl.template` outer(${mojl.include('./bar')}) `;
+module.exports = (tpl) => tpl` outer(${tpl.include('./bar')}) `;

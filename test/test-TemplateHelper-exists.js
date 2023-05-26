@@ -13,7 +13,7 @@ describe(name, async () => {
 	it('should be true when the module exists', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
-			let builder = new TemplateHelper(settings);
+			let builder = TemplateHelper(settings);
 			assert(builder.exists('src/foo'));
 		});
 	});
@@ -21,7 +21,7 @@ describe(name, async () => {
 	it('should be true when the module exists as a standalone template', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
-			let builder = new TemplateHelper(settings);
+			let builder = TemplateHelper(settings);
 			assert(builder.exists('src/bar'));
 		});
 	});
@@ -29,7 +29,7 @@ describe(name, async () => {
 	it('should be false when the module does not exist', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
-			let builder = new TemplateHelper(settings);
+			let builder = TemplateHelper(settings);
 			assert(!builder.exists('src/zote'));
 		});
 	});

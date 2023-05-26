@@ -1,4 +1,4 @@
-module.exports = async (mojl, props) => mojl.template`bar ${
+module.exports = async (tpl, props) => tpl`bar ${
 	await new Promise(resolve => {
 		setTimeout(() => {
 			props.log.push('zote');

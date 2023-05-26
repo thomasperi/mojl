@@ -21,7 +21,7 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 	
 	const stack = [];
 
-	this.template = (strings, ...values) => {
+	const helper = function (strings, ...values) {
 		let outputPromise = templateTagFn(strings, ...values);
 		if (trimIncludes) {
 			outputPromise = outputPromise.then(output => output.trim());
@@ -29,11 +29,11 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		return outputPromise;
 	};
 	
-	this.exists = (module) => {
+	helper.exists = (module) => {
 		return !!getTemplate(base, expandModule(base, stack, module));
 	};
 	
-	this.include = (module, props = {}) => {
+	helper.include = (module, props = {}) => {
 		if (stack.length >= maxIncludeDepth) {
 			throw `maxIncludeDepth exceeded (${maxIncludeDepth})`;
 		}
@@ -47,30 +47,32 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		
 		stack.push({module, templatePath});
 		
-		let outputPromise = includeTemplate(templatePath, this, props);
+		let outputPromise = includeTemplate(templatePath, helper, props);
 		
 		stack.pop();
 		
 		return outputPromise;
 	};
 	
-	this.file = (filePath, options = {}) => {
+	helper.file = (filePath, options = {}) => {
 		return fileUrl(settings, peek(stack).templatePath, urlDocument, filePath, options);
 	};
 	
-	this.link = (linkPath) => {
+	helper.link = (linkPath) => {
 		return linkUrl(settings, urlDocument, linkPath);
 	};
 	
-	this.script = (options) => {
+	helper.script = (options) => {
 		// to-do: require `file` option to be given as a site-relative URL
 		return scriptTag(settings, urlDocument, options);
 	};
 
-	this.style = (options) => {
+	helper.style = (options) => {
 		// to-do: require `file` option to be given as a site-relative URL
 		return styleTag(settings, urlDocument, options);
 	};
+	
+	return helper;
 }
 
 const trimSlashes = /^\/+(.+?)\/+$/;

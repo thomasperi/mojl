@@ -1,3 +1,3 @@
-module.exports = (mojl, props) => mojl.template`bar(${
-	mojl.file('../foo/icon.gif')
+module.exports = (tpl, props) => tpl`bar(${
+	tpl.file('../foo/icon.gif')
 })`;

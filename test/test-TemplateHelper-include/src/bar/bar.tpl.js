@@ -1,1 +1,1 @@
-module.exports = (mojl, props) => mojl.template`bar(${mojl.include('src/foo', props)})`;
+module.exports = (tpl, props) => tpl`bar(${tpl.include('src/foo', props)})`;

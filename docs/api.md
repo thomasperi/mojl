@@ -17,7 +17,7 @@ Creates a new Mojl instance with methods for building a project.
 
 #### `build`
 
-> `.build([options])`
+> `mojl.build([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
@@ -36,7 +36,7 @@ Performs all build tasks:
 
 #### `buildScripts`
 
-> `.buildScripts([options])`
+> `mojl.buildScripts([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
@@ -60,7 +60,7 @@ The following options can potentially change the default behavior:
 
 #### `buildStyles`
 
-> `.buildStyles([options])`
+> `mojl.buildStyles([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
@@ -84,7 +84,7 @@ The following options can potentially change the default behavior:
 
 #### `buildTemplate`
 
-> `.buildTemplate(docPrefix, module[, props, options])`
+> `mojl.buildTemplate(docPrefix, module[, props, options])`
 
 | Parameter   | Type   | Description
 |-------------|--------|-------------
@@ -114,7 +114,7 @@ The following options influence the file path that gets written:
 
 #### `buildTemplatesAuto`
 
-> `.buildTemplatesAuto([options])`
+> `mojl.buildTemplatesAuto([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
@@ -139,7 +139,7 @@ The following options can potentially change the default behavior:
 
 #### `deleteBuild`
 
-> `.deleteBuild([options])`
+> `mojl.deleteBuild([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
@@ -160,7 +160,7 @@ The following options can potentially change the default behavior:
 
 #### `getBase`
 
-> `.getBase()`
+> `mojl.getBase()`
 
 **Returns:** Promise -> String
 
@@ -169,7 +169,7 @@ The full filesystem path to the project's base directory.
 
 #### `getModuleList`
 
-> `.getModuleList()`
+> `mojl.getModuleList()`
 
 **Returns:** Promise -> Array
 
@@ -178,7 +178,7 @@ The array of module paths (relative to the project's base directory) this `Mojl`
 
 #### `mirrorAssets`
 
-> `.mirrorAssets([options])`
+> `mojl.mirrorAssets([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
@@ -440,22 +440,25 @@ Trim whitespace from head and tail of each include.
 
 ### `TemplateHelper`
 
-An instance of `TemplateHelper` is passed as the first argument the function exported by a Mojl template. You should never need to instantiate a `TemplateHelper` yourself.
+A template helper is a [tag function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) passed as the first argument to the function exported by a Mojl template.
 
-The convention used in this documentation is to call that parameter `mojl`, but be aware that it isn't a reference to the `Mojl` instance.
+> In this documentation, the parameter is named `tpl`, but of course any valid JavaScript identifier will work.
+
+**Returns:** Promise -> String
 
 Example Usage:
 
 ```javascript
-module.exports = (mojl, props) => mojl.template`
+module.exports = (tpl, props) => tpl`
   <p>Lorem ${props.ipsum} dolor sit amet</p>
 `;
 ```
 
+The helper function itself has methods that can be used inside the template:
 
 #### `exists`
 
-> `.exists(module)`
+> `tpl.exists(module)`
 
 Check whether a given module exists and has a template.
 
@@ -468,7 +471,7 @@ Check whether a given module exists and has a template.
 
 #### `file`
 
-> `.file(filePath, [options])`
+> `tpl.file(filePath, [options])`
 
 Get a URL for the specified file path.
 
@@ -485,7 +488,7 @@ If `filePath` is a relative path, it is relative to the current template's paren
 
 #### `include`
 
-> `.include(module, [props])`
+> `tpl.include(module, [props])`
 
 Include the named module's template.
 
@@ -499,7 +502,7 @@ Include the named module's template.
 
 #### `link`
 
-> `.link(linkPath)`
+> `tpl.link(linkPath)`
 
 Potentially transform the specified link URL.
 
@@ -522,7 +525,7 @@ Page-relative URLs (`./foo/bar`, `../foo/bar`, `foo/bar`) and site-relative URLs
 
 #### `script`
 
-> `.script([options])`
+> `tpl.script([options])`
 
 Get an HTML tag for loading a JavaScript file on the current page.
 
@@ -538,7 +541,7 @@ If `options.file` is omitted, the tag will load `/scripts.js` or the script spec
 
 #### `style`
 
-> `.style([options])`
+> `tpl.style([options])`
 
 Get an HTML tag for loading a stylesheet file on the current page.
 
@@ -552,29 +555,20 @@ If `options.file` is omitted, the tag will load `/styles.css` or the stylesheet 
 **Returns:** Promise -> String
 
 
-#### `template`
-
-A tag function for building the output string for the template.
-
-See [example usage](#templatehelper) above.
-
-**Returns:** Promise -> String
-
-
 ---
 
 ### Table of Contents
 
 * [`new Mojl([options])`](#mojl)
-  * [`.build([options])`](#build)
-  * [`.buildScripts([options])`](#buildscripts)
-  * [`.buildStyles([options])`](#buildstyles)
-  * [`.buildTemplate(docPrefix, module[, props, options])`](#buildtemplate)
-  * [`.buildTemplatesAuto([options])`](#buildtemplatesauto)
-  * [`.deleteBuild([options])`](#deletebuild)
-  * [`.getBase()`](#getbase)
-  * [`.getModuleList()`](#getmodulelist)
-  * [`.mirrorAssets([options])`](#mirrorassets)
+  * [`build([options])`](#build)
+  * [`buildScripts([options])`](#buildscripts)
+  * [`buildStyles([options])`](#buildstyles)
+  * [`buildTemplate(docPrefix, module[, props, options])`](#buildtemplate)
+  * [`buildTemplatesAuto([options])`](#buildtemplatesauto)
+  * [`deleteBuild([options])`](#deletebuild)
+  * [`getBase()`](#getbase)
+  * [`getModuleList()`](#getmodulelist)
+  * [`mirrorAssets([options])`](#mirrorassets)
 
 * [`Options`](#options)
   * [`base`](#base)

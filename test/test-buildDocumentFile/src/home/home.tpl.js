@@ -1,1 +1,1 @@
-module.exports = (mojl) => mojl.template`(home)`;
+module.exports = (tpl) => tpl`(home)`;

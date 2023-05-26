@@ -1,1 +1,1 @@
-module.exports = (mojl, props) => mojl.template`(contact)`;
+module.exports = (tpl, props) => tpl`(contact)`;

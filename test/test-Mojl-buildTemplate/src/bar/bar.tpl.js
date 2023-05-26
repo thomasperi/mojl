@@ -1,1 +1,1 @@
-module.exports = (mojl, props) => mojl.template`bar-${props.zote}`;
+module.exports = (tpl, props) => tpl`bar-${props.zote}`;

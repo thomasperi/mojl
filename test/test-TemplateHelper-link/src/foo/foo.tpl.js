@@ -1,3 +1,3 @@
-module.exports = (mojl, props) => mojl.template`foo(${
-	mojl.link(props.theLink)
+module.exports = (tpl, props) => tpl`foo(${
+	tpl.link(props.theLink)
 })`;

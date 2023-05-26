@@ -14,7 +14,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
 			let log = [];
-			let builder = new TemplateHelper(settings);
+			let builder = TemplateHelper(settings);
 			let actual = await builder.include('src/foo', {log});
 			let expected = 'foo zote sbor';
 			assert.equal(actual, expected);
@@ -26,7 +26,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
 			let log = [];
-			let builder = new TemplateHelper(settings);
+			let builder = TemplateHelper(settings);
 			let actual = await builder.include('src/bar', {log});
 			let expected = 'bar zote sbor';
 			assert.equal(actual, expected);
