@@ -17,7 +17,7 @@ It can also serve as a static site generator, or generate templates for a separa
 
 ## Why?
 
-**Intuitive Organization:** With Mojl you can organize files according to which module uses them, rather than having the bits and pieces of each module strewn across multiple directories among the rest of the pieces of the site. (Or even worse, writing all the JavaScript or CSS for the whole site in one 20,000-line file.)
+1. **Intuitive Organization:** With Mojl you can organize files according to which module uses them, rather than having the bits and pieces of each module strewn across multiple directories among the rest of the pieces of the site. (Or even worse, writing all the JavaScript or CSS for the whole site in one 20,000-line file.)
 
 ```
 So your files can         Instead of 
@@ -51,7 +51,7 @@ nav/                        nav.tpl
   nav.tpl.js
 ```
 
-**Code Reuse**: An added benefit of having each module in its own directory is that it can be published to npm and reused without manually copying individual files to their proper places in the filesystem.
+2. **Code Reuse**: An added benefit of having each module in its own directory is that it can be published to npm and reused without manually copying individual files to their proper places in the filesystem.
 
 
 ## Links
