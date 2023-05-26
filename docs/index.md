@@ -26,7 +26,7 @@ It can also serve as a static site builder, or generate templates for a separate
 
 ## Navigation
 
-Each page in this documentation is listed here, and at the bottom of each page is a link that leads back to this list.
+Each page in this documentation is listed here. At the bottom of each page is a link that leads back to this list.
 
 * [Modules](modules.md)
 * [Build](build.md)

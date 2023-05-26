@@ -84,14 +84,14 @@ class Mojl {
 				this.buildScripts(options),
 				this.mirrorAssets(options),
 			]);
-			await this.buildTemplates(options);
+			await this.buildTemplatesAuto(options);
 		});
 	}
 
-	async buildDocument(documentPrefix, module, props, options) {
-		this.#noDelete('buildDocument');
+	async buildTemplate(docPrefix, module, props, options) {
+		this.#noDelete('buildTemplate');
 		options = await this.#overrideWith(options);
-		await buildDocumentFile(options, module, props, documentPrefix);
+		await buildDocumentFile(options, module, props, docPrefix);
 	}
 
 	async buildScripts(options) {
@@ -120,8 +120,8 @@ class Mojl {
 		});
 	}
 
-	async buildTemplates(options) {
-		this.#noSame(this.#busyTemplates, 'buildTemplates');
+	async buildTemplatesAuto(options) {
+		this.#noSame(this.#busyTemplates, 'buildTemplatesAuto');
 		options = await this.#overrideWith(options);
 		await this.#busyTry('#busyTemplates', async () => {
 			if (options.templateHomeModule) {

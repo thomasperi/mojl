@@ -14,7 +14,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildDocument('foo-page', 'src/foo');
+			await mojl.buildTemplate('foo-page', 'src/foo');
 
 			let after = box.snapshot();
 			let diff = box.diff(before, after);
@@ -33,7 +33,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildDocument('/foo-page', 'src/foo');
+			await mojl.buildTemplate('/foo-page', 'src/foo');
 
 			let after = box.snapshot();
 			let diff = box.diff(before, after);
@@ -52,7 +52,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildDocument('bar-page', 'src/bar', {zote: 'sbor'});
+			await mojl.buildTemplate('bar-page', 'src/bar', {zote: 'sbor'});
 
 			let after = box.snapshot();
 			let diff = box.diff(before, after);
@@ -71,7 +71,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildDocument('bar-page-2', 'src/bar', {zote: 'thed'}, {
+			await mojl.buildTemplate('bar-page-2', 'src/bar', {zote: 'thed'}, {
 				isDev: true,
 				templateOutputSuffix: '.md'
 			});

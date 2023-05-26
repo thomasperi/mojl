@@ -14,7 +14,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl();
-			await mojl.buildTemplates();
+			await mojl.buildTemplatesAuto();
 
 			let after = box.snapshot();
 			let {created} = box.diff(before, after);

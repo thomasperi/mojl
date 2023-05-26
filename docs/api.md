@@ -31,7 +31,7 @@ Performs all build tasks:
 * [`buildStyles`](#buildstyles)
 * [`buildScripts`](#buildscripts)
 * [`mirrorAssets`](#mirrorassets)
-* [`buildTemplates`](#buildtemplates)
+* [`buildTemplatesAuto`](#buildtemplatesauto)
 
 
 #### `buildScripts`
@@ -82,9 +82,9 @@ The following options can potentially change the default behavior:
 * [`isDev`](#isdev)
 
 
-#### `buildTemplates`
+#### `buildTemplatesAuto`
 
-> `.buildTemplates([options])`
+> `.buildTemplatesAuto([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
@@ -535,7 +535,7 @@ See [example usage](#templatehelper) above.
   * [`.build([options])`](#build)
   * [`.buildScripts([options])`](#buildscripts)
   * [`.buildStyles([options])`](#buildstyles)
-  * [`.buildTemplates([options])`](#buildtemplates)
+  * [`.buildTemplatesAuto([options])`](#buildtemplatesauto)
   * [`.deleteBuild([options])`](#deletebuild)
   * [`.getBase()`](#getbase)
   * [`.getModuleList()`](#getmodulelist)
