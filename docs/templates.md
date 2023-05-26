@@ -1,6 +1,14 @@
 ## Templates
 
-Templates generate output. You can either use Mojl as a static site generator by having your templates output whole HTML pages, or you can have them output templates for another SSG or backend framework.
+Each Mojl module can optionally contain a template for generating output. The nature of that output depends on how you're using Mojl. You can:
+
+1. Use Mojl as a static site generator by having your templates output final HTML code;
+2. Output in another template language for another SSG or backend framework to use; or
+3. Choose not to use Mojl's templates at all, and instead write templates directly in another language to be dealt with separately.
+
+This documentation explores only the first case.
+
+### Format
 
 Mojl templates are written in JavaScript using native features instead of in a separate template language:
 
@@ -74,6 +82,7 @@ module.exports = (tpl, props) => tpl.include('src/shell', {
 });
 ```
 
+The files in the above example produce two complete HTML documents at `/index.html` and `/about/index.html`.
 
 ---
 
