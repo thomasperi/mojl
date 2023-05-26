@@ -7,7 +7,7 @@
 
 Mojl lets you modularize the code and assets for websites that aren't apps, without many of the complexities of modern webapp development.
 
-It can also serve as a static site builder, or generate templates for a separate SSB or backend framework.
+It can also serve as a static site generator, or generate templates for a separate SSG or backend framework.
 
 ## Docs
 <https://thomasperi.github.io/mojl/>
