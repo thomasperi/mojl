@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- home dotfile considerations
+
 
 ## [2.0.0-alpha.3] - 2023-05-25
 
