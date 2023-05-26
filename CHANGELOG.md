@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.0.0-alpha.3] - 2023-05-25
+
 ### Added
 - `buildDocumentFile` can now accept props to pass to the module, and an explicit document to write to.
 - `Mojl` class now has `buildDocument` method
@@ -16,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Renamed `Mojl` methods: `buildDocument` -> `buildTemplate`, `buildTemplates` -> `buildTemplatesAuto`
+
 
 ## [2.0.0-alpha.2] - 2023-05-24
 
@@ -61,7 +65,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-changelog
 
 
-[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.2...2.0.0-alpha
+[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.3...2.0.0-alpha
+[2.0.0-alpha.3]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
 [2.0.0-alpha.2]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
 [2.0.0-alpha.1]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.0...v2.0.0-alpha.1
 [2.0.0-alpha.0]: https://github.com/thomasperi/mojl/compare/v1.1.0...v2.0.0-alpha.0
