@@ -9,8 +9,10 @@ const { isArray } = Array;
 const getType = v => isArray(v) ? 'array' : v === null ? 'null' : typeof v;
 
 async function expandOptions(options) {
-	options = ((typeof options === 'object') && options) || {};
 	let expanded = {};
+	if (getType(options) !== 'object') {
+		options = {};
+	}
 	
 	// Ensure data types are correct on top-level options.
 	Object.keys(defaults).forEach(key => {
@@ -28,8 +30,17 @@ async function expandOptions(options) {
 		
 		expanded[key] = value;
 	});
+	
 	expanded.base = path.resolve(expanded.base);
+	
 	expanded.modules = await expandModulePaths(expanded.base, expanded.modules);
+	
+	let colls = expanded.collations;
+	for (let name of Object.keys(colls)) {
+		colls[name] = await expandModulePaths(expanded.base, colls[name]);
+	}
+	expanded.collations = colls;
+	
 	
 	// Load node modules for options that are module descriptors
 	['cssTranspilerAdaptor', 'cssMinifierAdaptor', 'jsMinifierAdaptor'].forEach(key => {

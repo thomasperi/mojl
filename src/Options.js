@@ -31,10 +31,26 @@ const Options = {
 	 *
 	 * Relative to `base`
 	 *
-	 * @type string | string[]
+	 * @type string[]
 	 * @default #value
 	 */
 	modules: ['src/**'],
+	
+	/**
+	 * *constructor only*
+	 *
+	 * An object whose keys are output file prefixes and whose values are arrays of module
+	 * names and/or wildcards to collate into the output files. Supports `*` and `**` which
+	 * behave roughly like glob, but other glob features are not supported.
+	 *
+	 * Prefixes and module names are relative to `base`
+	 *
+	 * @type object
+	 * @default #value
+	 */
+	collations: {
+		'site': ['src/**']
+	},
 	
 	/**
 	 * Module file types to exclude from mirrored assets
