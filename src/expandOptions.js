@@ -6,6 +6,8 @@ const expandModulePaths = require('./expandModulePaths.js');
 const has = Object.prototype.hasOwnProperty;
 const { isArray } = Array;
 
+const getType = v => isArray(v) ? 'array' : v === null ? 'null' : typeof v;
+
 async function expandOptions(options) {
 	options = ((typeof options === 'object') && options) || {};
 	let expanded = {};
@@ -13,19 +15,15 @@ async function expandOptions(options) {
 	// Ensure data types are correct on top-level options.
 	Object.keys(defaults).forEach(key => {
 		let value = has.call(options, key) ? options[key] : defaults[key];
+		let actualType = getType(value);
+		let expectedType = getType(defaults[key]);
+
+		if (expectedType !== actualType) {
+			throw `expected '${key}' option to be ${expectedType} but got ${actualType} instead`;
+		}
 		
-		if (isArray(defaults[key])) {
-			if (isArray(value)) {
-				value = [...value];
-			} else {
-				value = [value];
-			}
-		
-		} else if (typeof defaults[key] === 'string') {
-			value = `${value}`;
-			
-		} else if (typeof defaults[key] === 'boolean') {
-			value = !!value;
+		if (actualType === 'array' || actualType === 'object') {
+			value = JSON.parse(JSON.stringify(value));
 		}
 		
 		expanded[key] = value;

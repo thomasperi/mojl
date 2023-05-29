@@ -60,24 +60,25 @@ describe(name, async () => {
 		});
 	});
 
-	it('should force values to strings', async () => {
-		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let projectBase = path.join(base, 'foo');
-			let actual = await expandOptions({
-				base: projectBase,
-				buildDevDir: false,
-				buildDistDir: undefined,
-			});
-			let expected = {
-				...defaultOptions,
-				base: projectBase,
-				modules: [],
-				buildDevDir: 'false',
-				buildDistDir: 'undefined',
-			};
-			assert.deepEqual(actual, expected);
-		});
-	});
+	// Removed for option type strictness
+	// it('should force values to strings', async () => {
+	// 	await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+	// 		let projectBase = path.join(base, 'foo');
+	// 		let actual = await expandOptions({
+	// 			base: projectBase,
+	// 			buildDevDir: false,
+	// 			buildDistDir: undefined,
+	// 		});
+	// 		let expected = {
+	// 			...defaultOptions,
+	// 			base: projectBase,
+	// 			modules: [],
+	// 			buildDevDir: 'false',
+	// 			buildDistDir: 'undefined',
+	// 		};
+	// 		assert.deepEqual(actual, expected);
+	// 	});
+	// });
 
 	it('should expand module patterns into module paths', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
@@ -101,25 +102,26 @@ describe(name, async () => {
 		});
 	});
 
-	it('should wrap string `modules` option in array', async () => {
-		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let projectBase = path.join(base, 'project');
-			let actual = await expandOptions({
-				base: projectBase,
-				modules: 'src/*',
-			});
-			let expected = {
-				...defaultOptions,
-				base: projectBase,
-				modules: [
-					'src/a',
-					'src/b',
-					'src/c',
-				],
-			};
-			assert.deepEqual(actual, expected);
-		});
-	});
+	// Removed for option type strictness
+	// it('should wrap string `modules` option in array', async () => {
+	// 	await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+	// 		let projectBase = path.join(base, 'project');
+	// 		let actual = await expandOptions({
+	// 			base: projectBase,
+	// 			modules: 'src/*',
+	// 		});
+	// 		let expected = {
+	// 			...defaultOptions,
+	// 			base: projectBase,
+	// 			modules: [
+	// 				'src/a',
+	// 				'src/b',
+	// 				'src/c',
+	// 			],
+	// 		};
+	// 		assert.deepEqual(actual, expected);
+	// 	});
+	// });
 
 	it('should load adaptor nodejs modules', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
