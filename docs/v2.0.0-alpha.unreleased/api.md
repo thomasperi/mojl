@@ -281,7 +281,7 @@ The value is an array of paths (relative to [`base`](#base)) for the modules to 
 
 #### `cssMinifierAdaptor`
 
-A Node.js module to use as an adapter for a CSS minifier.
+A Node.js module to use as an adaptor for a CSS minifier.
 
 | Type   | Default
 |--------|---------
@@ -296,7 +296,7 @@ The module's default export should be a function that accepts a single string ar
 
 #### `cssTranspilerAdaptor`
 
-A Node.js module to use as an adapter for a CSS transpiler such as LESS or SASS.
+A Node.js module to use as an adaptor for a CSS transpiler such as LESS or SASS.
 
 | Type   | Default
 |--------|---------------------
@@ -312,7 +312,7 @@ The module should export two named members:
 
 | Property      | Type     | Description
 |---------------|----------|--------------
-| `entryPath`   | string   | The absolute path to the entry file for the adapter to write, and for the transpiler to read.
+| `entryPath`   | string   | The absolute path to the entry file for the adaptor to write, and for the transpiler to read.
 | `isDev`       | boolean  | `true` if the transpiler should build for development (presumably with a sourcemap), `false` for a production build.
 | `outputPath`  | string   | The absolute path to the css file for the transpiler to write.
 | `sourcePaths` | string[] | An array of source file paths, relative to the parent directory of `entryPath`.
@@ -338,7 +338,7 @@ If true, build the dev versions of files. If false, build dist.
 
 #### `jsMinifierAdaptor`
 
-A Node.js module to use as an adapter for a JS minifier.
+A Node.js module to use as an adaptor for a JS minifier.
 
 | Type   | Default
 |--------|---------

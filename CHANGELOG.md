@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0-alpha.5] - 2023-08-13
 
 ### Fixed
-- Minifier adapters can be async
+- Minifier adaptors can be async
 - stricter options
 
 ### Added
