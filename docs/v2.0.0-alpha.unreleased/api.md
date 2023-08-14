@@ -54,7 +54,7 @@ The following options can potentially change the default behavior:
 * [`buildDistDir`](#builddistdir)
 * [`collations`](#collations)
 * [`isDev`](#isdev)
-* [`jsMinifierAdapter`](#jsminifierAdapter)
+* [`jsMinifierAdapter`](#jsminifieradapter)
 
 
 
@@ -77,8 +77,8 @@ The following options can potentially change the default behavior:
 * [`buildDevDir`](#builddevdir)
 * [`buildDistDir`](#builddistdir)
 * [`collations`](#collations)
-* [`cssMinifierAdapter`](#cssminifierAdapter)
-* [`cssTranspilerAdapter`](#csstranspilerAdapter)
+* [`cssMinifierAdapter`](#cssminifieradapter)
+* [`cssTranspilerAdapter`](#csstranspileradapter)
 * [`isDev`](#isdev)
 
 
@@ -575,11 +575,11 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`buildDistDir`](#builddistdir)
   * [`buildTempDir`](#buildtempdir)
   * [`collations`](#collations)
-  * [`cssMinifierAdapter`](#cssminifierAdapter)
-  * [`cssTranspilerAdapter`](#csstranspilerAdapter)
+  * [`cssMinifierAdapter`](#cssminifieradapter)
+  * [`cssTranspilerAdapter`](#csstranspileradapter)
   * [`excludeFileTypesFromMirror`](#excludefiletypesfrommirror)
   * [`isDev`](#isdev)
-  * [`jsMinifierAdapter`](#jsminifierAdapter)
+  * [`jsMinifierAdapter`](#jsminifieradapter)
   * [`maxIncludeDepth`](#maxincludedepth)
   * [`pageRelativeUrls`](#pagerelativeurls)
   * [`symlinkDevAssets`](#symlinkdevassets)
