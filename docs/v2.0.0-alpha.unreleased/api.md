@@ -283,11 +283,13 @@ The value is an array of paths (relative to [`base`](#base)) for the modules to 
 
 A Node.js module to use as an adapter for a CSS minifier.
 
-| Type   | Default             | Notes
-|--------|---------------------|-----------
-| string | `''` (empty string) | Relative to `buildDevDir` or `buildDistDir`
+| Type   | Default
+|--------|---------
+| string | `'mojl-clean-css'`
 
-When the value begins with with `./` or `../`, it is resolved relative to `base`.
+The name of the module to use as a CSS minifier.
+
+If the name begins with with `./` or `../`, it is resolved relative to `base`. Otherwise it gets passed straight to `require`.
 
 The module's default export should be a function that accepts a single string argument and returns a string or a Promise that resolves to a string.
 
@@ -321,8 +323,8 @@ The module should export two named members:
 Module file types to exclude from mirrored assets besides css, js, tpl.js, and transpiler types.
 
 | Type     | Default
-|----------|---------------------
-| string[] | `[]` (empty string)
+|----------|---------
+| string[] | `[]` (empty array)
 
 
 #### `isDev`

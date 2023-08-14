@@ -111,7 +111,7 @@ const Options = {
 	 * @type string
 	 * @default #value
 	 */
-	cssMinifierAdaptor: '',
+	cssMinifierAdaptor: 'mojl-clean-css',
 
 	/**
 	 * A NodeJS module descriptor to a file or module that exports a function for minifying

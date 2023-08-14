@@ -23,7 +23,7 @@ async function each(settings, name, modules) {
 		isDev,
 	} = settings;
 	
-	let transpilerAdaptor = requireAdaptor(base, cssTranspilerAdaptor)
+	let transpilerAdaptor = requireAdaptor(base, cssTranspilerAdaptor);
 	let types = transpilerAdaptor.inputTypes;
 	let buildDir = isDev ? buildDevDir : buildDistDir;
 	let buildCssFile = `${name}.css`;

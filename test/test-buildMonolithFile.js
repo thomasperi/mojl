@@ -57,7 +57,9 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 
-			let settings = await expandOptions();
+			let settings = await expandOptions({
+				cssMinifierAdaptor: '',
+			});
 			let type = 'css';
 			let originalAssetList = await buildMonolithFile(settings, type);
 			assert.deepEqual(originalAssetList, [
@@ -71,6 +73,30 @@ describe(name, async () => {
 				"dist/site.css",
 			]);
 			assert.equal(after["dist/site.css"].trim(), expectedCss.trim());
+		});
+	});
+
+	it('should concatenate CSS files and minify by default', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let before = box.snapshot();
+
+			let settings = await expandOptions();
+			let type = 'css';
+			let originalAssetList = await buildMonolithFile(settings, type);
+			assert.deepEqual(originalAssetList, [
+				'src/c/icon.gif',
+			]);
+
+			let after = box.snapshot();
+			let {created} = box.diff(before, after);
+
+			assert.deepEqual(created, [
+				"dist/site.css",
+			]);
+			assert.equal(
+				after["dist/site.css"].trim(),
+				'#c{background:url(assets/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)}'
+			);
 		});
 	});
 
@@ -102,6 +128,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
+				cssMinifierAdaptor: '',
 				buildDistDir: 'dist-weird',
 				collations: {
 					'stuff/styles-weird': ['src/**'],
@@ -183,6 +210,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
+				cssMinifierAdaptor: '',
 				jsMinifierAdaptor: '',
 			});
 			await buildMonolithFile(settings, 'css');

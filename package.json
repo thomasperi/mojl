@@ -27,6 +27,7 @@
     "sandbox-clone": "^1.0.2"
   },
   "optionalDependencies": {
+    "mojl-clean-css": "^1.0.0-alpha.0",
     "mojl-terser": "^1.0.0-alpha.0"
   }
 }

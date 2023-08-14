@@ -18,7 +18,7 @@ async function mirrorAssets(settings) {
 		isDev,
 	} = settings;
 
-	let transpilerAdaptor = requireAdaptor(base, cssTranspilerAdaptor)
+	let transpilerAdaptor = requireAdaptor(base, cssTranspilerAdaptor);
 
 	const mirror = path.join(
 		isDev ? buildDevDir : buildDistDir,

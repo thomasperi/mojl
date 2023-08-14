@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `jsMinifierAdaptor` is now `mojl-terser` by default
+- `cssMinifierAdaptor` is now `mojl-clean-css` by default
 - Adaptors now wait to resolve until used, not during `expandOptions`
 
 
