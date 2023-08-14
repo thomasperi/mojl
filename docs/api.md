@@ -515,9 +515,9 @@ Page-relative URLs (`./foo/bar`, `../foo/bar`, `foo/bar`) and site-relative URLs
 **Returns:** Promise -> String
 
 
-#### `script`
+#### `scripts`
 
-> `tpl.script([collations, [options]])`
+> `tpl.scripts([collations, [options]])`
 
 Generate HTML code for loading JavaScript files on the current page.
 
@@ -532,9 +532,9 @@ This outputs a `script` tag for each collation's scripts. If `collations` is `nu
 **Returns:** Promise -> String
 
 
-#### `style`
+#### `styles`
 
-> `tpl.style([collations, [options]])`
+> `tpl.styles([collations, [options]])`
 
 Generate HTML code for loading CSS files on the current page.
 
@@ -589,8 +589,8 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`file`](#file)
   * [`include`](#include)
   * [`link`](#link)
-  * [`script`](#script)
-  * [`style`](#style)
+  * [`scripts`](#scripts)
+  * [`styles`](#styles)
   * [`template`](#template)
 
 ---
