@@ -1,6 +1,6 @@
 {
   "name": "mojl",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.6",
   "description": "A bundler for vanilla websites",
   "main": "index.js",
   "files": [
