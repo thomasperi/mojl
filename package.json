@@ -1,6 +1,6 @@
 {
   "name": "mojl",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "A bundler for vanilla websites",
   "main": "index.js",
   "files": [
@@ -10,7 +10,12 @@
   "scripts": {
     "test": "npx mocha"
   },
-  "keywords": ["bundler", "vanilla", "static site generator", "ssg"],
+  "keywords": [
+    "bundler",
+    "vanilla",
+    "static site generator",
+    "ssg"
+  ],
   "repository": "github:thomasperi/mojl",
   "homepage": "https://thomasperi.github.io/mojl/",
   "author": "Thomas Peri <hello@thomasperi.net>",
