@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - More documentation
-- collations option, not implemented yet
+- `collations` option
 
 ### Changed
 - Replaced `modules`, `buildJsFile`, and `buildCssFile` options with `collations`

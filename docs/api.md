@@ -52,7 +52,7 @@ The following options can potentially change the default behavior:
 
 * [`buildDevDir`](#builddevdir)
 * [`buildDistDir`](#builddistdir)
-* [`buildJsFile`](#buildjsfile)
+* [`collations`](#collations)
 * [`isDev`](#isdev)
 * [`jsMinifierAdaptor`](#jsminifieradaptor)
 
@@ -76,7 +76,7 @@ The following options can potentially change the default behavior:
 
 * [`buildDevDir`](#builddevdir)
 * [`buildDistDir`](#builddistdir)
-* [`buildCssFile`](#buildcssfile)
+* [`collations`](#collations)
 * [`cssMinifierAdaptor`](#cssminifieradaptor)
 * [`cssTranspilerAdaptor`](#csstranspileradaptor)
 * [`isDev`](#isdev)
@@ -235,15 +235,6 @@ The directory where files other than `<module>.*` files will be mirrored.
 | string | `'assets'` | Relative to `buildDevDir` or `buildDistDir`
 
 
-#### `buildCssFile`
-
-The CSS file to be built.
-
-| Type   | Default        | Notes
-|--------|----------------|-----------
-| string | `'site.css'` | Relative to `buildDevDir` or `buildDistDir`
-
-
 #### `buildDevDir`
 
 The directory where dev builds are to be written.
@@ -262,15 +253,6 @@ The directory where production builds are to be written.
 | string | `'dist'` | Relative to `base`
 
 
-#### `buildJsFile`
-
-The JavaScript file to be built.
-
-| Type   | Default        | Notes
-|--------|----------------|-----------
-| string | `'site.js'` | Relative to `buildDevDir` or `buildDistDir`
-
-
 #### `buildTempDir`
 
 The directory where temporary files are written during build and then removed.
@@ -278,6 +260,23 @@ The directory where temporary files are written during build and then removed.
 | Type   | Default  | Notes
 |--------|----------|-----------
 | string | `'temp'` | Relative to `buildDevDir` or `buildDistDir`
+
+
+#### `collations`
+
+> *constructor only*
+
+An object describing how the module files should be collated.
+
+| Type   | Default                  | Notes
+|--------|--------------------------|-----------
+| object | `{ 'site': ['src/**'] }` | See below.
+
+Each key/value pair describes a "collation" -- a group of modules to be concatenated into one script and one stylesheet.
+
+The key is the name of the collation, which will be used as the base filename for the concatenated scripts and styles. The default `site` collation produces a `site.css` file and a `site.js` file in the root of the build directory.
+
+The value is an array of paths (relative to [`base`](#base)) for the modules to include in the collation. The paths can include `*` and `**` wildcards which behave like they do in a glob, but other glob features are not supported.
 
 
 #### `cssMinifierAdaptor`
@@ -355,17 +354,6 @@ How many levels deep an include can go.
 | Type   | Default
 |--------|---------------------
 | number | `100`
-
-
-#### `modules`
-
-> *constructor only*
-
-An array of module directory names and/or wildcards to collate into the output files. Supports `*` and `**` which behave roughly like glob, but other glob features are not supported.
-
-| Type     | Default      | Notes
-|----------|--------------|-------
-| string[] | `['src/**']` | Relative to `base`
 
 
 #### `pageRelativeUrls`
@@ -529,32 +517,34 @@ Page-relative URLs (`./foo/bar`, `../foo/bar`, `foo/bar`) and site-relative URLs
 
 #### `script`
 
-> `tpl.script([options])`
+> `tpl.script([collations, [options]])`
 
-Get an HTML tag for loading a JavaScript file on the current page.
+Generate HTML code for loading JavaScript files on the current page.
 
-| Parameter       | Type   | Description
-|-----------------|--------|-------------
-| `options`       | object | (optional) Options affecting the behavior of this method
-| `options.file`  | string | The site-relative path to a specific file to load
+| Parameter       | Type     | Description
+|-----------------|----------|-------------
+| `collations`    | string[] | (optional) An array of collation names
+| `options`       | object   | (optional) Options affecting the behavior of this method
+| `options.hash`  | boolean  | (optional) Append a hash to the URL. Default: `true`
 
-If `options.file` is omitted, the tag will load `/site.js` or the script specified in the [`buildJsFile`](#buildjsfile) Mojl option.
+This outputs a `script` tag for each collation's scripts. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [`Options`](#options) (or the default `site` collation if no collations are described) will be used.
 
 **Returns:** Promise -> String
 
 
 #### `style`
 
-> `tpl.style([options])`
+> `tpl.style([collations, [options]])`
 
-Get an HTML tag for loading a stylesheet file on the current page.
+Generate HTML code for loading CSS files on the current page.
 
-| Parameter       | Type   | Description
-|-----------------|--------|-------------
-| `options`       | object | (optional) Options affecting the behavior of this method
-| `options.file`  | string | The site-relative path to a specific file to load
+| Parameter       | Type     | Description
+|-----------------|----------|-------------
+| `collations`    | string[] | (optional) An array of collation names
+| `options`       | object   | (optional) Options affecting the behavior of this method
+| `options.hash`  | boolean  | (optional) Append a hash to the URL. Default: `true`
 
-If `options.file` is omitted, the tag will load `/site.css` or the stylesheet specified in the [`buildCssFile`](#buildcssfile) Mojl option.
+This outputs a `link` tag for each collation's styles. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [`Options`](#options) (or the default `site` collation if no collations are described) will be used.
 
 **Returns:** Promise -> String
 
@@ -577,18 +567,16 @@ If `options.file` is omitted, the tag will load `/site.css` or the stylesheet sp
 * [`Options`](#options)
   * [`base`](#base)
   * [`buildAssetsDir`](#buildassetsdir)
-  * [`buildCssFile`](#buildcssfile)
   * [`buildDevDir`](#builddevdir)
   * [`buildDistDir`](#builddistdir)
-  * [`buildJsFile`](#buildjsfile)
   * [`buildTempDir`](#buildtempdir)
+  * [`collations`](#collations)
   * [`cssMinifierAdaptor`](#cssminifieradaptor)
   * [`cssTranspilerAdaptor`](#csstranspileradaptor)
   * [`excludeFileTypesFromMirror`](#excludefiletypesfrommirror)
   * [`isDev`](#isdev)
   * [`jsMinifierAdaptor`](#jsminifieradaptor)
   * [`maxIncludeDepth`](#maxincludedepth)
-  * [`modules`](#modules)
   * [`pageRelativeUrls`](#pagerelativeurls)
   * [`symlinkDevAssets`](#symlinkdevassets)
   * [`symlinkDistAssets`](#symlinkdistassets)
