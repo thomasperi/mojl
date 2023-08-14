@@ -57,9 +57,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 
-			let settings = await expandOptions({
-				modules: ['src/*']
-			});
+			let settings = await expandOptions();
 			let type = 'css';
 			let originalAssetList = await buildMonolithFile(settings, type);
 			assert.deepEqual(originalAssetList, [
@@ -70,9 +68,9 @@ describe(name, async () => {
 			let {created} = box.diff(before, after);
 
 			assert.deepEqual(created, [
-				"dist/styles.css",
+				"dist/site.css",
 			]);
-			assert.equal(after["dist/styles.css"].trim(), expectedCss.trim());
+			assert.equal(after["dist/site.css"].trim(), expectedCss.trim());
 		});
 	});
 
@@ -93,9 +91,9 @@ describe(name, async () => {
 			let {created} = box.diff(before, after);
 
 			assert.deepEqual(created, [
-				"dist/styles.css",
+				"dist/site.css",
 			]);
-			assert.equal(after["dist/styles.css"].trim(), expectedCssCaps.trim());
+			assert.equal(after["dist/site.css"].trim(), expectedCssCaps.trim());
 		});
 	});
 
@@ -105,7 +103,9 @@ describe(name, async () => {
 
 			let settings = await expandOptions({
 				buildDistDir: 'dist-weird',
-				buildCssFile: 'stuff/styles-weird.css',
+				collations: {
+					'stuff/styles-weird': ['src/**'],
+				},
 			});
 			let type = 'css';
 			await buildMonolithFile(settings, type);
@@ -132,9 +132,9 @@ describe(name, async () => {
 			let {created} = box.diff(before, after);
 
 			assert.deepEqual(created, [
-				"dist/scripts.js",
+				"dist/site.js",
 			]);
-			assert.equal(after["dist/scripts.js"].trim(), expectedJs.trim());
+			assert.equal(after["dist/site.js"].trim(), expectedJs.trim());
 		});
 	});
 
@@ -152,9 +152,9 @@ describe(name, async () => {
 			let {created} = box.diff(before, after);
 
 			assert.deepEqual(created, [
-				"dist/scripts.js",
+				"dist/site.js",
 			]);
-			assert.equal(after["dist/scripts.js"].trim(), expectedJsCaps.trim());
+			assert.equal(after["dist/site.js"].trim(), expectedJsCaps.trim());
 		});
 	});
 
@@ -170,11 +170,11 @@ describe(name, async () => {
 			let {created} = box.diff(before, after);
 
 			assert.deepEqual(created, [
-				"dist/scripts.js",
-				"dist/styles.css",
+				"dist/site.css",
+				"dist/site.js",
 			]);
-			assert.equal(after["dist/scripts.js"].trim(), expectedJs.trim());
-			assert.equal(after["dist/styles.css"].trim(), expectedCss.trim());
+			assert.equal(after["dist/site.js"].trim(), expectedJs.trim());
+			assert.equal(after["dist/site.css"].trim(), expectedCss.trim());
 		});
 	});
 

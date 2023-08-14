@@ -14,7 +14,7 @@ describe(name, async () => {
 		
 			let assetList = [];
 			let cssSourceFile = path.join(base, 'src/foo/foo.css');
-			let cssDestFile = path.join(base, 'destination/styles.css');
+			let cssDestFile = path.join(base, 'destination/site.css');
 			let baseSource = base;
 			let baseDest = path.join(base, 'destination/mirror');
 			let cssCode = fs.readFileSync(cssSourceFile, 'utf8');

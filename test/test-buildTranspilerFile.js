@@ -15,7 +15,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				modules: ['src/*'],
+				collations: {site: ['src/*']},
 				cssTranspilerAdaptor: './fakeTranspiler.js',
 				isDev: true,
 			});
@@ -30,11 +30,11 @@ describe(name, async () => {
 			]);
 
 			assert.deepEqual(created, [
-				'dev/styles.css',
+				'dev/site.css',
 				'dev/temp/assets/src/a/a.css',
 				'dev/temp/assets/src/b/b.scss',
 				'dev/temp/assets/src/c/c.scss',
-				'dev/temp/styles.css.scss',
+				'dev/temp/site.css.scss',
 			]);
 		
 			assert.equal(after['dev/temp/assets/src/a/a.css'], '#a-css{}');
@@ -44,7 +44,7 @@ describe(name, async () => {
 				'#c-sass{ background: url(assets/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }'
 			);
 		
-			assert.deepEqual(JSON.parse(after['dev/temp/styles.css.scss']), {
+			assert.deepEqual(JSON.parse(after['dev/temp/site.css.scss']), {
 				isEntry: true,
 				isDev: true,
 				sourcePaths: [
@@ -54,7 +54,7 @@ describe(name, async () => {
 				],
 			});
 
-			assert.deepEqual(JSON.parse(after['dev/styles.css']), {
+			assert.deepEqual(JSON.parse(after['dev/site.css']), {
 				isOutput: true,
 			});
 		});
@@ -65,7 +65,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				modules: ['src/*'],
+				collations: {site: ['src/*']},
 				cssTranspilerAdaptor: './fakeTranspiler.js',
 			});
 
@@ -79,10 +79,10 @@ describe(name, async () => {
 			]);
 
 			assert.deepEqual(created, [
-				'dist/styles.css',
+				'dist/site.css',
 			]);
 		
-			assert.deepEqual(JSON.parse(after['dist/styles.css']), {
+			assert.deepEqual(JSON.parse(after['dist/site.css']), {
 				isOutput: true,
 			});
 
@@ -93,9 +93,8 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 
 			let settings = await expandOptions({
-				modules: ['src/*'],
+				collations: {'foo/output': ['src/*']},
 				buildDevDir: 'dev-weird',
-				buildCssFile: 'foo/output.css',
 				buildAssetsDir: 'zote/sbor',
 				cssTranspilerAdaptor: './fakeTranspiler.js',
 				isDev: true,

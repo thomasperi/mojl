@@ -1,10 +1,8 @@
 const assetTagAttr = require('./assetTagAttr.js');
 
-async function scriptTag(settings, currentPage, options) {
-	let file = ( options && Object.hasOwnProperty.call(options, 'file') ) ?
-		options.file : settings.buildJsFile;
-	let src = await assetTagAttr(settings, currentPage, file, options);
-	return `<script src="${src}"></script>`;
+async function scriptTag(settings, currentPage, collationNames, options) {
+	let srcs = await assetTagAttr(settings, currentPage, 'js', collationNames, options);
+	return srcs.map(src => `<script src="${src}"></script>`).join(''); 
 }
 
 module.exports = scriptTag;

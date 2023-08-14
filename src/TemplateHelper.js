@@ -62,14 +62,12 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		return linkUrl(settings, urlDocument, linkPath);
 	};
 	
-	helper.script = (options) => {
-		// to-do: require `file` option to be given as a site-relative URL
-		return scriptTag(settings, urlDocument, options);
+	helper.script = (collations, options) => {
+		return scriptTag(settings, urlDocument, collations, options);
 	};
 
-	helper.style = (options) => {
-		// to-do: require `file` option to be given as a site-relative URL
-		return styleTag(settings, urlDocument, options);
+	helper.style = (collations, options) => {
+		return styleTag(settings, urlDocument, collations, options);
 	};
 	
 	return helper;

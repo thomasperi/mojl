@@ -1,10 +1,8 @@
 const assetTagAttr = require('./assetTagAttr.js');
 
-async function styleTag(settings, currentPage, options) {
-	let file = ( options && Object.hasOwnProperty.call(options, 'file') ) ?
-		options.file : settings.buildCssFile;
-	let href = await assetTagAttr(settings, currentPage, file, options);
-	return `<link rel="stylesheet" href="${href}" />`;
+async function styleTag(settings, currentPage, collationNames, options) {
+	let hrefs = await assetTagAttr(settings, currentPage, 'css', collationNames, options);
+	return hrefs.map(href => `<link rel="stylesheet" href="${href}" />`).join('');
 }
 
 module.exports = styleTag;

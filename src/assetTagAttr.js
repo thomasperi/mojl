@@ -3,7 +3,20 @@ const path = require('path').posix;
 const hashStamp = require('./hashStamp.js');
 const encodeHtmlAttribute = require('./encodeHtmlAttribute.js');
 
-async function assetTagAttr(settings, currentPage, file, options) {
+async function assetTagAttr(settings, currentPage, type, collationNames, options) {
+	if (collationNames === null || collationNames === undefined) {
+		collationNames = Object.keys(settings.collations);
+	}
+	if (!(collationNames instanceof Array)) {
+		collationNames = [collationNames];
+	}
+	return await Promise.all(collationNames.map(collationName => {
+		let file = `${collationName}.${type}`;
+		return each(settings, currentPage, file, options);
+	}));
+}
+
+async function each(settings, currentPage, file, options) {
 	let {
 		base,
 		buildDevDir,

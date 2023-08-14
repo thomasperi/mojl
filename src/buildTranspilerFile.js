@@ -5,20 +5,26 @@ const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
 
 async function buildTranspilerFile(settings) {
+	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
+		return each(settings, collationName, settings.collations[collationName]);
+	}));
+	return assetList.reduce((acc, curr) => acc.concat(curr), []);
+}
+
+async function each(settings, name, modules) {
 	let {
 		base,
-		modules,
 		buildDevDir,
 		buildDistDir,
 		buildTempDir,
 		buildAssetsDir,
-		buildCssFile,
 		cssTranspilerAdaptor,
 		isDev,
 	} = settings;
 	
 	let types = cssTranspilerAdaptor.inputTypes;
 	let buildDir = isDev ? buildDevDir : buildDistDir;
+	let buildCssFile = `${name}.css`;
 	let entryFile = `${buildCssFile}.${types[0]}`;
 	
 	let outputPath = path.resolve(path.join(base, buildDir, buildCssFile));

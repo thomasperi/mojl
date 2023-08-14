@@ -21,7 +21,7 @@ $ node build.js
 done
 ```
 
-Mojl creates a `dist` subdirectory (removing it first if it already exists), concatenates all the `<module>.css` and `<module>.js` files into `styles.css` and `scripts.js`, and copies any other files into an `assets` subdirectory:
+Mojl creates a `dist` subdirectory (removing it first if it already exists), concatenates all the `<module>.css` and `<module>.js` files into `site.css` and `site.js`, and copies any other files into an `assets` subdirectory:
 
 Before and after build:
 ```
@@ -30,8 +30,8 @@ example-project/        >   example-project/
   src/                  >     src/    -- existing src directory, unchanged
     shell/              >       
       shell.css         >     dist/   -- new build directory
-      shell.tpl.js      >       scripts.js     -- concatenated .js files
-      images/           >       styles.css     -- concatenated .css files
+      shell.tpl.js      >       site.js     -- concatenated .js files
+      images/           >       site.css     -- concatenated .css files
         logo.svg        >       index.html     -- built from home.tpl.js
         bg.jpg          >       about/
     home/               >         index.html   -- built from about.tpl.js
@@ -55,7 +55,7 @@ A snippet of the `shell.css` source file:
 }
 ```
 
-The corresponding part of the concatenated `styles.css` file:
+The corresponding part of the concatenated `site.css` file:
 ```css
 .header__logo {
   background-image: url(assets/shell/images/logo.svg?h=C*7Hteo!D9vJXQ3UfzxbwnXaijM~);
@@ -75,7 +75,7 @@ mojl.build({isDev: true}).then(() => {
 #### Development builds differ from production builds in a few ways:
 
 1. Files are written to a `dev` directory instead of `dist`.
-2. The `scripts.js` and `styles.css` files each contain code that load the original source files, instead of the concatenated code. This helps ease debugging.
+2. The `site.js` and `site.css` files each contain code that load the original source files, instead of the concatenated code. This helps ease debugging.
 3. Since the original files are used, URLs in CSS files are not rewritten.
 4. Other assets are symlinked instead of copied.
 

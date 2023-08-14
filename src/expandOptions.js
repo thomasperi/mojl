@@ -33,7 +33,7 @@ async function expandOptions(options) {
 	
 	expanded.base = path.resolve(expanded.base);
 	
-	expanded.modules = await expandModulePaths(expanded.base, expanded.modules);
+	//expanded.modules = await expandModulePaths(expanded.base, expanded.modules);
 	
 	let colls = expanded.collations;
 	for (let name of Object.keys(colls)) {
@@ -54,7 +54,7 @@ async function expandOptions(options) {
 	});
 	
 	// Ensure arrays have items of the correct type.
-	['modules', 'excludeFileTypesFromMirror'].forEach(key => {
+	['excludeFileTypesFromMirror'].forEach(key => {
 		expanded[key] = expanded[key].map(item => `${item}`);
 	});
 

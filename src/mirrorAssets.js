@@ -6,7 +6,7 @@ const symlinkModules = require('./symlinkModules.js');
 async function mirrorAssets(settings) {
 	const {
 		base,
-		modules,
+		collations,
 		buildDevDir,
 		buildDistDir,
 		buildAssetsDir,
@@ -21,6 +21,10 @@ async function mirrorAssets(settings) {
 		isDev ? buildDevDir : buildDistDir,
 		buildAssetsDir
 	);
+	
+	let modules = Object.values(collations);
+	modules = modules.reduce((acc, curr) => acc.concat(curr), []);
+	modules = [...new Set(modules)];
 	
 	if (
 		(symlinkDevAssets && isDev) ||

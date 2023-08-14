@@ -5,18 +5,22 @@ const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
 
 async function buildMonolithFile(settings, type) {
+	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
+		return each(settings, collationName, settings.collations[collationName], type);
+	}));
+	return assetList.reduce((acc, curr) => acc.concat(curr), []);
+}
+
+async function each(settings, name, modules, type) {
 	let {
 		base,
-		modules,
 		buildDistDir,
-		buildJsFile,
-		buildCssFile,
 		buildAssetsDir,
 		cssMinifierAdaptor,
 		jsMinifierAdaptor,
 	} = settings;
 	
-	let outputFile = type === 'css' ? buildCssFile : type === 'js' ? buildJsFile : null;
+	let outputFile = `${name}.${type}`;
 	let minifierFn = type === 'css' ? cssMinifierAdaptor : type === 'js' ? jsMinifierAdaptor : null;
 
 	let outputPath = path.resolve(path.join(base, buildDistDir, outputFile));

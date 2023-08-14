@@ -16,10 +16,12 @@ describe(name, async () => {
 	it('should generate a link tag with the styles filename from settings', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
-			let options = undefined;
 			let currentPage = '/index.html';
-			let actual = await styleTag(settings, currentPage, options);
-			let expected = `<link rel="stylesheet" href="/styles.css${fooHash}" />`;
+			let collations = undefined;
+			let options = undefined;
+			
+			let actual = await styleTag(settings, currentPage, collations, options);
+			let expected = `<link rel="stylesheet" href="/site.css${fooHash}" />`;
 			assert.equal(actual, expected);
 		});
 	});
@@ -27,9 +29,11 @@ describe(name, async () => {
 	it('should generate a link tag with the custom styles filename', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
-			let options = { file: 'custom.css' };
 			let currentPage = '/index.html';
-			let actual = await styleTag(settings, currentPage, options);
+			let collations = ['custom'];
+			let options = undefined;
+			
+			let actual = await styleTag(settings, currentPage, collations, options);
 			let expected = `<link rel="stylesheet" href="/custom.css${barHash}" />`;
 			assert.equal(actual, expected);
 		});
@@ -38,20 +42,56 @@ describe(name, async () => {
 	it('should omit the hash when specified', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions();
-			let options = { file: 'custom.css', hash: false };
 			let currentPage = '/index.html';
-			let actual = await styleTag(settings, currentPage, options);
+			let collations = ['custom'];
+			let options = { hash: false };
+			
+			let actual = await styleTag(settings, currentPage, collations, options);
 			let expected = `<link rel="stylesheet" href="/custom.css" />`;
 			assert.equal(actual, expected);
 		});
 	});
 
+	it('should use collations in settings', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let settings = await expandOptions({
+				collations: {
+					'one': 'src/one/*',
+					'two': 'src/two/*',
+				}
+			});
+			let currentPage = '/index.html';
+			let collations = undefined;
+			let options = { hash: false };
+			
+			let actual = await styleTag(settings, currentPage, collations, options);
+			let expected = `<link rel="stylesheet" href="/one.css" /><link rel="stylesheet" href="/two.css" />`;
+			assert.equal(actual, expected);
+		});
+	});
+	
+	it('should use explicit collations', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let settings = await expandOptions();
+			let currentPage = '/index.html';
+			let collations = ['aaa', 'bbb'];
+			let options = { hash: false };
+			
+			let actual = await styleTag(settings, currentPage, collations, options);
+			let expected = `<link rel="stylesheet" href="/aaa.css" /><link rel="stylesheet" href="/bbb.css" />`;
+			assert.equal(actual, expected);
+		});
+	});
+	
+
 	it('should relativize when specified', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions({ pageRelativeUrls: true });
-			let options = { file: 'custom.css', hash: false };
 			let currentPage = '/foo/index.html';
-			let actual = await styleTag(settings, currentPage, options);
+			let collations = ['custom'];
+			let options = { hash: false };
+			
+			let actual = await styleTag(settings, currentPage, collations, options);
 			let expected = `<link rel="stylesheet" href="../custom.css" />`;
 			assert.equal(actual, expected);
 		});

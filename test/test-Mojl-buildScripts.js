@@ -27,7 +27,7 @@ describe(name, async () => {
 			
 			assert.deepEqual(diff, {
 				created: [
-					'dev/scripts.js'
+					'dev/site.js'
 				],
 				modified: [],
 				removed: [],
@@ -49,7 +49,7 @@ describe(name, async () => {
 			
 			assert.deepEqual(diff, {
 				created: [
-					'dist/scripts.js'
+					'dist/site.js'
 				],
 				modified: [],
 				removed: [],

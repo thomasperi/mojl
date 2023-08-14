@@ -46,7 +46,7 @@ Performs all build tasks:
 
 Builds a JavaScript file based on the JavaScript files for all the modules in use.
 
-By default, it concatenates all the `.js` files into one file named `scripts.js`, located in the `dist` subdirectory inside the project's base directory.
+By default, it concatenates all the `.js` files into one file named `site.js`, located in the `dist` subdirectory inside the project's base directory.
 
 The following options can potentially change the default behavior:
 
@@ -70,7 +70,7 @@ The following options can potentially change the default behavior:
 
 Builds a CSS file based on the stylesheets for all the modules in use.
 
-By default, it concatenates all the `.css` files into one file named `styles.css`, located in the `dist` subdirectory inside the project's base directory.
+By default, it concatenates all the `.css` files into one file named `site.css`, located in the `dist` subdirectory inside the project's base directory.
 
 The following options can potentially change the default behavior:
 
@@ -241,7 +241,7 @@ The CSS file to be built.
 
 | Type   | Default        | Notes
 |--------|----------------|-----------
-| string | `'styles.css'` | Relative to `buildDevDir` or `buildDistDir`
+| string | `'site.css'` | Relative to `buildDevDir` or `buildDistDir`
 
 
 #### `buildDevDir`
@@ -268,7 +268,7 @@ The JavaScript file to be built.
 
 | Type   | Default        | Notes
 |--------|----------------|-----------
-| string | `'scripts.js'` | Relative to `buildDevDir` or `buildDistDir`
+| string | `'site.js'` | Relative to `buildDevDir` or `buildDistDir`
 
 
 #### `buildTempDir`
@@ -538,7 +538,7 @@ Get an HTML tag for loading a JavaScript file on the current page.
 | `options`       | object | (optional) Options affecting the behavior of this method
 | `options.file`  | string | The site-relative path to a specific file to load
 
-If `options.file` is omitted, the tag will load `/scripts.js` or the script specified in the [`buildJsFile`](#buildjsfile) Mojl option.
+If `options.file` is omitted, the tag will load `/site.js` or the script specified in the [`buildJsFile`](#buildjsfile) Mojl option.
 
 **Returns:** Promise -> String
 
@@ -554,7 +554,7 @@ Get an HTML tag for loading a stylesheet file on the current page.
 | `options`       | object | (optional) Options affecting the behavior of this method
 | `options.file`  | string | The site-relative path to a specific file to load
 
-If `options.file` is omitted, the tag will load `/styles.css` or the stylesheet specified in the [`buildCssFile`](#buildcssfile) Mojl option.
+If `options.file` is omitted, the tag will load `/site.css` or the stylesheet specified in the [`buildCssFile`](#buildcssfile) Mojl option.
 
 **Returns:** Promise -> String
 

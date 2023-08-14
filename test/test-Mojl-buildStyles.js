@@ -29,7 +29,7 @@ describe(name, async () => {
 			
 			assert.deepEqual(diff, {
 				created: [
-					'dev/styles.css'
+					'dev/site.css'
 				],
 				modified: [],
 				removed: [],
@@ -51,7 +51,7 @@ describe(name, async () => {
 			
 			assert.deepEqual(diff, {
 				created: [
-					'dist/styles.css'
+					'dist/site.css'
 				],
 				modified: [],
 				removed: [],
@@ -76,11 +76,11 @@ describe(name, async () => {
 			
 			assert.deepEqual(diff, {
 				created: [
-					'dev/styles.css',
+					'dev/site.css',
 					'dev/temp/assets/src/foo/foo.css',
 					'dev/temp/assets/src/zote/bar/bar.zazz',
 					'dev/temp/assets/src/zote/zote.css',
-					'dev/temp/styles.css.zazz'
+					'dev/temp/site.css.zazz'
 				],
 				modified: [],
 				removed: [],
@@ -104,7 +104,7 @@ describe(name, async () => {
 			
 			assert.deepEqual(diff, {
 				created: [
-					'dist/styles.css'
+					'dist/site.css'
 				],
 				modified: [],
 				removed: [],

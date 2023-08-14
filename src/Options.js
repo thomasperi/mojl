@@ -25,20 +25,6 @@ const Options = {
 	/**
 	 * *constructor only*
 	 *
-	 * An array of module directory names and/or wildcards to collate into the output
-	 * files. Supports `*` and `**` which behave roughly like glob, but other glob
-	 * features are not supported.
-	 *
-	 * Relative to `base`
-	 *
-	 * @type string[]
-	 * @default #value
-	 */
-	modules: ['src/**'],
-	
-	/**
-	 * *constructor only*
-	 *
 	 * An object whose keys are output file prefixes and whose values are arrays of module
 	 * names and/or wildcards to collate into the output files. Supports `*` and `**` which
 	 * behave roughly like glob, but other glob features are not supported.
@@ -92,22 +78,6 @@ const Options = {
 	 * @default #value
 	 */
 	buildTempDir: 'temp',
-
-	/**
-	 * Relative to `buildDevDir` and `buildDistDir`
-	 *
-	 * @type string
-	 * @default #value
-	 */
-	buildJsFile: 'scripts.js',
-
-	/**
-	 * Relative to `buildDevDir` and `buildDistDir`
-	 *
-	 * @type string
-	 * @default #value
-	 */
-	buildCssFile: 'styles.css',
 	
 	/**
 	 * A NodeJS module descriptor to a file or module that exports an object to use as an

@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Minifier adapters can be async
+- stricter options
+
+### Added
+- More documentation
+- collations option, not implemented yet
+
+### Changed
+- Replaced `modules`, `buildJsFile`, and `buildCssFile` options with `collations`
+
 
 ## [2.0.0-alpha.4] - 2023-05-25
 

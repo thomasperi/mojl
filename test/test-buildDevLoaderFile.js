@@ -29,9 +29,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 			
-			let settings = await expandOptions({
-				modules: ['src/*']
-			});
+			let settings = await expandOptions();
 			let actualAssets = await buildDevLoaderFile(settings, 'css');
 
 			let after = box.snapshot();
@@ -45,9 +43,9 @@ describe(name, async () => {
 			]);
 			
 			assert.deepEqual(created, [
-				"dev/styles.css",
+				"dev/site.css",
 			]);
-			assert(after["dev/styles.css"].includes(expectedCSS.trim()));
+			assert(after["dev/site.css"].includes(expectedCSS.trim()));
 
 		});
 	});
@@ -56,9 +54,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 			
-			let settings = await expandOptions({
-				modules: ['src/*']
-			});
+			let settings = await expandOptions();
 			let actualAssets = await buildDevLoaderFile(settings, 'js');
 
 			let after = box.snapshot();
@@ -71,9 +67,9 @@ describe(name, async () => {
 			]);
 
 			assert.deepEqual(created, [
-				"dev/scripts.js",
+				"dev/site.js",
 			]);
-			assert(after["dev/scripts.js"].includes(expectedJS.trim()));
+			assert(after["dev/site.js"].includes(expectedJS.trim()));
 		});
 	});
 
@@ -81,9 +77,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 
-			let settings = await expandOptions({
-				modules: ['src/*']
-			});
+			let settings = await expandOptions();
 			let actualAssetsJs = await buildDevLoaderFile(settings, 'js');
 			let actualAssetsCss = await buildDevLoaderFile(settings, 'css');
 
@@ -103,11 +97,11 @@ describe(name, async () => {
 			]);
 
 			assert.deepEqual(created, [
-				"dev/scripts.js",
-				"dev/styles.css",
+				"dev/site.css",
+				"dev/site.js",
 			]);
-			assert(after["dev/scripts.js"].includes(expectedJS.trim()));
-			assert(after["dev/styles.css"].includes(expectedCSS.trim()));
+			assert(after["dev/site.css"].includes(expectedCSS.trim()));
+			assert(after["dev/site.js"].includes(expectedJS.trim()));
 		});
 	});
 
