@@ -338,11 +338,13 @@ If true, build the dev versions of files. If false, build dist.
 
 A Node.js module to use as an adapter for a JS minifier.
 
-| Type   | Default             | Notes
-|--------|---------------------|-----------
-| string | `''` (empty string) | Relative to `buildDevDir` or `buildDistDir`
+| Type   | Default
+|--------|---------
+| string | `'mojl-terser'`
 
-When the value begins with with `./` or `../`, it is resolved relative to `base`.
+The name of the module to use as a JS minifier.
+
+If the name begins with with `./` or `../`, it is resolved relative to `base`. Otherwise it gets passed straight to `require`.
 
 The module's default export should be a function that accepts a single string argument and returns a string or a Promise that resolves to a string.
 
