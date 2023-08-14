@@ -10,7 +10,7 @@ This documentation is for the not-yet-stable 2.0.0-alpha.
 
 Mojl lets you compartmentalize the files for websites that aren't apps, without many of the complexities of modern webapp development.
 
-The CSS and JavaScript code you write is essentially the same code that gets deployed. In a development build, the source files are loaded individually. For production they're concatenated into a single file. Optionally (and recommendedly) you can minify the resulting JS and CSS files using the minifiers of your choice.
+The CSS and JavaScript code you write is essentially the same code that gets deployed. In a development build, the source files are loaded individually. For production they're concatenated into a single file and minified.
 
 It can also serve as a static site generator, or generate templates for a separate SSG or backend framework.
 
