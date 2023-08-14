@@ -39,6 +39,19 @@ const Options = {
 	},
 	
 	/**
+	 * to-do: implement
+	 * 
+	 * *constructor only*
+	 *
+	 * Create a virtual collation for every page, to be referenced as the empty string
+	 * when calling `tpl.scripts()` and `tpl.styles()`.
+	 *
+	 * @type boolean
+	 * @default #value
+	 */
+	collatePages: false,
+	
+	/**
 	 * Module file types to exclude from mirrored assets
 	 * besides css, js, tpl.js, and transpiler types.
 	 * 
