@@ -123,7 +123,7 @@ const Options = {
 	 * @type string
 	 * @default #value
 	 */
-	jsMinifierAdaptor: '',
+	jsMinifierAdaptor: 'mojl-terser',
 
 	/**
 	 * The path of the module that acts as the root directory

@@ -3,6 +3,7 @@ const path = require("path").posix;
 
 const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
+const requireAdaptor = require('./requireAdaptor.js');
 
 async function buildMonolithFile(settings, type) {
 	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
@@ -21,7 +22,9 @@ async function each(settings, name, modules, type) {
 	} = settings;
 	
 	let outputFile = `${name}.${type}`;
-	let minifierFn = type === 'css' ? cssMinifierAdaptor : type === 'js' ? jsMinifierAdaptor : null;
+	let minifierFn =
+		type === 'css' ? requireAdaptor(base, cssMinifierAdaptor) :
+			type === 'js' ? requireAdaptor(base, jsMinifierAdaptor) : null;
 
 	let outputPath = path.resolve(path.join(base, buildDistDir, outputFile));
 	let mirrorDir = path.resolve(path.join(base, buildDistDir, buildAssetsDir));

@@ -120,11 +120,31 @@ describe(name, async () => {
 		});
 	});
 
-	it('should concatenate JS files', async () => {
+	it('should concatenate JS files and minify by default', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 
 			let settings = await expandOptions();
+			let type = 'js';
+			await buildMonolithFile(settings, type);
+
+			let after = box.snapshot();
+			let {created} = box.diff(before, after);
+
+			assert.deepEqual(created, [
+				"dist/site.js",
+			]);
+			assert.equal(after["dist/site.js"].trim(), 'let a,b,c;');
+		});
+	});
+
+	it('should concatenate JS files', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let before = box.snapshot();
+
+			let settings = await expandOptions({
+				jsMinifierAdaptor: '',
+			});
 			let type = 'js';
 			await buildMonolithFile(settings, type);
 
@@ -162,7 +182,9 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 
-			let settings = await expandOptions();
+			let settings = await expandOptions({
+				jsMinifierAdaptor: '',
+			});
 			await buildMonolithFile(settings, 'css');
 			await buildMonolithFile(settings, 'js');
 

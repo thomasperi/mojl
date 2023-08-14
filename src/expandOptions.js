@@ -41,18 +41,6 @@ async function expandOptions(options) {
 	}
 	expanded.collations = colls;
 	
-	
-	// Load node modules for options that are module descriptors
-	['cssTranspilerAdaptor', 'cssMinifierAdaptor', 'jsMinifierAdaptor'].forEach(key => {
-		let adaptor = expanded[key];
-		if (adaptor) {
-			if (adaptor.startsWith('./') || adaptor.startsWith('../')) {
-				adaptor = path.join(expanded.base, adaptor);
-			}
-			expanded[key] = require(adaptor);
-		}
-	});
-	
 	// Ensure arrays have items of the correct type.
 	['excludeFileTypesFromMirror'].forEach(key => {
 		expanded[key] = expanded[key].map(item => `${item}`);

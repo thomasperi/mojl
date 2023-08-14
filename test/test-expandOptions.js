@@ -123,21 +123,6 @@ describe(name, async () => {
 	// 	});
 	// });
 
-	it('should load adaptor nodejs modules', async () => {
-		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let projectBase = path.join(base, 'adaptors/proj');
-			let actual = await expandOptions({
-				base: projectBase,
-				cssTranspilerAdaptor: 'assert',
-				cssMinifierAdaptor: './cssmin.js',
-				jsMinifierAdaptor: '../jsmin.js',
-			});
-			assert.equal(actual.cssTranspilerAdaptor, assert);
-			assert.deepEqual(actual.cssMinifierAdaptor, { foo: 'cssmin' });
-			assert.deepEqual(actual.jsMinifierAdaptor, { bar: 'jsmin' });
-		});
-	});
-
 });
 
 

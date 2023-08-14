@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- mojl-terser as optional dependency
+
+### Changed
+- `jsMinifierAdaptor` is now `mojl-terser` by default
+- Adaptors now wait to resolve until used, not during `expandOptions`
+
 
 ## [2.0.0-alpha.5] - 2023-08-13
 
