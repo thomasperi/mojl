@@ -64,7 +64,7 @@ The corresponding part of the concatenated `site.css` file:
 
 ### Dev Builds
 
-Mojl builds for production by default (except for minification). To build a development site, pass in an object with the `isDev` property set to `true`:
+Mojl builds for production by default. To build a development site, pass in an object with the `isDev` property set to `true`:
 
 ```javascript
 mojl.build({isDev: true}).then(() => {
@@ -76,8 +76,8 @@ mojl.build({isDev: true}).then(() => {
 
 1. Files are written to a `dev` directory instead of `dist`.
 2. The `site.js` and `site.css` files each contain code that load the original source files, instead of the concatenated code. This helps ease debugging.
-3. Since the original files are used, URLs in CSS files are not rewritten.
-4. Other assets are symlinked instead of copied.
+3. Since the modules' original directory structure is used, URLs in CSS files are not rewritten.
+4. Other assets are symlinked (where supported) instead of copied.
 
 
 ---

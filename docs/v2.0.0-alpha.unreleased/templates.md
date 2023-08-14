@@ -26,7 +26,7 @@ The `props` argument contains whatever value is passed to the template when it i
 
 ### Including a Template
 
-You include a template using the `include` method on the TemplateHelper. The path is relative to the project root, and only needs to include the name of the module directory (`src/hello`), not the template file.
+You include a template using the `include` method on the TemplateHelper. The path is relative to the project root, and contains only the name of the module directory (`src/hello`), not the template file.
 
 Using the `src/hello` example above:
 

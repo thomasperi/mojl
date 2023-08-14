@@ -14,7 +14,7 @@ foo/
     photo.jpg
 ```
 
-Mojl uses all modules in the `src` subdirectory in your project, recursively:
+By default, Mojl uses all modules in the `src` subdirectory in your project, recursively:
 
 ```
 example-project/
