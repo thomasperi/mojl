@@ -12,7 +12,7 @@
 
 ### 2.0.0-alpha.5
 - [docs](v2.0.0-alpha.5/index.md)
-- [github](https://github.com/thomasperi/mojl/releases/tag/v2.0.0-alpha.5)
+- [github](https://github.com/thomasperi/mojl/tree/v2.0.0-alpha.5)
 - [npm](https://www.npmjs.com/package/mojl/v/2.0.0-alpha.5)
 
 ## Changelog
