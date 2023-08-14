@@ -110,7 +110,7 @@ class Mojl {
 		this.#noSame(this.#busyStyles, 'buildStyles');
 		options = await this.#overrideWith(options);
 		await this.#busyTry('#busyStyles', async () => {
-			if (options.cssTranspilerAdaptor) {
+			if (options.cssTranspilerAdapter) {
 				await buildTranspilerFile(options);
 			} else if (options.isDev) {
 				await buildDevLoaderFile(options, 'css');

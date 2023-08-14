@@ -3,7 +3,7 @@ const path = require("path").posix;
 
 const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
-const requireAdaptor = require('./requireAdaptor.js');
+const requireAdapter = require('./requireAdapter.js');
 
 async function buildTranspilerFile(settings) {
 	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
@@ -19,12 +19,12 @@ async function each(settings, name, modules) {
 		buildDistDir,
 		buildTempDir,
 		buildAssetsDir,
-		cssTranspilerAdaptor,
+		cssTranspilerAdapter,
 		isDev,
 	} = settings;
 	
-	let transpilerAdaptor = requireAdaptor(base, cssTranspilerAdaptor);
-	let types = transpilerAdaptor.inputTypes;
+	let transpilerAdapter = requireAdapter(base, cssTranspilerAdapter);
+	let types = transpilerAdapter.inputTypes;
 	let buildDir = isDev ? buildDevDir : buildDistDir;
 	let buildCssFile = `${name}.css`;
 	let entryFile = `${buildCssFile}.${types[0]}`;
@@ -58,7 +58,7 @@ async function each(settings, name, modules) {
 	await fs.promises.mkdir(path.dirname(entryPath), {recursive: true});
 	await fs.promises.mkdir(path.dirname(outputPath), {recursive: true});
 
-	transpilerAdaptor.run({sourcePaths, entryPath, outputPath, isDev});
+	transpilerAdapter.run({sourcePaths, entryPath, outputPath, isDev});
 	
 	if (!isDev) {
 		let tempDirToDelete = path.resolve(path.join(base, buildDir, buildTempDir));

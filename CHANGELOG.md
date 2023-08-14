@@ -13,15 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - mojl-clean-css as optional dependency
 
 ### Changed
-- `jsMinifierAdaptor` is now `mojl-terser` by default
-- `cssMinifierAdaptor` is now `mojl-clean-css` by default
-- Adaptors now wait to resolve until used, not during `expandOptions`
+- Adapter with an E, not an O
+- `jsMinifierAdapter` is now `mojl-terser` by default
+- `cssMinifierAdapter` is now `mojl-clean-css` by default
+- Adapters now wait to resolve until used, not during `expandOptions`
 
 
 ## [2.0.0-alpha.5] - 2023-08-13
 
 ### Fixed
-- Minifier adaptors can be async
+- Minifier adapters can be async
 - stricter options
 
 ### Added

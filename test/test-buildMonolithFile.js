@@ -58,7 +58,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				cssMinifierAdaptor: '',
+				cssMinifierAdapter: '',
 			});
 			let type = 'css';
 			let originalAssetList = await buildMonolithFile(settings, type);
@@ -105,7 +105,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				cssMinifierAdaptor: './capitalize.js',
+				cssMinifierAdapter: './capitalize.js',
 			});
 			let type = 'css';
 			let originalAssetList = await buildMonolithFile(settings, type);
@@ -128,7 +128,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				cssMinifierAdaptor: '',
+				cssMinifierAdapter: '',
 				buildDistDir: 'dist-weird',
 				collations: {
 					'stuff/styles-weird': ['src/**'],
@@ -170,7 +170,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				jsMinifierAdaptor: '',
+				jsMinifierAdapter: '',
 			});
 			let type = 'js';
 			await buildMonolithFile(settings, type);
@@ -190,7 +190,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				jsMinifierAdaptor: './capitalize.js',
+				jsMinifierAdapter: './capitalize.js',
 			});
 			let type = 'js';
 			await buildMonolithFile(settings, type);
@@ -210,8 +210,8 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				cssMinifierAdaptor: '',
-				jsMinifierAdaptor: '',
+				cssMinifierAdapter: '',
+				jsMinifierAdapter: '',
 			});
 			await buildMonolithFile(settings, 'css');
 			await buildMonolithFile(settings, 'js');

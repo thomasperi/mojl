@@ -54,7 +54,7 @@ The following options can potentially change the default behavior:
 * [`buildDistDir`](#builddistdir)
 * [`collations`](#collations)
 * [`isDev`](#isdev)
-* [`jsMinifierAdaptor`](#jsminifieradaptor)
+* [`jsMinifierAdapter`](#jsminifierAdapter)
 
 
 
@@ -77,8 +77,8 @@ The following options can potentially change the default behavior:
 * [`buildDevDir`](#builddevdir)
 * [`buildDistDir`](#builddistdir)
 * [`collations`](#collations)
-* [`cssMinifierAdaptor`](#cssminifieradaptor)
-* [`cssTranspilerAdaptor`](#csstranspileradaptor)
+* [`cssMinifierAdapter`](#cssminifierAdapter)
+* [`cssTranspilerAdapter`](#csstranspilerAdapter)
 * [`isDev`](#isdev)
 
 
@@ -279,9 +279,9 @@ The key is the name of the collation, which will be used as the base filename fo
 The value is an array of paths (relative to [`base`](#base)) for the modules to include in the collation. The paths can include `*` and `**` wildcards which behave like they do in a glob, but other glob features are not supported.
 
 
-#### `cssMinifierAdaptor`
+#### `cssMinifierAdapter`
 
-A Node.js module to use as an adaptor for a CSS minifier.
+A Node.js module to use as an adapter for a CSS minifier.
 
 | Type   | Default
 |--------|---------
@@ -294,9 +294,9 @@ If the name begins with with `./` or `../`, it is resolved relative to `base`. O
 The module's default export should be a function that accepts a single string argument and returns a string or a Promise that resolves to a string.
 
 
-#### `cssTranspilerAdaptor`
+#### `cssTranspilerAdapter`
 
-A Node.js module to use as an adaptor for a CSS transpiler such as LESS or SASS.
+A Node.js module to use as an adapter for a CSS transpiler such as LESS or SASS.
 
 | Type   | Default
 |--------|---------------------
@@ -312,7 +312,7 @@ The module should export two named members:
 
 | Property      | Type     | Description
 |---------------|----------|--------------
-| `entryPath`   | string   | The absolute path to the entry file for the adaptor to write, and for the transpiler to read.
+| `entryPath`   | string   | The absolute path to the entry file for the adapter to write, and for the transpiler to read.
 | `isDev`       | boolean  | `true` if the transpiler should build for development (presumably with a sourcemap), `false` for a production build.
 | `outputPath`  | string   | The absolute path to the css file for the transpiler to write.
 | `sourcePaths` | string[] | An array of source file paths, relative to the parent directory of `entryPath`.
@@ -336,9 +336,9 @@ Module file types to exclude from mirrored assets besides css, js, tpl.js, and t
 If true, build the dev versions of files. If false, build dist.
 
 
-#### `jsMinifierAdaptor`
+#### `jsMinifierAdapter`
 
-A Node.js module to use as an adaptor for a JS minifier.
+A Node.js module to use as an adapter for a JS minifier.
 
 | Type   | Default
 |--------|---------
@@ -575,11 +575,11 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`buildDistDir`](#builddistdir)
   * [`buildTempDir`](#buildtempdir)
   * [`collations`](#collations)
-  * [`cssMinifierAdaptor`](#cssminifieradaptor)
-  * [`cssTranspilerAdaptor`](#csstranspileradaptor)
+  * [`cssMinifierAdapter`](#cssminifierAdapter)
+  * [`cssTranspilerAdapter`](#csstranspilerAdapter)
   * [`excludeFileTypesFromMirror`](#excludefiletypesfrommirror)
   * [`isDev`](#isdev)
-  * [`jsMinifierAdaptor`](#jsminifieradaptor)
+  * [`jsMinifierAdapter`](#jsminifierAdapter)
   * [`maxIncludeDepth`](#maxincludedepth)
   * [`pageRelativeUrls`](#pagerelativeurls)
   * [`symlinkDevAssets`](#symlinkdevassets)

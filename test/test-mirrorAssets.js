@@ -134,7 +134,7 @@ describe(name, async () => {
 	it('should exclude transpiler files', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions({
-				cssTranspilerAdaptor: './fakeTranspiler.js',
+				cssTranspilerAdapter: './fakeTranspiler.js',
 			});
 
 			const before = box.snapshot();
@@ -156,7 +156,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions({
 				excludeFileTypesFromMirror: ['php'],
-				cssTranspilerAdaptor: './fakeTranspiler.js',
+				cssTranspilerAdapter: './fakeTranspiler.js',
 			});
 
 			const before = box.snapshot();

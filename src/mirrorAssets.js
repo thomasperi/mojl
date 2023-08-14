@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path').posix;
 
 const symlinkModules = require('./symlinkModules.js');
-const requireAdaptor = require('./requireAdaptor.js');
+const requireAdapter = require('./requireAdapter.js');
 
 async function mirrorAssets(settings) {
 	const {
@@ -13,12 +13,12 @@ async function mirrorAssets(settings) {
 		buildAssetsDir,
 		symlinkDevAssets,
 		symlinkDistAssets,
-		cssTranspilerAdaptor,
+		cssTranspilerAdapter,
 		excludeFileTypesFromMirror,
 		isDev,
 	} = settings;
 
-	let transpilerAdaptor = requireAdaptor(base, cssTranspilerAdaptor);
+	let transpilerAdapter = requireAdapter(base, cssTranspilerAdapter);
 
 	const mirror = path.join(
 		isDev ? buildDevDir : buildDistDir,
@@ -36,7 +36,7 @@ async function mirrorAssets(settings) {
 		await symlinkModules(base, mirror, modules);
 		
 	} else {
-		const transpilerTypes = transpilerAdaptor ? transpilerAdaptor.inputTypes : [];
+		const transpilerTypes = transpilerAdapter ? transpilerAdapter.inputTypes : [];
 		
 		const exclude = [
 			...transpilerTypes,

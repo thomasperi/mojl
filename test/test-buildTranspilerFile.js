@@ -10,13 +10,13 @@ const buildTranspilerFile = require('../src/buildTranspilerFile.js');
 
 describe(name, async () => {
 
-	it('should send paths to adaptor function and return asset paths', async () => {
+	it('should send paths to adapter function and return asset paths', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
 				collations: {site: ['src/*']},
-				cssTranspilerAdaptor: './fakeTranspiler.js',
+				cssTranspilerAdapter: './fakeTranspiler.js',
 				isDev: true,
 			});
 
@@ -66,7 +66,7 @@ describe(name, async () => {
 
 			let settings = await expandOptions({
 				collations: {site: ['src/*']},
-				cssTranspilerAdaptor: './fakeTranspiler.js',
+				cssTranspilerAdapter: './fakeTranspiler.js',
 			});
 
 			let originalAssetList = await buildTranspilerFile(settings);
@@ -96,7 +96,7 @@ describe(name, async () => {
 				collations: {'foo/output': ['src/*']},
 				buildDevDir: 'dev-weird',
 				buildAssetsDir: 'zote/sbor',
-				cssTranspilerAdaptor: './fakeTranspiler.js',
+				cssTranspilerAdapter: './fakeTranspiler.js',
 				isDev: true,
 			});
 

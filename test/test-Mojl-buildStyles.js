@@ -66,7 +66,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl({
-				cssTranspilerAdaptor: './fake-transpiler.js',
+				cssTranspilerAdapter: './fake-transpiler.js',
 				isDev: true
 			});
 			await mojl.buildStyles();
@@ -95,7 +95,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let mojl = new Mojl({
-				cssTranspilerAdaptor: './fake-transpiler.js'
+				cssTranspilerAdapter: './fake-transpiler.js'
 			});
 			await mojl.buildStyles();
 

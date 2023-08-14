@@ -81,7 +81,7 @@ const Options = {
 	
 	/**
 	 * A NodeJS module descriptor to a file or module that exports an object to use as an
-	 * adaptor for a CSS transpiler such as LESS or SASS.
+	 * adapter for a CSS transpiler such as LESS or SASS.
 	 *
 	 * Relative to `base` if beginning with `./` or `../`
 	 *
@@ -92,14 +92,14 @@ const Options = {
 	 * Property      | Type     | Description
 	 * --------------|----------|--------------
 	 * `sourcePaths` | string[] | An array of source file paths, relative to the parent directory of `entryPath`.
-	 * `entryPath`   | string   | The absolute path to the entry file for the adaptor to write, and for the transpiler itself to read.
+	 * `entryPath`   | string   | The absolute path to the entry file for the adapter to write, and for the transpiler itself to read.
 	 * `outputPath`  | string   | The absolute path to the css file for the transpiler to write.
 	 * `isDev`       | boolean  | Whether to do a development build, presumably with a sourcemap.
 	 *
 	 * @type string
 	 * @default #value
 	 */
-	cssTranspilerAdaptor: '',
+	cssTranspilerAdapter: '',
 
 	/**
 	 * A NodeJS module descriptor to a file or module that exports a function for minifying
@@ -111,7 +111,7 @@ const Options = {
 	 * @type string
 	 * @default #value
 	 */
-	cssMinifierAdaptor: 'mojl-clean-css',
+	cssMinifierAdapter: 'mojl-clean-css',
 
 	/**
 	 * A NodeJS module descriptor to a file or module that exports a function for minifying
@@ -123,7 +123,7 @@ const Options = {
 	 * @type string
 	 * @default #value
 	 */
-	jsMinifierAdaptor: 'mojl-terser',
+	jsMinifierAdapter: 'mojl-terser',
 
 	/**
 	 * The path of the module that acts as the root directory
