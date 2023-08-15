@@ -222,11 +222,48 @@ describe(name, async () => {
 		});
 	});
 
+	it('should use page collations with non-subdirectory suffix', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let settings = await expandOptions({
+				base: base + '/page-collations-nosubdir',
+				collatePages: true,
+				templateOutputSuffix: '.htm',
+			});
+			let type = 'js';
+			let options = { hash: false };
+			
+			{
+				let currentPage = '/about.htm';
+				let collations = null;
+
+				let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+				let expected = ['/site.js', '/about.js'];
+				assert.deepEqual(actual, expected);
+			}
+			
+			{
+				let currentPage = '/about.htm';
+				let collations = ['']; // only the page collation
+
+				let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+				let expected = ['/about.js'];
+				assert.deepEqual(actual, expected);
+			}
+
+			{
+				let currentPage = '/about/us.htm';
+				let collations = ['', 'site']; // custom order
+
+				let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+				let expected = ['/about/us.js', '/site.js'];
+				assert.deepEqual(actual, expected);
+			}
+			
+		});
+	});
+
 	// to-do:
 	// break these tests' files out into separate directories now that the files really need to be there.
-	
-	// to-do:
-	// test multiple pages existing and only loading the correct page collation
 	
 	
 });
