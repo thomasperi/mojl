@@ -16,7 +16,7 @@ const requireAdapter = require('./requireAdapter.js');
 
 async function buildMonolithFile(settings, type) {
 	const promises = (settings.collations
-		.filter(coll => !coll.isPage)
+		.filter(coll => !coll.page)
 		.map(coll => {
 			return each(settings, coll.name, coll.modules, type);
 		})

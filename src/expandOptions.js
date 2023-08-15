@@ -42,9 +42,6 @@ async function expandOptions(options) {
 	for (let coll of expanded.collations) {
 		let mods = await expandModulePaths(expanded.base, coll.modules);
 		coll.modules = mods.filter(mod => !pageModules.includes(mod));
-		// if (/^\W/.test(coll.name)) {
-		// 	throw 'Collation names must begin with a word character (letters, numbers, underscores)';
-		// }
 	}
 	
 	// Add automatic page collations
@@ -54,18 +51,11 @@ async function expandOptions(options) {
 		pageCollName = path.relative(expanded.templateHomeModule, pageCollName);
 		
 		if (expanded.collations.some(coll => coll.name === pageCollName)) {
-			throw `Collation name collision: ${pageColl}`;
+			throw `Collation name collision: ${pageCollName}`;
 		}
-		expanded.collations.push({ name: pageCollName, modules: [pageMod], isPage: true });
+		expanded.collations.push({ name: pageCollName, modules: [pageMod], page: true });
+		
 	}
-	
-	// to-do:
-	// Need a prefix to differentiate the automatic page collations from the regular ones.
-	// Maybe start page collations with a dot (or other character... a star? a pound?),
-	// strip the dot when writing files,
-	// and ignore dot collations when writing script and link tags. 
-	// OR, define a collation as an array of objects with a `name` property,
-	// a `modules` property, and maybe a `page` property to differentiate.
 	
 	// Ensure arrays have items of the correct type.
 	['excludeFileTypesFromMirror'].forEach(key => {

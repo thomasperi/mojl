@@ -14,7 +14,7 @@ const requireAdapter = require('./requireAdapter.js');
 
 async function buildTranspilerFile(settings) {
 	const promises = (settings.collations
-		.filter(coll => !coll.isPage)
+		.filter(coll => !coll.page)
 		.map(coll => {
 			return each(settings, coll.name, coll.modules);
 		})

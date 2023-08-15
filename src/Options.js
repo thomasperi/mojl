@@ -35,8 +35,6 @@ const Options = {
 	],
 	
 	/**
-	 * to-do: implement
-	 * 
 	 * *constructor only*
 	 *
 	 * Create a virtual collation for every page, to be referenced as the empty string

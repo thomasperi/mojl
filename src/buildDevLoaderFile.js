@@ -9,7 +9,7 @@ const relativizeCssUrls = require('./relativizeCssUrls.js');
 
 async function buildDevLoaderFile(settings, type) {
 	const promises = (settings.collations
-		.filter(coll => !coll.isPage)
+		.filter(coll => !coll.page)
 		.map(coll => {
 			return each(settings, coll.name, coll.modules, type);
 		})
