@@ -9,7 +9,13 @@ const mirrorAssets = require('./mirrorAssets.js');
 
 const has = Object.prototype.hasOwnProperty;
 
-const nonOverridables = ['base', 'collations'];
+const nonOverridables = [
+	'base',
+	'collations',
+	'collatePages',
+	'templateHomeModule',
+	'templateOutputSuffix',
+];
 
 // to-do:
 // test new methods

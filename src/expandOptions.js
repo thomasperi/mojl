@@ -2,6 +2,7 @@ const path = require("path").posix;
 
 const defaults = require('./Options.js');
 const expandModulePaths = require('./expandModulePaths.js');
+const findPageModules = require('./findPageModules.js');
 
 const has = Object.prototype.hasOwnProperty;
 const { isArray } = Array;
@@ -14,7 +15,7 @@ async function expandOptions(options) {
 		options = {};
 	}
 	
-	// Ensure data types are correct on top-level options.
+	// Populate missing options and ensure data types on top-level options are correct.
 	Object.keys(defaults).forEach(key => {
 		let value = has.call(options, key) ? options[key] : defaults[key];
 		let actualType = getType(value);
@@ -31,15 +32,36 @@ async function expandOptions(options) {
 		expanded[key] = value;
 	});
 	
+	// Resolve the base
 	expanded.base = path.resolve(expanded.base);
 	
-	//expanded.modules = await expandModulePaths(expanded.base, expanded.modules);
+	// Get the names of any page modules to create automatic collations from.
+	let pageModules = expanded.collatePages ? (await findPageModules(expanded)) : [];
 	
+	// Expand explicit collations, removing any page collations.
 	let colls = expanded.collations;
 	for (let name of Object.keys(colls)) {
-		colls[name] = await expandModulePaths(expanded.base, colls[name]);
+		let mods = await expandModulePaths(expanded.base, colls[name]);
+		colls[name] = mods.filter(mod => !pageModules.includes(mod));
 	}
-	expanded.collations = colls;
+	
+	// Add automatic page collations
+	for (let pageMod of pageModules) {
+		let pageColl = path.join(pageMod, expanded.templateOutputSuffix)
+		pageColl = path.join(path.dirname(pageColl), path.parse(pageColl).name);
+		pageColl = path.relative(expanded.templateHomeModule, pageColl);
+		
+		if (has.call(colls, pageColl)) {
+			throw `Collation name collision: ${pageColl}`;
+		}
+		colls[pageColl] = [pageMod];
+	}
+	
+	// to-do:
+	// Need a prefix to differentiate the automatic page collations from the regular ones.
+	// Maybe start page collations with a dot (or other character... a star? a pound?),
+	// strip the dot when writing files,
+	// and ignore dot collations when writing script and link tags. 
 	
 	// Ensure arrays have items of the correct type.
 	['excludeFileTypesFromMirror'].forEach(key => {

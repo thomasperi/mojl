@@ -53,5 +53,30 @@ describe(name, async () => {
 	
 	// to-do: test collating transpiler files
 
+	it('should collate pages when building monoliths', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let settings = await expandOptions({
+				...options,
+				collations: {
+					site: ['src/**'],
+				},
+				collatePages: true,
+			});
+			
+			console.log(JSON.stringify({settings}, null, 2));
+			
+			await buildMonolithFile(settings, 'css');
+			await buildMonolithFile(settings, 'js');
+			
+			let after = box.snapshot();
+			console.log(JSON.stringify({after}, null, 2));
+			
+			// assert(after["dev/one.css"].includes('@import "assets/src/collation1/d/d.css";\n@import "assets/src/collation1/e/e.css";\n@import "assets/src/collation1/f/f.css";'));
+			// assert(after["dev/one.js"].includes('[\n\t"assets/src/collation1/d/d.js",\n\t"assets/src/collation1/e/e.js",\n\t"assets/src/collation1/f/f.js"\n]'));
+			// assert(after["dev/two.css"].includes('@import "assets/src/collation2/g/g.css";\n@import "assets/src/collation2/h/h.css";\n@import "assets/src/collation2/i/i.css";'));
+			// assert(after["dev/two.js"].includes('[\n\t"assets/src/collation2/g/g.js",\n\t"assets/src/collation2/h/h.js",\n\t"assets/src/collation2/i/i.js"\n]'));
+
+		});
+	});
 	
 });

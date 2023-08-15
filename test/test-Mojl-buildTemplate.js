@@ -70,10 +70,11 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let before = box.snapshot();
 
-			let mojl = new Mojl();
+			let mojl = new Mojl({
+				templateOutputSuffix: '.md',
+			});
 			await mojl.buildTemplate('bar-page-2', 'src/bar', {zote: 'thed'}, {
 				isDev: true,
-				templateOutputSuffix: '.md'
 			});
 
 			let after = box.snapshot();

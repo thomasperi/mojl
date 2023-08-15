@@ -5,6 +5,8 @@ const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
 const requireAdapter = require('./requireAdapter.js');
 
+// to-do: rename this method as plural
+
 async function buildMonolithFile(settings, type) {
 	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
 		return each(settings, collationName, settings.collations[collationName], type);
