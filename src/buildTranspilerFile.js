@@ -6,21 +6,10 @@ const relativizeCssUrls = require('./relativizeCssUrls.js');
 const requireAdapter = require('./requireAdapter.js');
 const writeFileRecursive = require('./writeFileRecursive.js');
 
-// async function buildTranspilerFile(settings) {
-// 	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
-// 		return each(settings, collationName, settings.collations[collationName]);
-// 	}));
-// 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
-// }
-
 async function buildTranspilerFile(settings) {
-	const promises = (settings.collations
-		.filter(coll => !coll.page)
-		.map(coll => {
-			return each(settings, coll.name, coll.modules);
-		})
-	);
-	const assetList = await Promise.all(promises);
+	const assetList = await Promise.all(settings.collations.map(
+		coll => each(settings, coll.name, coll.modules)
+	));
 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
 }
 

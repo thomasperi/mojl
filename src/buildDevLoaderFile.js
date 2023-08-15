@@ -9,13 +9,9 @@ const writeFileRecursive = require('./writeFileRecursive.js');
 // Note: module files are to be copied or symlinked separately
 
 async function buildDevLoaderFile(settings, type) {
-	const promises = (settings.collations
-		.filter(coll => !coll.page)
-		.map(coll => {
-			return each(settings, coll.name, coll.modules, type);
-		})
-	);
-	const assetList = await Promise.all(promises);
+	const assetList = await Promise.all(settings.collations.map(
+		coll => each(settings, coll.name, coll.modules, type)
+	));
 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
 }
 

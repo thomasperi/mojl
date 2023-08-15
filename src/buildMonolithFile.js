@@ -16,13 +16,9 @@ const writeFileRecursive = require('./writeFileRecursive.js');
 // }
 
 async function buildMonolithFile(settings, type) {
-	const promises = (settings.collations
-		.filter(coll => !coll.page)
-		.map(coll => {
-			return each(settings, coll.name, coll.modules, type);
-		})
-	);
-	const assetList = await Promise.all(promises);
+	const assetList = await Promise.all(settings.collations.map(
+		coll => each(settings, coll.name, coll.modules, type)
+	));
 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
 }
 
