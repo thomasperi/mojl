@@ -1,1 +1,3 @@
-.bar-zazz{}
+.bar-zazz {
+	color: green;
+}

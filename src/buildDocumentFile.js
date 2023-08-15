@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path").posix;
 
 const TemplateHelper = require('./TemplateHelper.js');
+const writeFileRecursive = require('./writeFileRecursive.js');
 // const isInside = require('./isInside.js');
 
 async function buildDocumentFile(settings, module, props = null, prefix = null) {
@@ -33,8 +34,7 @@ async function buildDocumentFile(settings, module, props = null, prefix = null) 
 	const content = await helper.include(module, props);
 	
 	if (content !== false) {
-		await fs.promises.mkdir(path.dirname(outputFile), {recursive: true});
-		await fs.promises.writeFile(outputFile, content, 'utf8');
+		await writeFileRecursive(outputFile, content, 'utf8');
 	}
 	
 }

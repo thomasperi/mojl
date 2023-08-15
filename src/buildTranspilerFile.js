@@ -4,6 +4,7 @@ const path = require("path").posix;
 const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
 const requireAdapter = require('./requireAdapter.js');
+const writeFileRecursive = require('./writeFileRecursive.js');
 
 // async function buildTranspilerFile(settings) {
 // 	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
@@ -58,8 +59,7 @@ async function each(settings, name, modules) {
 			mirrorDir,
 			assetList
 		);
-		await fs.promises.mkdir(path.dirname(moduleFilePathMirror), {recursive: true});
-		await fs.promises.writeFile(moduleFilePathMirror, moduleCode, 'utf8');
+		await writeFileRecursive(moduleFilePathMirror, moduleCode, 'utf8');
 	}
 
 	let sourcePaths = moduleFiles.map(

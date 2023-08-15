@@ -4,6 +4,7 @@ const path = require("path").posix;
 const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const devLoaders = require('./devLoaders.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
+const writeFileRecursive = require('./writeFileRecursive.js');
 
 // Note: module files are to be copied or symlinked separately
 
@@ -55,8 +56,7 @@ async function each(settings, name, modules, type) {
 	
 	let outputCode = devLoaders[type]({urls});
 	
-	await fs.promises.mkdir(path.dirname(outputPath), {recursive: true});
-	await fs.promises.writeFile(outputPath, outputCode, 'utf8');
+	await writeFileRecursive(outputPath, outputCode, 'utf8');
 	
 	return assetList;
 }

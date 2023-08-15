@@ -4,6 +4,7 @@ const path = require("path").posix;
 const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
 const requireAdapter = require('./requireAdapter.js');
+const writeFileRecursive = require('./writeFileRecursive.js');
 
 // to-do: rename this method as plural
 
@@ -65,8 +66,9 @@ async function each(settings, name, modules, type) {
 		outputCode = await minifierFn(outputCode);
 	}
 	
-	await fs.promises.mkdir(path.dirname(outputPath), {recursive: true});
-	await fs.promises.writeFile(outputPath, outputCode, 'utf8');
+	if (outputCode.trim()) {
+		await writeFileRecursive(outputPath, outputCode, 'utf8');
+	}
 	
 	return assetList;
 }
