@@ -35,11 +35,11 @@ async function assetTagAttr(settings, currentPage, type, collationNames, options
 		return collName;
 	});	
 
-	if (settings.collatePages) {
-		console.log(JSON.stringify({
-			collationNames
-		}, null, 2));
-	}
+	// if (settings.collatePages) {
+	// 	console.log(JSON.stringify({
+	// 		collationNames
+	// 	}, null, 2));
+	// }
 		
 	// Convert collation names to urls
 	let urls = await Promise.all(
@@ -48,13 +48,13 @@ async function assetTagAttr(settings, currentPage, type, collationNames, options
 		)
 	);
 
-	if (settings.collatePages) {
-		console.log(JSON.stringify({
-			settings,
-			urls
-		}, null, 2));
-	}
-	
+	// if (settings.collatePages) {
+	// 	console.log(JSON.stringify({
+	// 		settings,
+	// 		urls
+	// 	}, null, 2));
+	// }
+
 	// Remove the ones that don't exist
 	return urls.filter(url => !!url);
 }
@@ -70,11 +70,13 @@ async function each(settings, currentPage, file, options) {
 	
 	let docroot = path.join(base, isDev ? buildDevDir : buildDistDir);
 	let filePath = path.resolve(path.join(docroot, file));
-	if (settings.collatePages) {
-		console.log(JSON.stringify({
-			filePath
-		}, null, 2));
-	}
+
+	// if (settings.collatePages) {
+	// 	console.log(JSON.stringify({
+	// 		filePath
+	// 	}, null, 2));
+	// }
+
 	if (!fs.existsSync(filePath)) {
 		return;
 	}
