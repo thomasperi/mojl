@@ -46,15 +46,17 @@ async function expandOptions(options) {
 	
 	// Add automatic page collations
 	for (let pageMod of pageModules) {
-		let pageCollName = path.join(pageMod, expanded.templateOutputSuffix);
-		pageCollName = path.join(path.dirname(pageCollName), path.parse(pageCollName).name);
-		pageCollName = path.relative(expanded.templateHomeModule, pageCollName);
+		let pathThing = path.relative(
+			expanded.templateHomeModule,
+			pageMod + expanded.templateOutputSuffix
+		);
+		let page = path.join('/', pathThing);
+		let name = path.join(path.dirname(pathThing), path.parse(pathThing).name);
 		
-		if (expanded.collations.some(coll => coll.name === pageCollName)) {
-			throw `Collation name collision: ${pageCollName}`;
+		if (expanded.collations.some(coll => coll.name === name)) {
+			throw `Collation name collision: ${name}`;
 		}
-		expanded.collations.push({ name: pageCollName, modules: [pageMod], page: true });
-		
+		expanded.collations.push({ name, modules: [pageMod], page });
 	}
 	
 	// Ensure arrays have items of the correct type.

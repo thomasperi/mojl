@@ -61,13 +61,15 @@ describe(name, async () => {
 				collatePages: true,
 			});
 			
-			console.log(JSON.stringify({settings}, null, 2));
+			// 			console.log(JSON.stringify({settings}, null, 2));
 			
 			await buildMonolithFile(settings, 'css');
 			await buildMonolithFile(settings, 'js');
 			
 			let after = box.snapshot();
-			console.log(JSON.stringify({after}, null, 2));
+			// 			console.log(JSON.stringify({after}, null, 2));
+			
+			// to-do: finish writing this test
 			
 			// assert(after["dev/one.css"].includes('@import "assets/src/collation1/d/d.css";\n@import "assets/src/collation1/e/e.css";\n@import "assets/src/collation1/f/f.css";'));
 			// assert(after["dev/one.js"].includes('[\n\t"assets/src/collation1/d/d.js",\n\t"assets/src/collation1/e/e.js",\n\t"assets/src/collation1/f/f.js"\n]'));

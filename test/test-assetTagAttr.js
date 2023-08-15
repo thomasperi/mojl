@@ -174,4 +174,18 @@ describe(name, async () => {
 		});
 	});
 
+	it('should use page collations', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let settings = await expandOptions({ collatePages: true });
+			let currentPage = '/index.html';
+			let type = 'js';
+			let collations = null;
+			let options = { hash: false };
+
+			let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+			let expected = ['/site.js', '/index.js'];
+			assert.deepEqual(actual, expected);
+		});
+	});
+
 });
