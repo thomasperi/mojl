@@ -8,7 +8,8 @@
     "src/*.js"
   ],
   "scripts": {
-    "test": "npx mocha"
+    "test": "npx mocha",
+    "watch": "node dev/dev.js"
   },
   "keywords": [
     "bundler",
