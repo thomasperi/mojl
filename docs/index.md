@@ -10,6 +10,11 @@
 - [docs](v2.0.0-alpha.unreleased/index.md)
 - [github](https://github.com/thomasperi/mojl/tree/2.0.0-alpha)
 
+### 2.0.0-alpha.7
+- [docs](v2.0.0-alpha.7/index.md)
+- [github](https://github.com/thomasperi/mojl/tree/v2.0.0-alpha.7)
+- [npm](https://www.npmjs.com/package/mojl/v/2.0.0-alpha.7)
+
 ### 2.0.0-alpha.6
 - [docs](v2.0.0-alpha.6/index.md)
 - [github](https://github.com/thomasperi/mojl/tree/v2.0.0-alpha.6)
