@@ -176,16 +176,57 @@ describe(name, async () => {
 
 	it('should use page collations', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let settings = await expandOptions({ collatePages: true });
-			let currentPage = '/index.html';
+			let settings = await expandOptions({
+				base: base + '/page-collations',
+				collatePages: true,
+			});
 			let type = 'js';
-			let collations = null;
 			let options = { hash: false };
+			
+			{
+				let currentPage = '/index.html';
+				let collations = null;
 
-			let actual = await assetTagAttr(settings, currentPage, type, collations, options);
-			let expected = ['/site.js', '/index.js'];
-			assert.deepEqual(actual, expected);
+				let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+				let expected = ['/site.js', '/index.js'];
+				assert.deepEqual(actual, expected);
+			}
+			
+			{
+				let currentPage = '/about/index.html';
+				let collations = null;
+
+				let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+				let expected = ['/site.js', '/about/index.js'];
+				assert.deepEqual(actual, expected);
+			}
+			
+			{
+				let currentPage = '/about/index.html';
+				let collations = ['']; // only the page collation
+
+				let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+				let expected = ['/about/index.js'];
+				assert.deepEqual(actual, expected);
+			}
+
+			{
+				let currentPage = '/about/index.html';
+				let collations = ['', 'site']; // custom order
+
+				let actual = await assetTagAttr(settings, currentPage, type, collations, options);
+				let expected = ['/about/index.js', '/site.js'];
+				assert.deepEqual(actual, expected);
+			}
+			
 		});
 	});
 
+	// to-do:
+	// break these tests' files out into separate directories now that the files really need to be there.
+	
+	// to-do:
+	// test multiple pages existing and only loading the correct page collation
+	
+	
 });
