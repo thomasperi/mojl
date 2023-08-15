@@ -25,18 +25,14 @@ const Options = {
 	/**
 	 * *constructor only*
 	 *
-	 * An object whose keys are output file prefixes and whose values are arrays of module
-	 * names and/or wildcards to collate into the output files. Supports `*` and `**` which
-	 * behave roughly like glob, but other glob features are not supported.
-	 *
-	 * Prefixes and module names are relative to `base`
-	 *
-	 * @type object
+   * An array of "collation" objects describing how the module files should be collated.
+   *
+	 * @type object[]
 	 * @default #value
 	 */
-	collations: {
-		'site': ['src/**']
-	},
+	collations: [
+		{ name: 'site', modules: ['src/**'] }
+	],
 	
 	/**
 	 * to-do: implement

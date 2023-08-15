@@ -42,10 +42,10 @@ describe(name, async () => {
 	it('should use collations in settings', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions({
-				collations: {
-					'one': 'src/one/*',
-					'two': 'src/two/*',
-				}
+				collations: [
+					{ name: 'one', modules: ['src/one/*'] },
+					{ name: 'two', modules: ['src/two/*'] },
+				]
 			});
 			let currentPage = '/index.html';
 			let collations = undefined;

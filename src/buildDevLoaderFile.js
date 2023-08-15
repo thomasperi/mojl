@@ -8,9 +8,13 @@ const relativizeCssUrls = require('./relativizeCssUrls.js');
 // Note: module files are to be copied or symlinked separately
 
 async function buildDevLoaderFile(settings, type) {
-	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
-		return each(settings, collationName, settings.collations[collationName], type);
-	}));
+	const promises = (settings.collations
+		.filter(coll => !coll.isPage)
+		.map(coll => {
+			return each(settings, coll.name, coll.modules, type);
+		})
+	);
+	const assetList = await Promise.all(promises);
 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
 }
 

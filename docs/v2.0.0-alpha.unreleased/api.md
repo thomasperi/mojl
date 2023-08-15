@@ -266,17 +266,21 @@ The directory where temporary files are written during build and then removed.
 
 > *constructor only*
 
-An object describing how the module files should be collated.
+An array of "collation" objects describing how the module files should be collated.
 
-| Type   | Default                  | Notes
-|--------|--------------------------|-----------
-| object | `{ 'site': ['src/**'] }` | See below.
+| Type     | Default
+|----------|----------
+| object[] | `[ { name: 'site', modules: ['src/**'] } ]`
 
-Each key/value pair describes a "collation" -- a group of modules to be concatenated into one script and one stylesheet.
+A collation is a group of modules to be concatenated into one script and one stylesheet. Each object has two properties:
 
-The key is the name of the collation, which will be used as the base filename for the concatenated scripts and styles. The default `site` collation produces a `site.css` file and a `site.js` file in the root of the build directory.
+##### `name`
 
-The value is an array of paths (relative to [`base`](#base)) for the modules to include in the collation. The paths can include `*` and `**` wildcards which behave like they do in a glob, but other glob features are not supported.
+A string used as the base filename for the concatenated scripts and styles. The default `'site'` collation produces a `site.css` file and a `site.js` file in the root of the build directory.
+
+##### `modules`
+
+An array of paths (relative to [`base`](#base)) for the modules to include in the collation. The paths can include `*` and `**` wildcards which behave like they do in a glob, but other glob features are not supported.
 
 
 #### `cssMinifierAdapter`
@@ -287,9 +291,7 @@ A Node.js module to use as an adapter for a CSS minifier.
 |--------|---------
 | string | `'mojl-clean-css'`
 
-The name of the module to use as a CSS minifier.
-
-If the name begins with with `./` or `../`, it is resolved relative to `base`. Otherwise it gets passed straight to `require`.
+If the string begins with with `./` or `../`, it is resolved relative to `base`. Otherwise it gets passed straight to `require`.
 
 The module's default export should be a function that accepts a single string argument and returns a string or a Promise that resolves to a string.
 
@@ -344,9 +346,7 @@ A Node.js module to use as an adapter for a JS minifier.
 |--------|---------
 | string | `'mojl-terser'`
 
-The name of the module to use as a JS minifier.
-
-If the name begins with with `./` or `../`, it is resolved relative to `base`. Otherwise it gets passed straight to `require`.
+If the string begins with with `./` or `../`, it is resolved relative to `base`. Otherwise it gets passed straight to `require`.
 
 The module's default export should be a function that accepts a single string argument and returns a string or a Promise that resolves to a string.
 

@@ -15,7 +15,7 @@ describe(name, async () => {
 			let expected = {
 				...defaultOptions,
 				base,
-				collations: { site: [] }, // because patterns get expanded and there isn't a 'src' dir in base
+				collations: [ { name: 'site', modules: [] } ], // because patterns get expanded and there isn't a 'src' dir in base
 			};
 			assert.deepEqual(actual, expected);
 		});
@@ -27,7 +27,7 @@ describe(name, async () => {
 			let expected = {
 				...defaultOptions,
 				base,
-				collations: { site: [] },
+				collations: [ { name: 'site', modules: [] } ],
 			};
 			assert.deepEqual(actual, expected);
 		});
@@ -39,7 +39,7 @@ describe(name, async () => {
 			let expected = {
 				...defaultOptions,
 				base,
-				collations: { site: [] },
+				collations: [ { name: 'site', modules: [] } ],
 			};
 			assert.deepEqual(actual, expected);
 		});
@@ -54,7 +54,7 @@ describe(name, async () => {
 			let expected = {
 				...defaultOptions,
 				base: projectBase,
-				collations: { site: [] },
+				collations: [ { name: 'site', modules: [] } ],
 			};
 			assert.deepEqual(actual, expected);
 		});
@@ -89,14 +89,17 @@ describe(name, async () => {
 			let expected = {
 				...defaultOptions,
 				base: projectBase,
-				collations: { site: [
-					'src',
-					'src/a',
-					'src/b',
-					'src/c',
-					'src/c/d',
-					'src/c/d/e',
-				] },
+				collations: [ {
+					name: 'site',
+					modules: [
+						'src',
+						'src/a',
+						'src/b',
+						'src/c',
+						'src/c/d',
+						'src/c/d/e',
+					]
+				} ],
 			};
 			assert.deepEqual(actual, expected);
 		});

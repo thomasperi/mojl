@@ -15,7 +15,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				collations: {site: ['src/*']},
+				collations: [ { name: 'site', modules: ['src/*'] } ],
 				cssTranspilerAdapter: './fakeTranspiler.js',
 				isDev: true,
 			});
@@ -65,7 +65,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				collations: {site: ['src/*']},
+				collations: [ { name: 'site', modules: ['src/*'] } ],
 				cssTranspilerAdapter: './fakeTranspiler.js',
 			});
 
@@ -93,7 +93,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 
 			let settings = await expandOptions({
-				collations: {'foo/output': ['src/*']},
+				collations: [ { name: 'foo/output', modules: ['src/*'] } ],
 				buildDevDir: 'dev-weird',
 				buildAssetsDir: 'zote/sbor',
 				cssTranspilerAdapter: './fakeTranspiler.js',

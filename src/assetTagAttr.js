@@ -5,7 +5,10 @@ const encodeHtmlAttribute = require('./encodeHtmlAttribute.js');
 
 async function assetTagAttr(settings, currentPage, type, collationNames, options) {
 	if (collationNames === null || collationNames === undefined) {
-		collationNames = Object.keys(settings.collations);
+		collationNames = (settings.collations
+			.filter(coll => !coll.isPage)
+			.map(coll => coll.name)
+		);
 	}
 	if (!(collationNames instanceof Array)) {
 		collationNames = [collationNames];

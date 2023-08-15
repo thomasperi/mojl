@@ -5,10 +5,21 @@ const getModuleFilesOfType = require('./getModuleFilesOfType.js');
 const relativizeCssUrls = require('./relativizeCssUrls.js');
 const requireAdapter = require('./requireAdapter.js');
 
+// async function buildTranspilerFile(settings) {
+// 	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
+// 		return each(settings, collationName, settings.collations[collationName]);
+// 	}));
+// 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
+// }
+
 async function buildTranspilerFile(settings) {
-	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
-		return each(settings, collationName, settings.collations[collationName]);
-	}));
+	const promises = (settings.collations
+		.filter(coll => !coll.isPage)
+		.map(coll => {
+			return each(settings, coll.name, coll.modules);
+		})
+	);
+	const assetList = await Promise.all(promises);
 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
 }
 

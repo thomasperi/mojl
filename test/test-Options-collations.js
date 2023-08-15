@@ -10,10 +10,10 @@ const buildMonolithFile = require('../src/buildMonolithFile.js');
 const buildDevLoaderFile = require('../src/buildDevLoaderFile.js');
 
 const options = {
-	collations: {
-		'one': ['src/collation1/**'],
-		'two': ['src/collation2/**'],
-	},
+	collations: [
+		{ name: 'one', modules: ['src/collation1/**'] },
+		{ name: 'two', modules: ['src/collation2/**'] },
+	],
 };
 
 describe(name, async () => {
@@ -57,9 +57,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions({
 				...options,
-				collations: {
-					site: ['src/**'],
-				},
+				collations: [ { name: 'site', modules: ['src/**'] } ],
 				collatePages: true,
 			});
 			

@@ -130,9 +130,7 @@ describe(name, async () => {
 			let settings = await expandOptions({
 				cssMinifierAdapter: '',
 				buildDistDir: 'dist-weird',
-				collations: {
-					'stuff/styles-weird': ['src/**'],
-				},
+				collations: [ { name: 'stuff/styles-weird', modules: ['src/**'] } ],
 			});
 			let type = 'css';
 			await buildMonolithFile(settings, type);

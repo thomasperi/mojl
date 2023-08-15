@@ -25,7 +25,7 @@ async function mirrorAssets(settings) {
 		buildAssetsDir
 	);
 	
-	let modules = Object.values(collations);
+	let modules = collations.map(coll => coll.modules);
 	modules = modules.reduce((acc, curr) => acc.concat(curr), []);
 	modules = [...new Set(modules)];
 	

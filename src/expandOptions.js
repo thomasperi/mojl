@@ -39,25 +39,24 @@ async function expandOptions(options) {
 	let pageModules = expanded.collatePages ? (await findPageModules(expanded)) : [];
 	
 	// Expand explicit collations, removing any page collations.
-	let colls = expanded.collations;
-	for (let name of Object.keys(colls)) {
-		let mods = await expandModulePaths(expanded.base, colls[name]);
-		colls[name] = mods.filter(mod => !pageModules.includes(mod));
-		if (/^\W/.test(name)) {
-			throw 'Collation names must begin with a word character (letters, numbers, underscores)';
-		}
+	for (let coll of expanded.collations) {
+		let mods = await expandModulePaths(expanded.base, coll.modules);
+		coll.modules = mods.filter(mod => !pageModules.includes(mod));
+		// if (/^\W/.test(coll.name)) {
+		// 	throw 'Collation names must begin with a word character (letters, numbers, underscores)';
+		// }
 	}
 	
 	// Add automatic page collations
 	for (let pageMod of pageModules) {
-		let pageColl = path.join(pageMod, expanded.templateOutputSuffix);
-		pageColl = path.join(path.dirname(pageColl), path.parse(pageColl).name);
-		pageColl = path.relative(expanded.templateHomeModule, pageColl);
+		let pageCollName = path.join(pageMod, expanded.templateOutputSuffix);
+		pageCollName = path.join(path.dirname(pageCollName), path.parse(pageCollName).name);
+		pageCollName = path.relative(expanded.templateHomeModule, pageCollName);
 		
-		if (has.call(colls, pageColl)) {
+		if (expanded.collations.some(coll => coll.name === pageCollName)) {
 			throw `Collation name collision: ${pageColl}`;
 		}
-		colls['*' + pageColl] = [pageMod];
+		expanded.collations.push({ name: pageCollName, modules: [pageMod], isPage: true });
 	}
 	
 	// to-do:

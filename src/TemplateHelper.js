@@ -62,12 +62,12 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		return linkUrl(settings, urlDocument, linkPath);
 	};
 	
-	helper.scripts = (collations, options) => {
-		return scriptTag(settings, urlDocument, collations, options);
+	helper.scripts = (collationNames, options) => {
+		return scriptTag(settings, urlDocument, collationNames, options);
 	};
 
-	helper.styles = (collations, options) => {
-		return styleTag(settings, urlDocument, collations, options);
+	helper.styles = (collationNames, options) => {
+		return styleTag(settings, urlDocument, collationNames, options);
 	};
 	
 	return helper;

@@ -7,10 +7,21 @@ const requireAdapter = require('./requireAdapter.js');
 
 // to-do: rename this method as plural
 
+// async function buildMonolithFile(settings, type) {
+// 	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
+// 		return each(settings, collationName, settings.collations[collationName], type);
+// 	}));
+// 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
+// }
+
 async function buildMonolithFile(settings, type) {
-	const assetList = await Promise.all(Object.keys(settings.collations).map(collationName => {
-		return each(settings, collationName, settings.collations[collationName], type);
-	}));
+	const promises = (settings.collations
+		.filter(coll => !coll.isPage)
+		.map(coll => {
+			return each(settings, coll.name, coll.modules, type);
+		})
+	);
+	const assetList = await Promise.all(promises);
 	return assetList.reduce((acc, curr) => acc.concat(curr), []);
 }
 
