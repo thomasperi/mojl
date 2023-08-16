@@ -6,7 +6,7 @@ Collations let you:
 - Control the order in which the modules load, and
 - Split the modules into multiple output files.
 
-A collation is defined as a JavaScript object describing which modules to concatenated into which script and stylesheet.
+A collation is defined as a JavaScript object describing which modules to concatenate into which script and stylesheet.
 
 Here's the default array of collations (only one collation in the array) that causes everything in `src` to be concatenated into `site.js` and `site.css`:
 
