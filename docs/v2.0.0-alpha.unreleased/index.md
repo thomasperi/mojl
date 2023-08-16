@@ -58,8 +58,14 @@ nav/                        nav.tpl
 * Mojl on GitHub: <https://github.com/thomasperi/mojl/tags>
 * Mojl on npm: <https://www.npmjs.com/package/mojl?activeTab=versions>
 
+
 ## Pronunciation
 /ˈmɑdʒəl/ (MODGE-ul)
+
+
+## Up Next
+
+Get started now by learning how [Modules](modules.md) are constructed.
 
 
 ## Navigation
@@ -69,5 +75,6 @@ Each page in this documentation is listed here. At the bottom of each page is a 
 * [Modules](modules.md)
 * [Build](build.md)
 * [Templates](templates.md)
+* [Collations](collations.md)
 * [Transpilers](transpilers.md)
 * [API](api.md)

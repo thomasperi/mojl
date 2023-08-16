@@ -84,6 +84,39 @@ module.exports = (tpl, props) => tpl.include('src/shell', {
 
 The files in the above example produce two complete HTML documents at `/index.html` and `/about/index.html`.
 
+
+### Scripts and Styles
+
+Use the `tpl.scripts()` and `tpl.styles()` methods to automatically write `link` and `script` tags for your site's CSS and JavaScript.
+
+```javascript
+/*** src/shell/shell.tpl.js ***/
+
+module.exports = (tpl, props) => tpl`
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>${props.title} | Example Site</title>
+    
+    ${tpl.styles()}
+    
+  </head>
+  <body>
+    ...
+    
+    ${tpl.scripts()} 
+    
+  </body>
+</html>
+`;
+```
+
+
+## Up Next
+
+You can fine-tune how the scripts and styles get loaded by using [Collations](collations.md).
+
+
 ---
 
 [< Back to Navigation](index.md#navigation)

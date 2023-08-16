@@ -80,6 +80,11 @@ mojl.build({isDev: true}).then(() => {
 4. Other assets are symlinked (where supported) instead of copied.
 
 
+## Up Next
+
+See how [Templates](templates.md) are constructed in the next section.
+
+
 ---
 
 [< Back to Navigation](index.md#navigation)
