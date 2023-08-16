@@ -262,6 +262,17 @@ The directory where temporary files are written during build and then removed.
 | string | `'temp'` | Relative to `buildDevDir` or `buildDistDir`
 
 
+#### `collatePages`
+
+> *constructor only*
+
+Create an automatic collation for every page, to be referenced as the empty string when calling `tpl.scripts()` and `tpl.styles()`.
+
+| Type    | Default
+|---------|----------
+| boolean | false
+
+
 #### `collations`
 
 > *constructor only*
@@ -574,6 +585,7 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`buildDevDir`](#builddevdir)
   * [`buildDistDir`](#builddistdir)
   * [`buildTempDir`](#buildtempdir)
+  * [`collatePages`](#collatepages)
   * [`collations`](#collations)
   * [`cssMinifierAdapter`](#cssminifieradapter)
   * [`cssTranspilerAdapter`](#csstranspileradapter)
