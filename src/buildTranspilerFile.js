@@ -58,7 +58,7 @@ async function each(settings, name, modules) {
 	await fs.promises.mkdir(path.dirname(entryPath), {recursive: true});
 	await fs.promises.mkdir(path.dirname(outputPath), {recursive: true});
 
-	transpilerAdapter.run({sourcePaths, entryPath, outputPath, isDev});
+	await transpilerAdapter.run({sourcePaths, entryPath, outputPath, isDev});
 	
 	if (!isDev) {
 		let tempDirToDelete = path.resolve(path.join(base, buildDir, buildTempDir));
