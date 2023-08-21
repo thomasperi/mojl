@@ -1,10 +1,14 @@
 *A bundler for vanilla websites*
 
-This documentation is for the not-yet-stable 2.0.0-alpha.
-
 <img alt="Mojl - Vanilla Bundler"
   src="https://thomasperi.github.io/mojl/mojl-logo-landscape.svg"
   style="width: 100%; border: 1px solid #eee; background: #fafbfc">
+
+This documentation is for the not-yet-stable 2.0.0-alpha.
+
+```
+npm i mojl@alpha
+```
 
 ## Overview
 
