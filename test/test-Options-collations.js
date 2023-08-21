@@ -57,7 +57,7 @@ describe(name, async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let settings = await expandOptions({
 				...options,
-				collations: [ { name: 'site', modules: ['src/**'] } ],
+				collations: [ { modules: ['src/**'] } ],
 				collatePages: true,
 			});
 			

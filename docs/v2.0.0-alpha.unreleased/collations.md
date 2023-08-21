@@ -11,12 +11,13 @@ A collation is defined as a JavaScript object describing which modules to concat
 Here's the default array of collations (only one collation in the array) that causes everything in `src` to be concatenated into `site.js` and `site.css`:
 
 ```javascript
-[ { name: 'site', modules: ['src/**'] } ]
+[ { modules: ['src/**'] } ]
 ```
 
-The `name` property is a string defining the name of the output files,`site.js` and `site.css`.
-
 The `modules` property is an array of strings defining which modules should be included. The default value uses the `**` wildcard to match all modules recursively inside `src`.
+
+There's also an optional `name` property that can be used to change the name of the output files to something other than the default `site`. More on that later.
+
 
 ### Reordering
 
@@ -27,7 +28,7 @@ For example, maybe you want your `shell` module's JS and CSS to load first, and 
 ```javascript
 const mojl = new Mojl({
   collations: [
-    { name: 'site', modules: [
+    { modules: [
       'src/shell',
       'src/**'
       'src/foo',
@@ -40,19 +41,21 @@ const mojl = new Mojl({
 
 You might also want some modules to be concatenated into their own file separate from the rest of the modules. For example, if you've installed modules from npm that are updated more often or less often than your site is, separating them can allow users' browsers to keep their cached version of one set of modules while loading the newest version of another set.
 
-The following collations array concatenates the two modules from `node_modules` into `npm.js` and `npm.css`, and everything in `src` into `site.js` and `site.css`:
+Here's where the optional `name` property comes into play. The following collations array concatenates the two modules from `node_modules` into `npm.js` and `npm.css`, and everything in `src` into `site.js` and `site.css`. 
 
 ```javascript
 const mojl = new Mojl({
   collations: [
     { name: 'npm', modules: [
-      'node_modules/third-party-module',
+      'node_modules/some-third-party-module',
       'node_modules/my-own-reusable-module',
     ] },
-    { name: 'site', modules: ['src/**'] }, // Don't forget to re-include the default!
+    { modules: ['src/**'] }, // Don't forget to re-include the default!
   ],
 });
 ```
+
+(If more than one collation has no explicit `name`, the first one gets named `site`, and subsequent ones are called `site-1`, `site-2`, etc.)
 
 > Note that you should NOT use a wildcard to load everything in `node_modules`. Load each desired module individually.
 

@@ -9,7 +9,7 @@ const expandModulePaths = require('../src/expandModulePaths.js');
 
 describe(name, async () => {
 
-	it('should expand sing-star module paths in alphabetical order but not recursively', async () => {
+	it('should expand single-star module paths in alphabetical order but not recursively', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let actual = await expandModulePaths(base, ['src/*']);
 			let expected = [

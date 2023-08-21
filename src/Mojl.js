@@ -13,6 +13,7 @@ const nonOverridables = [
 	'base',
 	'collations',
 	'collatePages',
+	'collationNamePrefix',
 	'templateHomeModule',
 	'templateOutputSuffix',
 ];

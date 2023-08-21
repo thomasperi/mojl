@@ -31,8 +31,20 @@ const Options = {
 	 * @default #value
 	 */
 	collations: [
-		{ name: 'site', modules: ['src/**'] }
+		{ modules: ['src/**'] }
 	],
+	
+	/**
+	 * *constructor only*
+	 *
+	 * The default name for collations omitting the optional `name` property.
+	 * After the first, any subsequent `name`-less collations are suffixed
+	 * with `-1`, `-2`, etc.
+	 *
+	 * @type string
+	 * @default #value
+	 */
+	collationNamePrefix: 'site',
 	
 	/**
 	 * *constructor only*

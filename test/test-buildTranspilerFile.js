@@ -15,7 +15,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				collations: [ { name: 'site', modules: ['src/*'] } ],
+				collations: [ { modules: ['src/*'] } ],
 				cssTranspilerAdapter: './fakeTranspiler.js',
 				isDev: true,
 			});
@@ -65,7 +65,7 @@ describe(name, async () => {
 			let before = box.snapshot();
 
 			let settings = await expandOptions({
-				collations: [ { name: 'site', modules: ['src/*'] } ],
+				collations: [ { modules: ['src/*'] } ],
 				cssTranspilerAdapter: './fakeTranspiler.js',
 			});
 

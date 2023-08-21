@@ -60,26 +60,6 @@ describe(name, async () => {
 		});
 	});
 
-	// Removed for option type strictness
-	// it('should force values to strings', async () => {
-	// 	await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-	// 		let projectBase = path.join(base, 'foo');
-	// 		let actual = await expandOptions({
-	// 			base: projectBase,
-	// 			buildDevDir: false,
-	// 			buildDistDir: undefined,
-	// 		});
-	// 		let expected = {
-	// 			...defaultOptions,
-	// 			base: projectBase,
-	// 			modules: [],
-	// 			buildDevDir: 'false',
-	// 			buildDistDir: 'undefined',
-	// 		};
-	// 		assert.deepEqual(actual, expected);
-	// 	});
-	// });
-
 	it('should expand module patterns into module paths', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let projectBase = path.join(base, 'project');
@@ -105,26 +85,91 @@ describe(name, async () => {
 		});
 	});
 
-	// Removed for option type strictness
-	// it('should wrap string `modules` option in array', async () => {
-	// 	await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-	// 		let projectBase = path.join(base, 'project');
-	// 		let actual = await expandOptions({
-	// 			base: projectBase,
-	// 			modules: 'src/*',
-	// 		});
-	// 		let expected = {
-	// 			...defaultOptions,
-	// 			base: projectBase,
-	// 			modules: [
-	// 				'src/a',
-	// 				'src/b',
-	// 				'src/c',
-	// 			],
-	// 		};
-	// 		assert.deepEqual(actual, expected);
-	// 	});
-	// });
+	it('should assign names to nameless collations', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let projectBase = path.join(base, 'project');
+			let actual = await expandOptions({
+				base: projectBase,
+				collations: [
+					{ modules: ['src/*'] },
+					{ modules: ['src/c/d'] },
+					{ modules: ['src/c/d/e'] },
+				],
+			});
+			let expected = {
+				...defaultOptions,
+				base: projectBase,
+				collations: [
+					{
+						name: 'site',
+						modules: [
+							'src/a',
+							'src/b',
+							'src/c',
+						]
+					},
+					{
+						name: 'site-1',
+						modules: [
+							'src/c/d',
+						]
+					},
+					{
+						name: 'site-2',
+						modules: [
+							'src/c/d/e',
+						]
+					},
+				],
+			};
+			assert.deepEqual(actual, expected);
+		});
+	});
+
+	it('should allow changing the default collation name', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let projectBase = path.join(base, 'project');
+			let actual = await expandOptions({
+				base: projectBase,
+				collationNamePrefix: 'foo',
+				collations: [
+					{ modules: ['src/*'] },
+					{ modules: ['src/c/d'] },
+					{ modules: ['src/c/d/e'] },
+				],
+			});
+			
+			let expected = {
+				...defaultOptions,
+				base: projectBase,
+				collationNamePrefix: 'foo',
+				collations: [
+					{
+						name: 'foo',
+						modules: [
+							'src/a',
+							'src/b',
+							'src/c',
+						]
+					},
+					{
+						name: 'foo-1',
+						modules: [
+							'src/c/d',
+						]
+					},
+					{
+						name: 'foo-2', 
+						modules: [
+							'src/c/d/e',
+						]
+					},
+				],
+			};
+
+			assert.deepEqual(actual, expected);
+		});
+	});
 
 });
 

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Made collation names optional
+
 
 ## [2.0.0-alpha.8] - 2023-08-21
 

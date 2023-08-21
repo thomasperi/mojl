@@ -273,6 +273,17 @@ Create an automatic collation for every page, to be referenced as the empty stri
 | boolean | false
 
 
+#### `collationNamePrefix`
+
+> *constructor only*
+
+The default name for collations omitting the optional `name` property. After the first, any subsequent `name`-less collations are suffixed with `-1`, `-2`, etc.
+
+| Type   | Default
+|--------|----------
+| string | `'site'`
+
+
 #### `collations`
 
 > *constructor only*
@@ -281,13 +292,15 @@ An array of "collation" objects describing how the module files should be collat
 
 | Type     | Default
 |----------|----------
-| object[] | `[ { name: 'site', modules: ['src/**'] } ]`
+| object[] | `[ { modules: ['src/**'] } ]`
 
 A collation is a group of modules to be concatenated into one script and one stylesheet. Each object has two properties:
 
 ##### `name`
 
-A string used as the base filename for the concatenated scripts and styles. The default `'site'` collation produces a `site.css` file and a `site.js` file in the root of the build directory.
+An optional string used as the base filename for the concatenated scripts and styles.
+
+The first collation without `name` specified uses the value of the `collationNamePrefix` option as its name (`site` by default). Any subsequent `name`-less collations are suffixed with `-1`, `-2`, etc.
 
 ##### `modules`
 

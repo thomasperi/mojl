@@ -25,6 +25,7 @@ async function expandOptions(options) {
 			throw `expected '${key}' option to be ${expectedType} but got ${actualType} instead`;
 		}
 		
+		// All options are representable in JSON, so we can use it to make an easy deep clone.
 		if (actualType === 'array' || actualType === 'object') {
 			value = JSON.parse(JSON.stringify(value));
 		}
@@ -38,8 +39,20 @@ async function expandOptions(options) {
 	// Get the names of any page modules to create automatic collations from.
 	let pageModules = expanded.collatePages ? (await findPageModules(expanded)) : [];
 	
-	// Expand explicit collations, removing any page collations.
+	// Expand explicit collations.
+	let prefixIndex = 0;
 	for (let coll of expanded.collations) {
+	
+		// Add names to any nameless collations.
+		if (!has.call(coll, 'name')) {
+			coll.name = expanded.collationNamePrefix;
+			if (prefixIndex > 0) {
+				coll.name += `-${prefixIndex}`;
+			}
+			prefixIndex++;
+		}
+		
+		// Remove any page collations that might have been added via findPageModules above.
 		let mods = await expandModulePaths(expanded.base, coll.modules);
 		coll.modules = mods.filter(mod => !pageModules.includes(mod));
 	}
