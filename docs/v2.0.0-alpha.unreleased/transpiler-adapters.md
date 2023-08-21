@@ -1,4 +1,4 @@
-## Transpilers
+## Transpiler Adapters
 
 > This feature is more experimental than the rest of Mojl. 
 
@@ -47,9 +47,10 @@ Since the SASS entry point is written automagically, the `mojl-sass` adapter doe
 // ...
 ```
 
-This means that every Mojl module should do *either but not both*:
-- Output CSS, or
-- Define SASS variables, mixins, etc.
+This means it's a good idea to separate your SASS code into separate modules for:
+
+- Files that define variables intended for export, and
+- Files that output CSS code.
 
 That way, let's say `foo.scss` defines:
 ```scss
@@ -66,7 +67,7 @@ There's no good way around it, but it's not a big problem either.
 */
 
 .bar {
-	font-style: foo.$fs;
+  font-style: foo.$fs;
 }
 ```
 
@@ -75,7 +76,7 @@ There's no good way around it, but it's not a big problem either.
 
 (...for now.)
 
-Lots more details are documented on the [API](api.md) page.
+More details (about transpiler adapters and other features) are documented on the [API](api.md) page.
 
 
 ---
