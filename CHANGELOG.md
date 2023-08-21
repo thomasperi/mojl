@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Transpiler await bug
+
 
 ## [2.0.0-alpha.7] - 2023-08-15
 
