@@ -126,4 +126,41 @@ describe(name, async () => {
 
 	});
 
+	it('should work with async run function', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+
+			let settings = await expandOptions({
+				collations: [ { name: 'foo/output', modules: ['src/*'] } ],
+				buildDevDir: 'dev-weird',
+				buildAssetsDir: 'zote/sbor',
+				cssTranspilerAdapter: './fakeTranspilerAsync.js',
+				isDev: true,
+			});
+
+			await buildTranspilerFile(settings);
+
+			let after = box.snapshot();
+
+			assert.equal(after['dev-weird/temp/zote/sbor/src/c/c.scss'],
+				// relative to {base}/dev-weird/foo, since that's where output.css will be.
+				'#c-sass{ background: url(../zote/sbor/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }'
+			);
+		
+			assert.deepEqual(JSON.parse(after['dev-weird/temp/foo/output.css.scss']), {
+				isEntry: true,
+				isDev: true,
+				sourcePaths: [
+					'../zote/sbor/src/a/a.css',
+					'../zote/sbor/src/b/b.scss',
+					'../zote/sbor/src/c/c.scss'
+				],
+			});
+
+			assert.deepEqual(JSON.parse(after['dev-weird/foo/output.css']), {
+				isOutput: true,
+			});
+		});
+
+	});
+
 });
