@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.0.0-alpha.8] - 2023-08-21
+
 ### Fixed
 - Transpiler await bug
 
@@ -113,7 +116,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-changelog
 
 
-[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.7...2.0.0-alpha
+[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.8...2.0.0-alpha
+[2.0.0-alpha.8]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.7...v2.0.0-alpha.8
 [2.0.0-alpha.7]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.6...v2.0.0-alpha.7
 [2.0.0-alpha.6]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.5...v2.0.0-alpha.6
 [2.0.0-alpha.5]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.4...v2.0.0-alpha.5
