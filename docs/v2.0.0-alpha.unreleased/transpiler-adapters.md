@@ -25,7 +25,7 @@ That's it! You can load the styles onto your site's pages with [`tpl.styles()`](
 
 ### `@use`
 
-Okay okay, it's a *little* more complicated.
+Okay okay, there's a *little* more to it.
 
 The `mojl-sass` adapter automagically generates a SASS "entry point" file that loads all your SASS source files, and so it doesn't give you fine control over how the files are `@use`d there. The file looks basically like this:
 
@@ -37,7 +37,7 @@ The `mojl-sass` adapter automagically generates a SASS "entry point" file that l
 
 This means that if you're sharing variables, mixins, etc. between SASS files, it's a good idea to separate your SASS code into separate modules for:
 
-- Defining variables, etc. intended for export, and
+- Defining things intended to be `@use`d elsewhere, and
 - Outputting CSS code.
 
 (Modules that output CSS code can still define variables, etc. They just shouldn't be `@use`d by other modules.)
