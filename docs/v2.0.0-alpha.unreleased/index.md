@@ -76,5 +76,5 @@ Each page in this documentation is listed here. At the bottom of each page is a 
 * [Build](build.md)
 * [Templates](templates.md)
 * [Collations](collations.md)
-* [Transpilers](transpilers.md)
+* [Transpiler Adapters](transpiler-adapters.md)
 * [API](api.md)
