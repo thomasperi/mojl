@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Made collation names optional
 - Frontend helper library
+- `useFrontendLibrary` option
 
 ### Removed
 - `buildTempDir` option
