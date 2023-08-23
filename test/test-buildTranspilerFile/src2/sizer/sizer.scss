@@ -1,0 +1,6 @@
+$over: auto;
+.sizer {
+	width: min(50rem, 100% - 4rem);
+	margin-inline: auto;
+	overflow: $over;
+}

@@ -15,6 +15,19 @@ const existingFiles = [
 	'src/zote/zote.css'
 ];
 
+function getTemp(after) {
+	let temp;
+	Object.keys(after).some(item => {
+		let match = item.match(/\/(temp-\w+)\//);
+		if (match) {
+			temp = match[1];
+			return true;
+		}
+		return false;
+	});
+	return temp;
+}
+
 describe(name, async () => {
 
 	it('should build dev styles', async () => {
@@ -72,15 +85,16 @@ describe(name, async () => {
 			await mojl.buildStyles();
 
 			let after = box.snapshot();
+			let temp = getTemp(after);
 			let diff = box.diff(before, after);
 			
 			assert.deepEqual(diff, {
 				created: [
-					'dev/site.css',
-					'dev/temp/assets/src/foo/foo.css',
-					'dev/temp/assets/src/zote/bar/bar.zazz',
-					'dev/temp/assets/src/zote/zote.css',
-					'dev/temp/site.css.zazz'
+					`dev/site.css`,
+					`dev/${temp}/assets/src/foo/foo.css`,
+					`dev/${temp}/assets/src/zote/bar/bar.zazz`,
+					`dev/${temp}/assets/src/zote/zote.css`,
+					`dev/${temp}/site.css.zazz`
 				],
 				modified: [],
 				removed: [],

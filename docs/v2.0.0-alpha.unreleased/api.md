@@ -253,15 +253,6 @@ The directory where production builds are to be written.
 | string | `'dist'` | Relative to `base`
 
 
-#### `buildTempDir`
-
-The directory where temporary files are written during build and then removed.
-
-| Type   | Default  | Notes
-|--------|----------|-----------
-| string | `'temp'` | Relative to `buildDevDir` or `buildDistDir`
-
-
 #### `collatePages`
 
 > *constructor only*
@@ -597,7 +588,6 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`buildAssetsDir`](#buildassetsdir)
   * [`buildDevDir`](#builddevdir)
   * [`buildDistDir`](#builddistdir)
-  * [`buildTempDir`](#buildtempdir)
   * [`collatePages`](#collatepages)
   * [`collations`](#collations)
   * [`cssMinifierAdapter`](#cssminifieradapter)

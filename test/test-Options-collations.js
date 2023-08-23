@@ -66,7 +66,7 @@ describe(name, async () => {
 			await buildMonolithFile(settings, 'css');
 			await buildMonolithFile(settings, 'js');
 			
-			let after = box.snapshot();
+			// let after = box.snapshot();
 			// 			console.log(JSON.stringify({after}, null, 2));
 			
 			// to-do: finish writing this test

@@ -91,17 +91,6 @@ const Options = {
 	buildAssetsDir: 'assets',
 	
 	/**
-	 * Relative to `buildDevDir` and `buildDistDir`
-	 *
-	 * @type string
-	 * @default #value
-	 */
-	buildTempDir: 'temp',
-	// to-do:
-	// write real mojl-sass test case for colliding temp directory deletions
-	// once reproducible, remove this option in favor of the OS temp dir and a mkdtmp suffix
-	
-	/**
 	 * A NodeJS module descriptor to a file or module that exports an object to use as an
 	 * adapter for a CSS transpiler such as LESS or SASS.
 	 *
