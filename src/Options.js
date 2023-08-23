@@ -97,6 +97,9 @@ const Options = {
 	 * @default #value
 	 */
 	buildTempDir: 'temp',
+	// to-do:
+	// write real mojl-sass test case for colliding temp directory deletions
+	// once reproducible, remove this option in favor of the OS temp dir and a mkdtmp suffix
 	
 	/**
 	 * A NodeJS module descriptor to a file or module that exports an object to use as an
