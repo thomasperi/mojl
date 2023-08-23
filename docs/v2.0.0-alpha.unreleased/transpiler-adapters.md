@@ -70,11 +70,9 @@ There's no good way around it, but it's not a big problem either.
 > \* Modules that output CSS code can still define variables, etc. Just avoid `@use`ing them from other modules, or the CSS might appear in a different order in the output file than what you intended.
 
 
-## That's It for the Guide
+## Up Next
 
-(...for now.)
-
-More details (about transpiler adapters and other features) are documented on the [API](api.md) page.
+Now that you know how to use Mojl in your build scripts, I recommend reading about one way Mojl makes it easy to encapsulate your [frontend scripts](frontend-scripts.md).
 
 
 ---

@@ -4,7 +4,7 @@
 
 ---
 
-### `Mojl`
+### `Mojl` constructor
 
 > `new Mojl([options])`
 
@@ -577,11 +577,34 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
 **Returns:** Promise -> String
 
 
+### `mojl` Frontend Library
+
+A simple library for encapsulation on the frontend, which can be enabled via the [`useFrontendLibrary`](#usefrontendlibrary) option.
+
+
+#### `each`
+
+> `mojl.each(selector, initializer)`
+
+Initialize all instances of a module on DOM ready.
+
+| Parameter     | Type     | Description
+|---------------|----------|-------------
+| `selector`    | string   | A DOM selector for the module's main element
+| `initializer` | function | A function for initializing each instance of the module
+
+The `initializer` function will be called once for each DOM element matched by the selector. Each time, the function receives the same arguments as the [`Array.prototype.forEach` callback function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach#parameters):
+
+* `element`
+* `index`
+* `array`
+
+
 ---
 
 ### Table of Contents
 
-* [`new Mojl([options])`](#mojl)
+* [`new Mojl([options])`](#mojl-constructor)
   * [`build([options])`](#build)
   * [`buildScripts([options])`](#buildscripts)
   * [`buildStyles([options])`](#buildstyles)
@@ -613,7 +636,6 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`trimIncludes`](#trimincludes)
   * [`useFrontendLibrary`](#usefrontendlibrary)
 
-
 * [`TemplateHelper`](#templatehelper)
   * [`exists`](#exists)
   * [`file`](#file)
@@ -622,6 +644,9 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`scripts`](#scripts)
   * [`styles`](#styles)
   * [`template`](#template)
+
+* [`mojl` Frontend Library](#mojl-frontend-library)
+  * [`each`](#each)
 
 ---
 
