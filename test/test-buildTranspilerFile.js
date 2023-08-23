@@ -182,6 +182,20 @@ describe(name, async () => {
 	});
 
 	it('should not collide temp deletions when a collation has no output', async () => {
+
+		// NOTE:
+		//
+		// Before fixing the bug that this test case checks for, this test
+		// would fail only when a hard-to-replicate race condition occurred.
+		//
+		// The bug was that all collations wrote to the same temp directory, and so
+		// on a production build, they all tried to delete the same temp directory.
+		// When one collation didn't have any output, an error would sometimes occur
+		// when trying to remove the temp directory.
+		//
+		// Temp directories are created with mkdtemp now, which fixes that bug.
+		// However, this test would only fail intermittently before the bug was fixed.
+		
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 
 			let settings = await expandOptions({
