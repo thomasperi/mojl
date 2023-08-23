@@ -1,4 +1,4 @@
-## Build
+# Build
 
 Your build script should be located at the top level of your project. It can be a plain Node.js script, a gulpfile, or whatever you like.
 
@@ -44,7 +44,7 @@ example-project/        >   example-project/
         about.tpl.js    >
 ```
 
-### Relative URLs
+## Relative URLs
 
 Relative URLs in CSS files are automatically rewritten to be relative to the concatenated file, and appended with a hash for cache-busting.
 
@@ -62,7 +62,7 @@ The corresponding part of the concatenated `site.css` file:
 }
 ```
 
-### Dev Builds
+## Dev Builds
 
 Mojl builds for production by default. To build a development site, pass in an object with the `isDev` property set to `true`:
 
@@ -72,7 +72,7 @@ mojl.build({isDev: true}).then(() => {
 });
 ```
 
-#### Development builds differ from production builds in a few ways:
+### Development builds differ from production builds in a few ways:
 
 1. Files are written to a `dev` directory instead of `dist`.
 2. The `site.js` and `site.css` files each contain code that load the original source files, instead of the concatenated code. This helps ease debugging.
@@ -80,7 +80,7 @@ mojl.build({isDev: true}).then(() => {
 4. Other assets are symlinked (where supported) instead of copied.
 
 
-## Up Next
+# Up Next
 
 See how [Templates](templates.md) are constructed in the next section.
 

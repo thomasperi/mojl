@@ -1,4 +1,4 @@
-## Modules
+# Modules
 
 A Mojl "module" is a directory containing at least one file with the same base name as the directory. The directory can also contain other files, such as images, used by the module.
 
@@ -51,7 +51,7 @@ example-project/
 ```
 
 
-## Up Next
+# Up Next
 
 In the next section, [Build](build.md), we'll see how these parts get assembled into a working web site.
 

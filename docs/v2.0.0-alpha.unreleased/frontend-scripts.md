@@ -1,4 +1,4 @@
-## Frontend Scripts
+# Frontend Scripts
 
 > to-do: The specific code snippets on this page have not been tested yet.
 
@@ -14,7 +14,7 @@ new Mojl({
 
 > This causes the module `node_modules/mojl/frontend` to be added as the first module in the first (or only) collation. If you want it in a different collation, you can leave `useFrontendLibrary` set to its default `false` and add the module manually instead.
 
-### Usage
+## Usage
 
 Let's use the time-honored example of a counter. Here's the mojl template for the counter:
 
@@ -76,7 +76,7 @@ mojl.each('.click-counter', clickCounter => {
 });
 ```
 
-### What It Does
+## What It Does
 
 The `each` method waits for the `DOMContentLoaded` event, then passes each element matching the selector, separately and one at a time, to the callback function you provide. So you can put your scripts in the `<head>` if you want, and it'll still work.
 
@@ -91,7 +91,7 @@ $(function () {
 ```
 
 
-## That's It for the Guide
+# That's It for the Guide
 
 (...for now.)
 

@@ -1,4 +1,4 @@
-## Collations
+# Collations
 
 By default, `site.js` and `site.css` are built from all the `.js` and `.css` files inside a project's `src` directory, in alphabetical order. But sometimes that's not what we want. Enter collations.
 
@@ -19,7 +19,7 @@ The `modules` property is an array of strings defining which modules should be i
 There's also an optional `name` property that can be used to change the name of the output files to something other than the default `site`. More on that later.
 
 
-### Reordering
+## Reordering
 
 To change how the files are collated, set a new array as the [`collations`](apl.md#collations) option passed to the `Mojl` constructor.
 
@@ -37,7 +37,7 @@ const mojl = new Mojl({
 });
 ```
 
-### Splitting
+## Splitting
 
 You might also want some modules to be concatenated into their own file separate from the rest of the modules. For example, if you've installed modules from npm that are updated more often or less often than your site is, separating them can allow users' browsers to keep their cached version of one set of modules while loading the newest version of another set.
 
@@ -60,7 +60,7 @@ const mojl = new Mojl({
 > Note that you should NOT use a wildcard to load everything in `node_modules`. Load each desired module individually.
 
 
-### Collations in Templates
+## Collations in Templates
 
 Calling `tpl.scripts()` and `tpl.styles()` in a template automagically loads all collations in order. To continue the example from above:
 
@@ -83,7 +83,7 @@ tpl.scripts(['npm'])   -->   <script src="/npm.js"></script>
 ```
 
 
-### Exclusions
+## Exclusions
 
 Another reason for splitting modules into multiple collations is that a section of your site might have heavy styling that isn't needed in other sections. You can create a collation for any section you want to separate, but if it's a subset of another collation, you'll need to exclude the subset from the superset, using the `!` mark:
 
@@ -102,7 +102,7 @@ const mojl = new Mojl({
 ```
 
 
-### Individual Pages
+## Individual Pages
 
 Most sites don't have much customization on individual pages, but if yours does, it's easy to automatically load them all separately without explicitly naming each one. Use the [`collatePages`](api.md#collatepages) option:
 
@@ -128,7 +128,7 @@ tpl.scripts([''])   -->   <script src="/foo/bar/index.js"></script>
 ```
 
 
-## Up Next
+# Up Next
 
 Use a [Transpiler Adapter](transpiler-adapters.md) to incorporate SASS into a Mojl project.
 

@@ -1,4 +1,4 @@
-## Templates
+# Templates
 
 Each Mojl module can optionally contain a template for generating output. The nature of that output depends on how you're using Mojl. You can:
 
@@ -8,7 +8,7 @@ Each Mojl module can optionally contain a template for generating output. The na
 
 This documentation currently explores only the first case.
 
-### Format
+## Format
 
 Mojl templates are written in JavaScript using native features instead of in a separate template language:
 
@@ -24,7 +24,7 @@ The `tpl` argument is a tag function with additional methods, called a [`Templat
 
 The `props` argument contains whatever value is passed to the template when it is included. By convention this is an object with named properties, but it doesn't have to be.
 
-### Including a Template
+## Including a Template
 
 You include a template using the `include` method on the TemplateHelper. The path is relative to the project root, and contains only the name of the module directory (`src/hello`), not the template file.
 
@@ -35,7 +35,7 @@ tpl.include('src/hello', {name: 'World'})
 // outputs: <h1>Hello, World!</h1>
 ```
 
-### "Shell" Pattern
+## "Shell" Pattern
 
 To have multiple pages use the same outer shell, you can simply include the shell and pass the page content to it, along with any other properties it will need, like the page title.
 
@@ -85,7 +85,7 @@ module.exports = (tpl, props) => tpl.include('src/shell', {
 The files in the above example produce two complete HTML documents at `/index.html` and `/about/index.html`.
 
 
-### Scripts and Styles
+## Scripts and Styles
 
 Use the `tpl.scripts()` and `tpl.styles()` methods to automatically write `link` and `script` tags for your site's CSS and JavaScript.
 
@@ -112,7 +112,7 @@ module.exports = (tpl, props) => tpl`
 ```
 
 
-## Up Next
+# Up Next
 
 You can fine-tune how the scripts and styles get loaded by using [Collations](collations.md).
 
