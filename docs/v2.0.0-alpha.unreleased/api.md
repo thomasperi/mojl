@@ -445,6 +445,13 @@ Trim whitespace from head and tail of each include.
 | boolean | `true`
 
 
+#### `useFrontendLibrary`
+
+Prepend mojl's frontend JavaScript library to the front of the first collation.
+
+| Type    | Default
+|---------|---------
+| boolean | `false`
 
 
 ---
@@ -602,6 +609,8 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`templateHomeModule`](#templatehomemodule)
   * [`templateOutputSuffix`](#templateoutputsuffix)
   * [`trimIncludes`](#trimincludes)
+  * [`useFrontendLibrary`](#usefrontendlibrary)
+
 
 * [`TemplateHelper`](#templatehelper)
   * [`exists`](#exists)

@@ -125,7 +125,7 @@ const Options = {
 	cssMinifierAdapter: 'mojl-clean-css',
 	
 	/**
-	 * Add the frontend helper to the beginning of the first collation.
+	 * Prepend mojl's frontend JavaScript library to the front of the first collation.
 	 * 
 	 * @type boolean
 	 * @default #value
