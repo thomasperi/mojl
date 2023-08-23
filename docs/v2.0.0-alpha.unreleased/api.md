@@ -10,7 +10,7 @@
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) See [`Options`](#options) below.
+| `options` | object | (optional) See [Options](#options) below.
 
 Creates a new Mojl instance with methods for building a project.
 
@@ -21,7 +21,7 @@ Creates a new Mojl instance with methods for building a project.
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -40,7 +40,7 @@ Performs all build tasks:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -64,7 +64,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -91,7 +91,7 @@ The following options can potentially change the default behavior:
 | `docPrefix` | string | The prefix for determining where to write the output document.
 | `module`    | string | The module whose template will build the document.
 | `props`     | object | (optional) An props object to pass to the module.
-| `options`   | object | (optional) Overrides to the instance [`Options`](#options)
+| `options`   | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -120,7 +120,7 @@ The following options influence the file path that gets written:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -147,7 +147,7 @@ The following options can potentially change the default behavior:
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -186,7 +186,7 @@ The array of module paths (relative to the project's base directory) this `Mojl`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -206,7 +206,7 @@ The following options can potentially change the default behavior:
 
 ---
 
-## `Options`
+## Options
 
 These options can be passed to the [`Mojl`](#mojl) constructor, or to any instance method that accepts options. Some options (noted individually below as "constructor only") are ignored by methods other than the constructor.
 
@@ -555,7 +555,7 @@ Generate HTML code for loading JavaScript files on the current page.
 | `options`       | object   | (optional) Options affecting the behavior of this method
 | `options.hash`  | boolean  | (optional) Append a hash to the URL. Default: `true`
 
-This outputs a `script` tag for each collation's scripts. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [`Options`](#options) (or the default `site` collation if no collations are described) will be used.
+This outputs a `script` tag for each collation's scripts. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [Options](#options) (or the default `site` collation if no collations are described) will be used.
 
 **Returns:** Promise -> String
 
@@ -572,7 +572,7 @@ Generate HTML code for loading CSS files on the current page.
 | `options`       | object   | (optional) Options affecting the behavior of this method
 | `options.hash`  | boolean  | (optional) Append a hash to the URL. Default: `true`
 
-This outputs a `link` tag for each collation's styles. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [`Options`](#options) (or the default `site` collation if no collations are described) will be used.
+This outputs a `link` tag for each collation's styles. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [Options](#options) (or the default `site` collation if no collations are described) will be used.
 
 **Returns:** Promise -> String
 
@@ -615,7 +615,7 @@ The `initializer` function will be called once for each DOM element matched by t
   * [`getModuleList()`](#getmodulelist)
   * [`mirrorAssets([options])`](#mirrorassets)
 
-* [`Options`](#options)
+* [Options](#options)
   * [`base`](#base)
   * [`buildAssetsDir`](#buildassetsdir)
   * [`buildDevDir`](#builddevdir)
