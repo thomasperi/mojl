@@ -170,6 +170,52 @@ describe(name, async () => {
 			assert.deepEqual(actual, expected);
 		});
 	});
+	
+	it('should include frontend library when useFrontendLibrary is true', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let projectBase = path.join(base, 'project');
+			let actual = await expandOptions({
+				base: projectBase,
+				useFrontendLibrary: true,
+				collations: [
+					{ modules: ['src/*'] },
+					{ modules: ['src/c/d'] },
+					{ modules: ['src/c/d/e'] },
+				],
+			});
+			
+			let expected = {
+				...defaultOptions,
+				base: projectBase,
+				useFrontendLibrary: true,
+				collations: [
+					{
+						name: 'site',
+						modules: [
+							'node_modules/mojl/frontend',
+							'src/a',
+							'src/b',
+							'src/c',
+						]
+					},
+					{
+						name: 'site-1',
+						modules: [
+							'src/c/d',
+						]
+					},
+					{
+						name: 'site-2', 
+						modules: [
+							'src/c/d/e',
+						]
+					},
+				],
+			};
+
+			assert.deepEqual(actual, expected);
+		});
+	});
 
 });
 

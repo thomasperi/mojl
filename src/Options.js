@@ -123,6 +123,14 @@ const Options = {
 	 * @default #value
 	 */
 	cssMinifierAdapter: 'mojl-clean-css',
+	
+	/**
+	 * Add the frontend helper to the beginning of the first collation.
+	 * 
+	 * @type boolean
+	 * @default #value
+	 */
+	useFrontendLibrary: false,
 
 	/**
 	 * A NodeJS module descriptor to a file or module that exports a function for minifying

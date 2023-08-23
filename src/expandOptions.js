@@ -36,6 +36,11 @@ async function expandOptions(options) {
 	// Resolve the base
 	expanded.base = path.resolve(expanded.base);
 	
+	// Ensure arrays have items of the correct type.
+	['excludeFileTypesFromMirror'].forEach(key => {
+		expanded[key] = expanded[key].map(item => `${item}`);
+	});
+
 	// Get the names of any page modules to create automatic collations from.
 	let pageModules = expanded.collatePages ? (await findPageModules(expanded)) : [];
 	
@@ -71,12 +76,12 @@ async function expandOptions(options) {
 		}
 		expanded.collations.push({ name, modules: [pageMod], page });
 	}
-	
-	// Ensure arrays have items of the correct type.
-	['excludeFileTypesFromMirror'].forEach(key => {
-		expanded[key] = expanded[key].map(item => `${item}`);
-	});
 
+	// Add the frontend library to the first collation.
+	if (expanded.useFrontendLibrary && expanded.collations.length > 0) {
+		expanded.collations[0].modules.unshift('node_modules/mojl/frontend');
+	}
+	
 	return expanded;
 }
 
