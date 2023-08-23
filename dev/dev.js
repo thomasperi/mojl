@@ -8,6 +8,7 @@ const files = {
 	dev: `${project}/dev/*.js`,
 	src: `${project}/src/*.js`,
 	tests: `${project}/test/*.js`,
+	frontend: `${project}/frontend/*.js`,
 };
 
 function lintDev() {
@@ -23,6 +24,11 @@ function lintSrc() {
 function lintTests() {
 	console.log('lint tests', new Date());
 	lint(files.tests);
+}
+
+function lintFrontend() {
+	console.log('lint frontend', new Date());
+	lint(files.frontend);
 }
 
 function lintFile(file) {
@@ -41,10 +47,11 @@ function runTests() {
 lintDev();
 lintSrc();
 lintTests();
+lintFrontend();
 runTests();
 
 chokidar.watch(
-	[files.dev, files.src, files.tests],
+	[files.dev, files.src, files.tests, files.frontend],
 	{ignoreInitial: true}
 ).on('all', (event, path) => {
 	if (path !== __filename) {
