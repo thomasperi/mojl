@@ -431,9 +431,9 @@ There are two ways of using this, each for its own purpose:
 
 **Caveat for Pattern #2:**
 
-You shouldn't attempt to build a document at the root of the build directory (i.e., with an empty string or single slash for the prefix) when using just an extension, because the output file will be named using only the extension beginning with with a dot, which is probably not desirable. (e.g. `https://example.com/.html`)
+When using just an extension, you shouldn't attempt to build a document at the root of the build directory (i.e., with an empty string or single slash for the prefix) because the output file will be named using only the extension beginning with with a dot, which is probably not desirable. (e.g. `https://example.com/.html`)
 
-This means that if you've got modules automatically being built from [`templateHomeModule`](#templatehomemodule), the home module should not have a template of its own when `templateOutputSuffix` follows pattern #2. Instead, if you're building a static site this way, you can create an `index` module inside the `home` module.
+This means that if you've got modules automatically being built from [`templateHomeModule`](#templatehomemodule), the home module should not have a template of its own when `templateOutputSuffix` follows pattern #2. Instead, if you're building a static site this way, you can build the home page as an `index` module inside the `home` module.
 
 
 #### `trimIncludes`
@@ -446,6 +446,8 @@ Trim whitespace from head and tail of each include.
 
 
 #### `useFrontendLibrary`
+
+> *constructor only*
 
 Prepend mojl's frontend JavaScript library to the front of the first collation.
 

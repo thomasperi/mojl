@@ -16,6 +16,7 @@ const nonOverridables = [
 	'collationNamePrefix',
 	'templateHomeModule',
 	'templateOutputSuffix',
+	'useFrontendLibrary',
 ];
 
 // to-do:

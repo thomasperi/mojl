@@ -125,14 +125,6 @@ const Options = {
 	cssMinifierAdapter: 'mojl-clean-css',
 	
 	/**
-	 * Prepend mojl's frontend JavaScript library to the front of the first collation.
-	 * 
-	 * @type boolean
-	 * @default #value
-	 */
-	useFrontendLibrary: false,
-
-	/**
 	 * A NodeJS module descriptor to a file or module that exports a function for minifying
 	 * the concatenated JavaScript code from the included modules. The function should
 	 * accept a single string argument and return a string.
@@ -228,6 +220,16 @@ const Options = {
 	 * @default #value
 	 */
 	isDev: false,
+
+	/**
+	 * *constructor only*
+	 *
+	 * Prepend mojl's frontend JavaScript library to the front of the first collation.
+	 * 
+	 * @type boolean
+	 * @default #value
+	 */
+	useFrontendLibrary: false,
 
 };
 
