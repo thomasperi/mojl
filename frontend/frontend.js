@@ -26,26 +26,29 @@
  * });
  *
  */
-window.mojl = window.mojl || {
-	each: (function () {
-		var queue = [];
-		document.addEventListener('DOMContentLoaded', function () {
-			// Use a loop instead of forEach, because a loop can grow with the queue
-			// in real time, in the (albeit weird) case of nested mojl.each() calls.
-			while (queue.length > 0) {
-				queue.shift()();
-			}
-			queue = null;
-		});
-		return function (selector, fn) {
+window.mojl = window.mojl || (function () {
+
+	var queue = [];
+	document.addEventListener('DOMContentLoaded', function () {
+		// Use a loop instead of forEach, because a loop can grow with the queue
+		// in real time, in the (albeit weird) case of nested mojl.each() calls.
+		while (queue.length > 0) {
+			queue.shift()();
+		}
+		queue = null;
+	});
+	
+	return {
+		each: function (selector, initializer) {
 			function run() {
-				document.querySelectorAll(selector).forEach(fn);
+				document.querySelectorAll(selector).forEach(initializer);
 			}
 			if (queue) {
 				queue.push(run);
 			} else {
 				run();
 			}
-		};
-	}())
-};
+		}
+	};
+	
+}());
