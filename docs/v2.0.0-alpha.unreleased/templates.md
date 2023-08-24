@@ -112,7 +112,7 @@ module.exports = (tpl, props) => tpl`
 ```
 
 
-# Up Next
+## Up Next
 
 You can fine-tune how the scripts and styles get loaded by using [Collations](collations.md).
 

@@ -51,7 +51,7 @@ example-project/
 ```
 
 
-# Up Next
+## Up Next
 
 In the next section, [Build](build.md), we'll see how these parts get assembled into a working web site.
 

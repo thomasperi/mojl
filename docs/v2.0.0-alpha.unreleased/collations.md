@@ -128,7 +128,7 @@ tpl.scripts([''])   -->   <script src="/foo/bar/index.js"></script>
 ```
 
 
-# Up Next
+## Up Next
 
 Use a [Transpiler Adapter](transpiler-adapters.md) to incorporate SASS into a Mojl project.
 
