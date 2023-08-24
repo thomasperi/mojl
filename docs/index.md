@@ -6,10 +6,10 @@
 
 ## Versions
 
-### 2.0.0-alpha Latest
+### 2.0.0-alpha Latest (alpha.9)
 - [docs](v2.0.0-alpha.latest/index.md)
-- [github](https://github.com/thomasperi/mojl/tree/v2.0.0-alpha.8)
-- [npm](https://www.npmjs.com/package/mojl/v/2.0.0-alpha.8)
+- [github](https://github.com/thomasperi/mojl/tree/v2.0.0-alpha.9)
+- [npm](https://www.npmjs.com/package/mojl/v/2.0.0-alpha.9)
 
 ### 2.0.0-alpha Unreleased
 - [docs](v2.0.0-alpha.unreleased/index.md)

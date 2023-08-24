@@ -81,4 +81,5 @@ Each page in this documentation is listed here. At the bottom of each page is a 
 * [Templates](templates.md)
 * [Collations](collations.md)
 * [Transpiler Adapters](transpiler-adapters.md)
+* [Frontend Scripts](frontend-scripts.md)
 * [API](api.md)

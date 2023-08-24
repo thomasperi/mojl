@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.0.0-alpha.9] - 2023-08-23
+
 ### Added
 - Made collation names optional
 - Frontend helper library
@@ -127,7 +130,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-changelog
 
 
-[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.8...2.0.0-alpha
+[unreleased]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.9...2.0.0-alpha
+[2.0.0-alpha.9]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.8...v2.0.0-alpha.9
 [2.0.0-alpha.8]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.7...v2.0.0-alpha.8
 [2.0.0-alpha.7]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.6...v2.0.0-alpha.7
 [2.0.0-alpha.6]: https://github.com/thomasperi/mojl/compare/v2.0.0-alpha.5...v2.0.0-alpha.6

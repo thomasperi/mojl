@@ -1,27 +1,27 @@
-## API
+# API
 
 *[Table of Contents](#table-of-contents) at the end*
 
 ---
 
-### `Mojl`
+## `Mojl` constructor
 
 > `new Mojl([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) See [`Options`](#options) below.
+| `options` | object | (optional) See [Options](#options) below.
 
 Creates a new Mojl instance with methods for building a project.
 
 
-#### `build`
+### `build`
 
 > `mojl.build([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -34,13 +34,13 @@ Performs all build tasks:
 * [`buildTemplatesAuto`](#buildtemplatesauto)
 
 
-#### `buildScripts`
+### `buildScripts`
 
 > `mojl.buildScripts([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -58,13 +58,13 @@ The following options can potentially change the default behavior:
 
 
 
-#### `buildStyles`
+### `buildStyles`
 
 > `mojl.buildStyles([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -82,7 +82,7 @@ The following options can potentially change the default behavior:
 * [`isDev`](#isdev)
 
 
-#### `buildTemplate`
+### `buildTemplate`
 
 > `mojl.buildTemplate(docPrefix, module[, props[, options]])`
 
@@ -91,7 +91,7 @@ The following options can potentially change the default behavior:
 | `docPrefix` | string | The prefix for determining where to write the output document.
 | `module`    | string | The module whose template will build the document.
 | `props`     | object | (optional) An props object to pass to the module.
-| `options`   | object | (optional) Overrides to the instance [`Options`](#options)
+| `options`   | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -114,13 +114,13 @@ The following options influence the file path that gets written:
 * [`templateOutputSuffix`](#templateoutputsuffix)
 
 
-#### `buildTemplatesAuto`
+### `buildTemplatesAuto`
 
 > `mojl.buildTemplatesAuto([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -141,13 +141,13 @@ The following options can potentially change the default behavior:
 * [`templateOutputSuffix`](#templateoutputsuffix)
 
 
-#### `deleteBuild`
+### `deleteBuild`
 
 > `mojl.deleteBuild([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -162,7 +162,7 @@ The following options can potentially change the default behavior:
 * [`isDev`](#isdev)
 
 
-#### `getBase`
+### `getBase`
 
 > `mojl.getBase()`
 
@@ -171,7 +171,7 @@ The following options can potentially change the default behavior:
 The full filesystem path to the project's base directory.
 
 
-#### `getModuleList`
+### `getModuleList`
 
 > `mojl.getModuleList()`
 
@@ -180,13 +180,13 @@ The full filesystem path to the project's base directory.
 The array of module paths (relative to the project's base directory) this `Mojl` instance is working from.
 
 
-#### `mirrorAssets`
+### `mirrorAssets`
 
 > `mojl.mirrorAssets([options])`
 
 | Parameter | Type   | Description
 |-----------|--------|-------------
-| `options` | object | (optional) Overrides to the instance [`Options`](#options)
+| `options` | object | (optional) Overrides to the instance [Options](#options)
 
 **Returns:** Promise
 
@@ -206,7 +206,7 @@ The following options can potentially change the default behavior:
 
 ---
 
-### `Options`
+## Options
 
 These options can be passed to the [`Mojl`](#mojl) constructor, or to any instance method that accepts options. Some options (noted individually below as "constructor only") are ignored by methods other than the constructor.
 
@@ -215,7 +215,7 @@ An option passed to the constructor persists for the life of the instance.
 An accepted option passed to a method applies only to that method call.
 
 
-#### `base`
+### `base`
 
 > *constructor only*
 
@@ -226,7 +226,7 @@ The root directory of the project. If relative, this path is resolved relative t
 | string | `''` (empty string)
 
 
-#### `buildAssetsDir`
+### `buildAssetsDir`
 
 The directory where files other than `<module>.*` files will be mirrored.
 
@@ -235,7 +235,7 @@ The directory where files other than `<module>.*` files will be mirrored.
 | string | `'assets'` | Relative to `buildDevDir` or `buildDistDir`
 
 
-#### `buildDevDir`
+### `buildDevDir`
 
 The directory where dev builds are to be written.
 
@@ -244,7 +244,7 @@ The directory where dev builds are to be written.
 | string | `'dev'` | Relative to `base`
 
 
-#### `buildDistDir`
+### `buildDistDir`
 
 The directory where production builds are to be written.
 
@@ -253,16 +253,7 @@ The directory where production builds are to be written.
 | string | `'dist'` | Relative to `base`
 
 
-#### `buildTempDir`
-
-The directory where temporary files are written during build and then removed.
-
-| Type   | Default  | Notes
-|--------|----------|-----------
-| string | `'temp'` | Relative to `buildDevDir` or `buildDistDir`
-
-
-#### `collatePages`
+### `collatePages`
 
 > *constructor only*
 
@@ -273,7 +264,18 @@ Create an automatic collation for every page, to be referenced as the empty stri
 | boolean | false
 
 
-#### `collations`
+### `collationNamePrefix`
+
+> *constructor only*
+
+The default name for collations omitting the optional `name` property. After the first, any subsequent `name`-less collations are suffixed with `-1`, `-2`, etc.
+
+| Type   | Default
+|--------|----------
+| string | `'site'`
+
+
+### `collations`
 
 > *constructor only*
 
@@ -281,20 +283,22 @@ An array of "collation" objects describing how the module files should be collat
 
 | Type     | Default
 |----------|----------
-| object[] | `[ { name: 'site', modules: ['src/**'] } ]`
+| object[] | `[ { modules: ['src/**'] } ]`
 
 A collation is a group of modules to be concatenated into one script and one stylesheet. Each object has two properties:
 
-##### `name`
+#### `name`
 
-A string used as the base filename for the concatenated scripts and styles. The default `'site'` collation produces a `site.css` file and a `site.js` file in the root of the build directory.
+An optional string used as the base filename for the concatenated scripts and styles.
 
-##### `modules`
+The first collation without `name` specified uses the value of the `collationNamePrefix` option as its name (`site` by default). Any subsequent `name`-less collations are suffixed with `-1`, `-2`, etc.
+
+#### `modules`
 
 An array of paths (relative to [`base`](#base)) for the modules to include in the collation. The paths can include `*` and `**` wildcards which behave like they do in a glob, but other glob features are not supported.
 
 
-#### `cssMinifierAdapter`
+### `cssMinifierAdapter`
 
 A Node.js module to use as an adapter for a CSS minifier.
 
@@ -307,7 +311,7 @@ If the string begins with with `./` or `../`, it is resolved relative to `base`.
 The module's default export should be a function that accepts a single string argument and returns a string or a Promise that resolves to a string.
 
 
-#### `cssTranspilerAdapter`
+### `cssTranspilerAdapter`
 
 A Node.js module to use as an adapter for a CSS transpiler such as LESS or SASS.
 
@@ -331,7 +335,7 @@ The module should export two named members:
 | `sourcePaths` | string[] | An array of source file paths, relative to the parent directory of `entryPath`.
 
 
-#### `excludeFileTypesFromMirror`
+### `excludeFileTypesFromMirror`
 
 Module file types to exclude from mirrored assets besides css, js, tpl.js, and transpiler types.
 
@@ -340,7 +344,7 @@ Module file types to exclude from mirrored assets besides css, js, tpl.js, and t
 | string[] | `[]` (empty array)
 
 
-#### `isDev`
+### `isDev`
 
 | Type    | Default
 |---------|---------
@@ -349,7 +353,7 @@ Module file types to exclude from mirrored assets besides css, js, tpl.js, and t
 If true, build the dev versions of files. If false, build dist.
 
 
-#### `jsMinifierAdapter`
+### `jsMinifierAdapter`
 
 A Node.js module to use as an adapter for a JS minifier.
 
@@ -362,7 +366,7 @@ If the string begins with with `./` or `../`, it is resolved relative to `base`.
 The module's default export should be a function that accepts a single string argument and returns a string or a Promise that resolves to a string.
 
 
-#### `maxIncludeDepth`
+### `maxIncludeDepth`
 
 How many levels deep an include can go.
 
@@ -371,7 +375,7 @@ How many levels deep an include can go.
 | number | `100`
 
 
-#### `pageRelativeUrls`
+### `pageRelativeUrls`
 
 Determines how URLs are written in template output.
 
@@ -384,7 +388,7 @@ If `false` (default), URLs are written relative to `buildDevDir` or `buildDistDi
 If `true`, URLs in templates are written relative to the current template's output file to form a page-relative URL.
 
 
-#### `symlinkDevAssets`
+### `symlinkDevAssets`
 
 Symlink assets when building dev rather than copying them.
 
@@ -393,7 +397,7 @@ Symlink assets when building dev rather than copying them.
 | boolean | `true`
 
 
-#### `symlinkDistAssets`
+### `symlinkDistAssets`
 
 Symlink assets when building dist rather than copying them.
 
@@ -402,7 +406,7 @@ Symlink assets when building dist rather than copying them.
 | boolean | `false`
 
 
-#### `templateHomeModule`
+### `templateHomeModule`
 
 The path of the module that acts as the root directory for finding templates to be built.
 
@@ -411,7 +415,7 @@ The path of the module that acts as the root directory for finding templates to 
 | string | `'src/home'` | Relative to `base`
 
 
-#### `templateOutputSuffix`
+### `templateOutputSuffix`
 
 The string to append to a path prefix when writing template output files.
 
@@ -427,12 +431,12 @@ There are two ways of using this, each for its own purpose:
 
 **Caveat for Pattern #2:**
 
-You shouldn't attempt to build a document at the root of the build directory (i.e., with an empty string or single slash for the prefix) when using just an extension, because the output file will be named using only the extension beginning with with a dot, which is probably not desirable. (e.g. `https://example.com/.html`)
+When using just an extension, you shouldn't attempt to build a document at the root of the build directory (i.e., with an empty string or single slash for the prefix) because the output file will be named using only the extension beginning with with a dot, which is probably not desirable. (e.g. `https://example.com/.html`)
 
-This means that if you've got modules automatically being built from [`templateHomeModule`](#templatehomemodule), the home module should not have a template of its own when `templateOutputSuffix` follows pattern #2. Instead, if you're building a static site this way, you can create an `index` module inside the `home` module.
+This means that if you've got modules automatically being built from [`templateHomeModule`](#templatehomemodule), the home module should not have a template of its own when `templateOutputSuffix` follows pattern #2. Instead, if you're building a static site this way, you can build the home page as an `index` module inside the `home` module.
 
 
-#### `trimIncludes`
+### `trimIncludes`
 
 Trim whitespace from head and tail of each include.
 
@@ -441,11 +445,20 @@ Trim whitespace from head and tail of each include.
 | boolean | `true`
 
 
+### `useFrontendLibrary`
+
+> *constructor only*
+
+Prepend mojl's frontend JavaScript library to the front of the first collation.
+
+| Type    | Default
+|---------|---------
+| boolean | `false`
 
 
 ---
 
-### `TemplateHelper`
+## `TemplateHelper`
 
 A template helper is a [tag function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) passed as the first argument to the function exported by a Mojl template.
 
@@ -463,7 +476,7 @@ module.exports = (tpl, props) => tpl`
 
 The helper function itself has methods that can be used inside the template:
 
-#### `exists`
+### `exists`
 
 > `tpl.exists(module)`
 
@@ -476,7 +489,7 @@ Check whether a given module exists and has a template.
 **Returns:** Boolean
 
 
-#### `file`
+### `file`
 
 > `tpl.file(filePath, [options])`
 
@@ -493,7 +506,7 @@ If `filePath` is a relative path, it is relative to the current template's paren
 **Returns:** Promise -> String
 
 
-#### `include`
+### `include`
 
 > `tpl.include(module, [props])`
 
@@ -507,7 +520,7 @@ Include the named module's template.
 **Returns:** Promise -> String
 
 
-#### `link`
+### `link`
 
 > `tpl.link(linkPath)`
 
@@ -530,7 +543,7 @@ Page-relative URLs (`./foo/bar`, `../foo/bar`, `foo/bar`) and site-relative URLs
 **Returns:** Promise -> String
 
 
-#### `scripts`
+### `scripts`
 
 > `tpl.scripts([collations, [options]])`
 
@@ -542,12 +555,12 @@ Generate HTML code for loading JavaScript files on the current page.
 | `options`       | object   | (optional) Options affecting the behavior of this method
 | `options.hash`  | boolean  | (optional) Append a hash to the URL. Default: `true`
 
-This outputs a `script` tag for each collation's scripts. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [`Options`](#options) (or the default `site` collation if no collations are described) will be used.
+This outputs a `script` tag for each collation's scripts. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [Options](#options) (or the default `site` collation if no collations are described) will be used.
 
 **Returns:** Promise -> String
 
 
-#### `styles`
+### `styles`
 
 > `tpl.styles([collations, [options]])`
 
@@ -559,16 +572,39 @@ Generate HTML code for loading CSS files on the current page.
 | `options`       | object   | (optional) Options affecting the behavior of this method
 | `options.hash`  | boolean  | (optional) Append a hash to the URL. Default: `true`
 
-This outputs a `link` tag for each collation's styles. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [`Options`](#options) (or the default `site` collation if no collations are described) will be used.
+This outputs a `link` tag for each collation's styles. If `collations` is `null` or `undefined`, all of the collations specified in the Mojl [Options](#options) (or the default `site` collation if no collations are described) will be used.
 
 **Returns:** Promise -> String
 
 
+## `mojl` Frontend Library
+
+A simple library for encapsulation on the frontend, which can be enabled via the [`useFrontendLibrary`](#usefrontendlibrary) option.
+
+
+### `each`
+
+> `mojl.each(selector, initializer)`
+
+Initialize all instances of a module on DOM ready.
+
+| Parameter     | Type     | Description
+|---------------|----------|-------------
+| `selector`    | string   | A DOM selector for the module's main element
+| `initializer` | function | A function for initializing each instance of the module
+
+The `initializer` function will be called once for each DOM element matched by the selector. Each time, the function receives the same arguments as the [`Array.prototype.forEach` callback function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach#parameters):
+
+* `element`
+* `index`
+* `array`
+
+
 ---
 
-### Table of Contents
+## Table of Contents
 
-* [`new Mojl([options])`](#mojl)
+* [`new Mojl([options])`](#mojl-constructor)
   * [`build([options])`](#build)
   * [`buildScripts([options])`](#buildscripts)
   * [`buildStyles([options])`](#buildstyles)
@@ -579,12 +615,11 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`getModuleList()`](#getmodulelist)
   * [`mirrorAssets([options])`](#mirrorassets)
 
-* [`Options`](#options)
+* [Options](#options)
   * [`base`](#base)
   * [`buildAssetsDir`](#buildassetsdir)
   * [`buildDevDir`](#builddevdir)
   * [`buildDistDir`](#builddistdir)
-  * [`buildTempDir`](#buildtempdir)
   * [`collatePages`](#collatepages)
   * [`collations`](#collations)
   * [`cssMinifierAdapter`](#cssminifieradapter)
@@ -599,6 +634,7 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`templateHomeModule`](#templatehomemodule)
   * [`templateOutputSuffix`](#templateoutputsuffix)
   * [`trimIncludes`](#trimincludes)
+  * [`useFrontendLibrary`](#usefrontendlibrary)
 
 * [`TemplateHelper`](#templatehelper)
   * [`exists`](#exists)
@@ -608,6 +644,9 @@ This outputs a `link` tag for each collation's styles. If `collations` is `null`
   * [`scripts`](#scripts)
   * [`styles`](#styles)
   * [`template`](#template)
+
+* [`mojl` Frontend Library](#mojl-frontend-library)
+  * [`each`](#each)
 
 ---
 
