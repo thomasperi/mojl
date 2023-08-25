@@ -1,8 +1,6 @@
 # Frontend Scripts
 
-> to-do: The specific code snippets on this page have not been tested yet.
-
-Mojl is mainly about modularizing the source code itself, but it's a good idea to also write your frontend JavaScript in a way that encapsulates the functionality and state of each module instance. Mojl includes a built-in frontend library for exactly that.
+Mojl is mainly about modularizing the source code itself, but it's a good idea to also write your frontend JavaScript in a way that encapsulates the functionality and state of each module instance. Mojl includes a built-in frontend library for doing just that. (This "library" is currently only one small method weighing in at 242 bytes when minified.)
 
 By default, the library is not added to your site (that would be presumptuous), but it's easy to add via the `useFrontendLibrary` option:
 
@@ -19,56 +17,23 @@ new Mojl({
 Let's use the time-honored example of a counter. Here's the mojl template for the counter:
 
 ```javascript
-/* src/click-counter/click-counter.tpl.js */
+/* src/example-counter/example-counter.tpl.js */
 module.exports = (tpl, props) => tpl`
-  <div class="click-counter">
-    <div class="click-counter__name">${props.name}</div>
-    <div class="click-counter__display">${props.count}</div>
+  <div data-mojl="example-counter">
+    <div class="example-counter__name">${props.name}</div>
+    <div class="example-counter__display">${props.count}</div>
     <button>increment</button>
   </div>
 `;
 ```
 
-And let's say we have a page displaying multiple counters:
+On the frontend, using the `mojl.each` method, we can define the behavior of a counter in a way that lets multiple counters operate independently of each other.
 
 ```javascript
-/* home/my-counters/my-counters.tpl.js */
-module.exports = (tpl, props) => tpl`
-  <h1>My Counters</h1>
-  ${ tpl.include('src/click-counter', { name: 'Planes', count: 17 }) }
-  ${ tpl.include('src/click-counter', { name: 'Trains', count: 5 }) }
-  ${ tpl.include('src/click-counter', { name: 'Automobiles', count: 23 }) }
-`;
-```
-
-Which generates this HTML:
-
-```html
-<h1>My Counters</h1>
-<div class="click-counter">
-  <div class="click-counter__name">Planes</div>
-  <div class="click-counter__display">17</div>
-  <button>increment</button>
-</div>
-<div class="click-counter">
-  <div class="click-counter__name">Trains</div>
-  <div class="click-counter__display">5</div>
-  <button>increment</button>
-</div>
-<div class="click-counter">
-  <div class="click-counter__name">Automobiles</div>
-  <div class="click-counter__display">23</div>
-  <button>increment</button>
-</div>
-```
-
-Using the `each` method (which is the *only* method at the time of this writing), we can define the counters' behavior in a way that lets each counter operate independently of the others.
-
-```javascript
-/* src/click-counter/click-counter.js */
-mojl.each('.click-counter', clickCounter => {
-  const button = clickCounter.querySelector('button');
-  const display = clickCounter.querySelector('.click-counter__display');
+/* src/example-counter/example-counter.js */
+mojl.each('[data-mojl="example-counter"]', exampleCounter => {
+  const button = exampleCounter.querySelector('button');
+  const display = exampleCounter.querySelector('.example-counter__display');
   let count = parseInt(display.innerText);
   button.addEventListener('click', () => {
     display.innerText = ++count;
@@ -76,19 +41,30 @@ mojl.each('.click-counter', clickCounter => {
 });
 ```
 
-## What It Does
+## What Is It Really Doing?
 
 The `each` method waits for the `DOMContentLoaded` event, then passes each element matching the selector, separately and one at a time, to the callback function you provide. So you can put your scripts in the `<head>` if you want, and it'll still work.
 
-It's roughly equivalent to doing this in jQuery:
+It's roughly equivalent to this in jQuery:
 
 ```javascript
 $(function () {
-  $('.click-counter').each(function () {
+  $('[data-mojl="example-counter"]').each(function () {
     // ...
   });
 });
 ```
+
+
+## Publishing Convention
+
+If you publish a Mojl module, it should follow the naming convention illustrated above, to avoid selector collisions.
+
+The outermost HTML tag representing the module should have the attribute `data-mojl="your-package-name"`, where `your-package-name` is the name of the npm package the module is published in.
+
+Your JS and CSS should only select that element and/or elements inside it.
+
+If the npm package contains more than one module -- say, `counter-a` and `counter-b`, distributed as one package, `example-counters`, you can differentiate them by appending the package name with a slash, like: `data-mojl="example-counters/counter-a"`
 
 
 ## That's It for the Guide
