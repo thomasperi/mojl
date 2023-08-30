@@ -62,6 +62,11 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		return linkUrl(settings, urlDocument, linkPath);
 	};
 	
+
+	// to-do: Add an option for getting just the URLs, not the tags.
+	// (Then when this is ported to PHP, the URLs can be loaded
+	// via WordPress' own script and style registry.)
+	
 	helper.scripts = (collationNames, options) => {
 		return scriptTag(settings, urlDocument, collationNames, options);
 	};
@@ -81,7 +86,8 @@ function expandModule(base, stack, module) {
 		if (stack.length === 0) {
 			throw 'Relative module paths can only be used from inside templates.';
 		}
-		let moduleDir = path.join(base, stack[0].module);
+		// to-do: test bugfix (was stack[0] which is wrong)
+		let moduleDir = path.join(base, stack[stack.length - 1].module);
 		let moduleParent = path.dirname(moduleDir);
 		let absoluteModule = path.resolve(path.join(moduleParent, module));
 		module = path.relative(base, absoluteModule);
