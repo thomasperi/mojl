@@ -13,9 +13,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe(name, async () => {
 
-	// to-do: add tests for nonexistent files
-	
-	it('should do some basic things', async () => {
+	it('should add cache files', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
 			const cache = new CtimeCache(settings);
@@ -28,13 +26,37 @@ describe(name, async () => {
 			await cache.freshenEntry(relFile);
 			
 			const entry = await cache.getEntry(relFile);
+			
 			assert(has.call(entry, 'hash'));
 			assert(has.call(entry, 'ctimeMs'));
 			assert(has.call(entry, 'expires'));
+
+			assert(!!entry.hash);
+			assert(!!entry.ctimeMs);
+			assert(!!entry.expires);
 			
 			const after = box.snapshot();
 			assert.equal(
 				after['mojl_cache/hashes/src/foo/file.txt.mojlcache'],
+				`${entry.hash} ${entry.ctimeMs} ${entry.expires}`
+			);
+		});
+	});
+
+	it('should use custom cacheDir name', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base, cacheDir: 'zote_cache' });
+			const cache = new CtimeCache(settings);
+			
+			const relFile = 'src/foo/file.txt';
+			
+			await cache.freshenEntry(relFile);
+			
+			const entry = await cache.getEntry(relFile);
+			
+			const after = box.snapshot();
+			assert.equal(
+				after['zote_cache/hashes/src/foo/file.txt.mojlcache'],
 				`${entry.hash} ${entry.ctimeMs} ${entry.expires}`
 			);
 		});
@@ -155,6 +177,50 @@ describe(name, async () => {
 	
 			const stale = await cache.entryIsStale(relFile);
 			assert(!stale);
+		});
+	});
+
+	it('should mark nonexistent files as such', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base });
+			const cache = new CtimeCache(settings);
+			const relFile = 'src/foo/file.txt';
+			const rel404 = 'src/foo/404.txt'; // not there
+	
+			await cache.freshenEntry(relFile);
+			await cache.freshenEntry(rel404);
+			
+			const entry = await cache.getEntry(rel404);
+			assert.equal(entry.hash, 'not-found');
+			assert.equal(entry.ctimeMs, 'false');
+			
+			const after = box.snapshot();
+			
+			assert(has.call(after, 'mojl_cache/hashes/src/foo/404.txt.mojlcache'));
+			assert(has.call(after, 'mojl_cache/hashes/src/foo/file.txt.mojlcache'));
+			
+			assert(after['mojl_cache/hashes/src/foo/404.txt.mojlcache'].startsWith('not-found false '));
+		});
+	});
+
+	it('should read existing cache entries', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base });
+			const relFile = 'src/foo/file.txt';
+
+			// Create cache entry
+			const cache_1 = new CtimeCache(settings);
+			const stale_1a = await cache_1.entryIsStale(relFile);
+			assert(stale_1a);
+
+			await cache_1.freshenEntry(relFile);
+			const stale_1b = await cache_1.entryIsStale(relFile);
+			assert(!stale_1b);
+			
+			// Read cache entry
+			const cache_2 = new CtimeCache(settings);
+			const stale_2 = await cache_2.entryIsStale(relFile);
+			assert(!stale_2);
 		});
 	});
 
