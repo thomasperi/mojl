@@ -71,7 +71,6 @@ describe(name, async () => {
 
 			assert.deepEqual(created, [
 				'dist/site.css',
-				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 			assert.equal(after["dist/site.css"].trim(), expectedCss.trim());
 		});
@@ -93,7 +92,6 @@ describe(name, async () => {
 
 			assert.deepEqual(created, [
 				'dist/site.css',
-				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 			assert.equal(
 				after["dist/site.css"].trim(),
@@ -120,7 +118,6 @@ describe(name, async () => {
 
 			assert.deepEqual(created, [
 				'dist/site.css',
-				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 			assert.equal(after["dist/site.css"].trim(), expectedCssCaps.trim());
 		});
@@ -143,7 +140,6 @@ describe(name, async () => {
 
 			assert.deepEqual(created, [
 				"dist-weird/stuff/styles-weird.css",
-				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 			assert.equal(after["dist-weird/stuff/styles-weird.css"].trim(), expectedWeirdCss.trim());
 		});
@@ -224,7 +220,6 @@ describe(name, async () => {
 			assert.deepEqual(created, [
 				'dist/site.css',
 				'dist/site.js',
-				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 			assert.equal(after["dist/site.js"].trim(), expectedJs.trim());
 			assert.equal(after["dist/site.css"].trim(), expectedCss.trim());

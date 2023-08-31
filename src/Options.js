@@ -91,6 +91,8 @@ const Options = {
 	buildAssetsDir: 'assets',
 	
 	/**
+	 * *constructor only*
+	 *
 	 * Relative to `base`
 	 * 
 	 * @type string
@@ -99,6 +101,18 @@ const Options = {
 	cacheDir: 'mojl_cache',
 	
 	/**
+	 * *constructor only*
+	 *
+	 * Save the cached hashes to the `cacheDir` directory inside `base`.
+	 * 
+	 * @type boolean
+	 * @default #value
+	 */
+	cacheSave: false,
+	
+	/**
+	 * *constructor only*
+	 *
 	 * @type number
 	 * @default #value
 	 */

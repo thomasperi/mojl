@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Options for writing cached hash entries to disk
+
 
 ## [2.0.0-alpha.9] - 2023-08-23
 

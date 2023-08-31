@@ -253,6 +253,39 @@ The directory where production builds are to be written.
 | string | `'dist'` | Relative to `base`
 
 
+### `cacheDir`
+
+> *constructor only*
+
+Where cache files are written when `cacheSave` is `true`.
+
+| Type   | Default        | Notes
+|--------|----------------|-----------
+| string | `'mojl_cache'` | Relative to `base`
+
+
+### `cacheSave`
+
+> *constructor only*
+
+Write cache entries to `cacheDir` instead of only storing them in memory for the duration of the build.
+
+| Type    | Default
+|---------|----------
+| boolean | false
+
+
+### `cacheTTL`
+
+> *constructor only*
+
+How long before each cache entry expires, in milliseconds.
+
+| Type   | Default      | Notes
+|--------|--------------|-----------
+| number | `86_400_000` | 24 hours
+
+
 ### `collatePages`
 
 > *constructor only*
@@ -620,6 +653,9 @@ The `initializer` function will be called once for each DOM element matched by t
   * [`buildAssetsDir`](#buildassetsdir)
   * [`buildDevDir`](#builddevdir)
   * [`buildDistDir`](#builddistdir)
+  * [`cacheDir`](#cachedir)
+  * [`cacheSave`](#cachesave)
+  * [`cacheTTL`](#cachettl)
   * [`collatePages`](#collatepages)
   * [`collations`](#collations)
   * [`cssMinifierAdapter`](#cssminifieradapter)

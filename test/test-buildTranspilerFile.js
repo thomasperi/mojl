@@ -50,7 +50,6 @@ describe(name, async () => {
 				`dev/${temp}/assets/src/b/b.scss`,
 				`dev/${temp}/assets/src/c/c.scss`,
 				`dev/${temp}/site.css.scss`,
-				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 		
 			assert.equal(after[`dev/${temp}/assets/src/a/a.css`], '#a-css{}');
@@ -96,7 +95,6 @@ describe(name, async () => {
 
 			assert.deepEqual(created, [
 				'dist/site.css',
-				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 		
 			assert.deepEqual(JSON.parse(after['dist/site.css']), {

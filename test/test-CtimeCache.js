@@ -13,9 +13,36 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe(name, async () => {
 
-	it('should add cache files', async () => {
+	it('should not add cache files without cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
+			const cache = new CtimeCache(settings);
+			
+			const relFile = 'src/foo/file.txt';
+			
+			const stale = await cache.entryIsStale(relFile);
+			assert(stale);
+			
+			await cache.freshenEntry(relFile);
+			
+			const entry = await cache.getEntry(relFile);
+			
+			assert(has.call(entry, 'hash'));
+			assert(has.call(entry, 'ctimeMs'));
+			assert(has.call(entry, 'expires'));
+
+			assert(!!entry.hash);
+			assert(!!entry.ctimeMs);
+			assert(!!entry.expires);
+			
+			const after = box.snapshot();
+			assert(!has.call(after, 'mojl_cache/hashes/src/foo/file.txt.mojlcache'));
+		});
+	});
+
+	it('should add cache files with cacheSave', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base, cacheSave: true });
 			const cache = new CtimeCache(settings);
 			
 			const relFile = 'src/foo/file.txt';
@@ -45,7 +72,7 @@ describe(name, async () => {
 
 	it('should use custom cacheDir name', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			const settings = await expandOptions({ base, cacheDir: 'zote_cache' });
+			const settings = await expandOptions({ base, cacheDir: 'zote_cache', cacheSave: true });
 			const cache = new CtimeCache(settings);
 			
 			const relFile = 'src/foo/file.txt';
@@ -74,6 +101,18 @@ describe(name, async () => {
 		});
 	});
 	
+	it('should change after file is added with cacheSave', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base, cacheSave: true });
+			const cache = new CtimeCache(settings);
+			
+			const relFile = 'src/foo/file.txt';
+			
+			const stale = await cache.entryIsStale(relFile);
+			assert(stale);
+		});
+	});
+	
 	it('should change when file is modified', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
@@ -91,9 +130,41 @@ describe(name, async () => {
 		});
 	});
 
+	it('should change when file is modified with cacheSave', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base, cacheSave: true });
+			const cache = new CtimeCache(settings);
+			
+			const relFile = 'src/foo/file.txt';
+			const absFile = path.join(base, relFile);
+			
+			await cache.freshenEntry(relFile);
+			await sleep(50);
+			fs.writeFileSync(absFile, 'foo', 'utf8');
+			
+			const changed = await cache.entryIsStale(relFile);
+			assert(changed);
+		});
+	});
+
 	it('should NOT change when file is NOT modified', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
+			const cache = new CtimeCache(settings);
+			
+			const relFile = 'src/foo/file.txt';
+			
+			await cache.freshenEntry(relFile);
+			await sleep(50);
+			
+			const changed = await cache.entryIsStale(relFile);
+			assert(!changed);
+		});
+	});
+	
+	it('should NOT change when file is NOT modified, with cacheSave', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base, cacheSave: true });
 			const cache = new CtimeCache(settings);
 			
 			const relFile = 'src/foo/file.txt';
@@ -182,7 +253,7 @@ describe(name, async () => {
 
 	it('should mark nonexistent files as such', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			const settings = await expandOptions({ base });
+			const settings = await expandOptions({ base, cacheSave: true });
 			const cache = new CtimeCache(settings);
 			const relFile = 'src/foo/file.txt';
 			const rel404 = 'src/foo/404.txt'; // not there
@@ -203,9 +274,30 @@ describe(name, async () => {
 		});
 	});
 
-	it('should read existing cache entries', async () => {
+	it('should read existing cache entries without cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
+			const relFile = 'src/foo/file.txt';
+
+			// Create cache entry
+			const cache_1 = new CtimeCache({...settings, cacheSave: true}); // write the files...
+			const stale_1a = await cache_1.entryIsStale(relFile);
+			assert(stale_1a);
+
+			await cache_1.freshenEntry(relFile);
+			const stale_1b = await cache_1.entryIsStale(relFile);
+			assert(!stale_1b);
+			
+			// Read cache entry
+			const cache_2 = new CtimeCache(settings); // ...but don't read the files.
+			const stale_2 = await cache_2.entryIsStale(relFile);
+			assert(stale_2);
+		});
+	});
+
+	it('should read existing cache entries with cacheSave', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base, cacheSave: true }); // write and read them.
 			const relFile = 'src/foo/file.txt';
 
 			// Create cache entry

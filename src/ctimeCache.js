@@ -24,6 +24,7 @@ class CtimeCache {
 	#base;
 	#cacheTTL;
 	#cacheDir;
+	#cacheSave;
 	
 	#memoryCache = {};
 	
@@ -33,6 +34,7 @@ class CtimeCache {
 	
 	constructor(settings) {
 		this.#base = settings.base;
+		this.#cacheSave = settings.cacheSave;
 		this.#cacheTTL = settings.cacheTTL;
 		this.#cacheDir = path.join(this.#base, settings.cacheDir, infix);
 	}
@@ -87,34 +89,40 @@ class CtimeCache {
 		if (has.call(this.#memoryCache, relFile)) {
 			return {...this.#memoryCache[relFile]};
 		}
-		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
-		if (fs.existsSync(cacheAbsFile)) {
-			const content = await fs.promises.readFile(cacheAbsFile, 'utf-8');
-			let [hash, ctimeMs, expires] = content.trim().split(/\s+/);
-			expires = parseFloat(expires);
-			if (Date.now() <= expires) {
-				const entry = { hash, ctimeMs, expires };
-				this.#memoryCache[relFile] = entry;
-				return {...entry};
+		if (this.#cacheSave) {
+			const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
+			if (fs.existsSync(cacheAbsFile)) {
+				const content = await fs.promises.readFile(cacheAbsFile, 'utf-8');
+				let [hash, ctimeMs, expires] = content.trim().split(/\s+/);
+				expires = parseFloat(expires);
+				if (Date.now() <= expires) {
+					const entry = { hash, ctimeMs, expires };
+					this.#memoryCache[relFile] = entry;
+					return {...entry};
+				}
 			}
 		}
 	}
 
 	async #writeEntry(relFile, entry) {
 		this.#memoryCache[relFile] = entry;
-		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
-		await writeFileRecursive(
-			cacheAbsFile,
-			`${entry.hash} ${entry.ctimeMs} ${entry.expires}`,
-			'utf-8'
-		);
+		if (this.#cacheSave) {
+			const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
+			await writeFileRecursive(
+				cacheAbsFile,
+				`${entry.hash} ${entry.ctimeMs} ${entry.expires}`,
+				'utf-8'
+			);
+		}
 	}
 
 	async #deleteEntry(relFile) {
 		delete this.#memoryCache[relFile];
-		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
-		if (fs.existsSync(cacheAbsFile)) {
-			await fs.promises.rm(cacheAbsFile);
+		if (this.#cacheSave) {
+			const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
+			if (fs.existsSync(cacheAbsFile)) {
+				await fs.promises.rm(cacheAbsFile);
+			}
 		}
 	}
 	
