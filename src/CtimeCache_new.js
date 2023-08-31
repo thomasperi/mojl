@@ -1,3 +1,5 @@
+// to-do: Replace hashStamp usage with CtimeCache
+
 const fs = require('fs');
 const path = require('path').posix;
 const crypto = require('crypto');
@@ -36,31 +38,37 @@ class CtimeCache {
 	}
 	
 	async stamp(relFile) {
-		const entry = this.fileChanged(relFile) ?
-			(await this.readCacheEntry(relFile)) : 
-			(await this.freshenCacheEntry(relFile));
+		const entry = this.entryIsStale(relFile) ?
+			(await this.#readEntry(relFile)) : 
+			(await this.freshenEntry(relFile));
 		return `?h=${entry.hash}`;
 	}
 	
-	fileChanged(relFile) {
-		const absFile = path.join(this.#base, relFile);
-		const cacheEntry = this.readCacheEntry(relFile);
-		const ctimeMs = String(fs.existsSync(absFile) && fs.statSync(absFile).ctimeMs);
-		return !cacheEntry || cacheEntry.ctimeMs !== ctimeMs;
+	async getEntry(relFile) {
+		if (await this.entryIsStale(relFile)) {
+			await this.freshenEntry(relFile);
+		}
+		return await this.#readEntry(relFile);
 	}
 	
-	async freshenCacheEntry(relFile) {
+	async entryIsStale(relFile) {
+		const absFile = path.join(this.#base, relFile);
+		const entry = await this.#readEntry(relFile);
+		const ctimeMs = String(fs.existsSync(absFile) && fs.statSync(absFile).ctimeMs);
+		return !entry || entry.ctimeMs !== ctimeMs || Date.now() > entry.expires;
+	}
+	
+	async freshenEntry(relFile) {
 		const absFile = path.join(this.#base, relFile);
 		const entry = {
-			hash: this.#hash(absFile),
+			hash: await this.hash(absFile),
 			ctimeMs: String(fs.existsSync(absFile) && fs.statSync(absFile).ctimeMs),
 			expires: Date.now() + this.#cacheTTL,
 		};
-		this.#writeCacheEntry(relFile, entry);
-		return entry;
+		await this.#writeEntry(relFile, entry);
 	}
 	
-	async #hash(absFile) {
+	async hash(absFile) {
 		if (fs.existsSync(absFile) && fs.statSync(absFile).isFile()) {
 			let content = await fs.promises.readFile(absFile, 'binary');
 			let sha = crypto.createHash('sha1');
@@ -71,23 +79,24 @@ class CtimeCache {
 		}
 	}
 	
-	async readCacheEntry(relFile) {
+	async #readEntry(relFile) {
 		if (has.call(this.#memoryCache, relFile)) {
-			return this.#memoryCache[relFile];
+			return {...this.#memoryCache[relFile]};
 		}
 		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
 		if (fs.existsSync(cacheAbsFile)) {
 			const content = await fs.promises.readFile(cacheAbsFile, 'utf-8');
 			let [hash, ctimeMs, expires] = content.trim().split(/\s+/);
-			if (Date.now() <= parseInt(expires)) {
+			expires = parseFloat(expires);
+			if (Date.now() <= expires) {
 				const entry = { hash, ctimeMs, expires };
 				this.#memoryCache[relFile] = entry;
-				return entry;
+				return {...entry};
 			}
 		}
 	}
 
-	async #writeCacheEntry(relFile, entry) {
+	async #writeEntry(relFile, entry) {
 		this.#memoryCache[relFile] = entry;
 		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
 		await writeFileRecursive(
@@ -97,7 +106,7 @@ class CtimeCache {
 		);
 	}
 
-	async #deleteCache(relFile) {
+	async #deleteEntry(relFile) {
 		delete this.#memoryCache[relFile];
 		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
 		if (fs.existsSync(cacheAbsFile)) {
