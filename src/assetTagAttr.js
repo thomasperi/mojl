@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path').posix;
 
-// const hashStamp = require('./hashStamp.js');
-// const CtimeCache = require('./CtimeCache_new.js');
 const encodeHtmlAttribute = require('./encodeHtmlAttribute.js');
 
 async function assetTagAttr(settings, currentPage, type, collationNames, options) {
@@ -74,8 +72,7 @@ async function each(settings, currentPage, file, options) {
 		options.hash : true;
 
 	if (useHash) {
-		const relPath = path.relative(base, filePath);
-		fileUrl += await _cache.stamp(relPath);
+		fileUrl += await _cache.stampAbs(filePath);
 	}
 	
 	return encodeHtmlAttribute(fileUrl);

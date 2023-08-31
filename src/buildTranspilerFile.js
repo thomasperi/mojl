@@ -44,10 +44,10 @@ async function each(settings, name, modules) {
 		let moduleFilePathOriginal = path.join(base, file);
 		let moduleFilePathMirror = path.join(tempPath, buildAssetsDir, file);
 		let moduleCode = await relativizeCssUrls(
+			settings,
 			await fs.promises.readFile(moduleFilePathOriginal, 'utf8'),
 			moduleFilePathOriginal,
 			outputPath,
-			base,
 			mirrorDir,
 			assetList
 		);

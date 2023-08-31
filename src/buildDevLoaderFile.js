@@ -39,11 +39,13 @@ async function each(settings, name, modules, type) {
 		if (type === 'css') {
 			let moduleFilePath = path.join(base, file);
 			let moduleCode = await fs.promises.readFile(moduleFilePath, 'utf8');
-			relativizeCssUrls(
+			
+			// We're calling this to build the assetList, not to actually relativize anything.
+			await relativizeCssUrls(
+				settings,
 				moduleCode,
 				moduleFilePath,
 				outputPath,
-				base,
 				mirrorDir,
 				assetList
 			);

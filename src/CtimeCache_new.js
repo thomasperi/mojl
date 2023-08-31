@@ -1,5 +1,3 @@
-// to-do: Replace hashStamp usage with CtimeCache
-
 const fs = require('fs');
 const path = require('path').posix;
 const crypto = require('crypto');
@@ -40,6 +38,12 @@ class CtimeCache {
 	}
 	
 	async stamp(relFile) {
+		const entry = await this.getEntry(relFile);
+		return `?h=${entry.hash}`;
+	}
+	
+	async stampAbs(absFile) {
+		const relFile = path.relative(this.#base, absFile);
 		const entry = await this.getEntry(relFile);
 		return `?h=${entry.hash}`;
 	}

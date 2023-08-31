@@ -1,7 +1,5 @@
 const path = require('path').posix;
 
-const hashStamp = require('./hashStamp.js');
-
 /*
 
 // pageRelativeUrls: false
@@ -31,6 +29,7 @@ async function fileUrl(settings, currentTemplate, currentDocument, filePath, opt
 		base,
 		buildAssetsDir,
 		pageRelativeUrls,
+		_cache,
 	} = settings;
 
 	let isAbsolute = filePath.startsWith('/');
@@ -46,7 +45,7 @@ async function fileUrl(settings, currentTemplate, currentDocument, filePath, opt
 		options.hash : true;
 		
 	if (useHash) {
-		absoluteUrl += await hashStamp(absolutePath);
+		absoluteUrl += await _cache.stampAbs(absolutePath);
 	}
 
 	return pageRelativeUrls ?

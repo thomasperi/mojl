@@ -16,7 +16,7 @@ describe(name, async () => {
 	it('should prepare a dev filename for use in a script tag or stylesheet link tag', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 		
-			let settings = await expandOptions({isDev: true}, true);
+			let settings = await expandOptions({isDev: true});
 			let currentPage = '/index.html';
 			let type = 'txt';
 			let collations = ['test'];
@@ -30,7 +30,7 @@ describe(name, async () => {
 	
 	it('should prepare a dist filename for use in a script tag or stylesheet link tag', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let settings = await expandOptions({}, true);
+			let settings = await expandOptions();
 			let currentPage = '/index.html';
 			let type = 'txt';
 			let collations = ['test'];

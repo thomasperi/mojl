@@ -43,7 +43,8 @@ describe(name, async () => {
 			]);
 			
 			assert.deepEqual(created, [
-				"dev/site.css",
+				'dev/site.css',
+				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 			assert(after["dev/site.css"].includes(expectedCSS.trim()));
 
@@ -97,8 +98,9 @@ describe(name, async () => {
 			]);
 
 			assert.deepEqual(created, [
-				"dev/site.css",
-				"dev/site.js",
+				'dev/site.css',
+				'dev/site.js',
+				'mojl_cache/hashes/src/c/icon.gif.mojlcache',
 			]);
 			assert(after["dev/site.css"].includes(expectedCSS.trim()));
 			assert(after["dev/site.js"].includes(expectedJS.trim()));

@@ -32,7 +32,7 @@ class Mojl {
 	#busyTemplates = false;
 	
 	constructor(options = {}) {
-		this.#optionsPromise = expandOptions(options, true);
+		this.#optionsPromise = expandOptions(options);
 	}
 	
 	async #overrideWith(options = {}) {

@@ -10,7 +10,7 @@ const { isArray } = Array;
 
 const getType = v => isArray(v) ? 'array' : v === null ? 'null' : typeof v;
 
-async function expandOptions(options, extend = false) {
+async function expandOptions(options) {
 	let expanded = {};
 	if (getType(options) !== 'object') {
 		options = {};
@@ -83,9 +83,7 @@ async function expandOptions(options, extend = false) {
 		expanded.collations[0].modules.unshift('node_modules/mojl/frontend');
 	}
 	
-	if (extend) {
-		expanded._cache = new CtimeCache(expanded);
-	}
+	expanded._cache = new CtimeCache(expanded);
 
 	return expanded;
 }
