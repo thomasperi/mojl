@@ -87,7 +87,7 @@ function expandModule(base, stack, module) {
 			throw 'Relative module paths can only be used from inside templates.';
 		}
 		// to-do: test bugfix (was stack[0] which is wrong)
-		let moduleDir = path.join(base, stack[stack.length - 1].module);
+		let moduleDir = path.join(base, peek(stack).module);
 		let moduleParent = path.dirname(moduleDir);
 		let absoluteModule = path.resolve(path.join(moduleParent, module));
 		module = path.relative(base, absoluteModule);
