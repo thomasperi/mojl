@@ -6,8 +6,24 @@ const { name, cloneRun } = new DirectoryTester(__filename);
 
 const defaultOptions = require('../src/Options.js');
 const expandOptions = require('../src/expandOptions.js');
+const CtimeCache = require('../src/CtimeCache_new.js');
 
 describe(name, async () => {
+
+	it('should add a _cache field when extend is true', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			let actual = await expandOptions({}, true);
+			assert(actual._cache instanceof CtimeCache);
+			delete actual._cache;
+			
+			let expected = {
+				...defaultOptions,
+				base,
+				collations: [ { name: 'site', modules: [] } ], // because patterns get expanded and there isn't a 'src' dir in base
+			};
+			assert.deepEqual(actual, expected);
+		});
+	});
 
 	it('should expand an undefined options value', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars

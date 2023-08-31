@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path').posix;
 
-const hashStamp = require('./hashStamp.js');
+// const hashStamp = require('./hashStamp.js');
+// const CtimeCache = require('./CtimeCache_new.js');
 const encodeHtmlAttribute = require('./encodeHtmlAttribute.js');
 
 async function assetTagAttr(settings, currentPage, type, collationNames, options) {
@@ -34,12 +35,6 @@ async function assetTagAttr(settings, currentPage, type, collationNames, options
 		}
 		return collName;
 	});	
-
-	// if (settings.collatePages) {
-	// 	console.log(JSON.stringify({
-	// 		collationNames
-	// 	}, null, 2));
-	// }
 		
 	// Convert collation names to urls
 	let urls = await Promise.all(
@@ -47,13 +42,6 @@ async function assetTagAttr(settings, currentPage, type, collationNames, options
 			collName => each(settings, currentPage, `${collName}.${type}`, options)
 		)
 	);
-
-	// if (settings.collatePages) {
-	// 	console.log(JSON.stringify({
-	// 		settings,
-	// 		urls
-	// 	}, null, 2));
-	// }
 
 	// Remove the ones that don't exist
 	return urls.filter(url => !!url);
@@ -66,16 +54,12 @@ async function each(settings, currentPage, file, options) {
 		buildDistDir,
 		pageRelativeUrls,
 		isDev,
+		_cache,
 	} = settings;
 	
-	let docroot = path.join(base, isDev ? buildDevDir : buildDistDir);
-	let filePath = path.resolve(path.join(docroot, file));
-
-	// if (settings.collatePages) {
-	// 	console.log(JSON.stringify({
-	// 		filePath
-	// 	}, null, 2));
-	// }
+	const buildDir = isDev ? buildDevDir : buildDistDir;
+	const docroot = path.join(base, buildDir);
+	const filePath = path.resolve(path.join(docroot, file));
 
 	if (!fs.existsSync(filePath)) {
 		return;
@@ -90,7 +74,8 @@ async function each(settings, currentPage, file, options) {
 		options.hash : true;
 
 	if (useHash) {
-		fileUrl += await hashStamp(filePath);
+		const relPath = path.relative(base, filePath);
+		fileUrl += await _cache.stamp(relPath);
 	}
 	
 	return encodeHtmlAttribute(fileUrl);

@@ -3,13 +3,14 @@ const path = require("path").posix;
 const defaults = require('./Options.js');
 const expandModulePaths = require('./expandModulePaths.js');
 const findPageModules = require('./findPageModules.js');
+const CtimeCache = require('./CtimeCache_new.js');
 
 const has = Object.prototype.hasOwnProperty;
 const { isArray } = Array;
 
 const getType = v => isArray(v) ? 'array' : v === null ? 'null' : typeof v;
 
-async function expandOptions(options) {
+async function expandOptions(options, extend = false) {
 	let expanded = {};
 	if (getType(options) !== 'object') {
 		options = {};
@@ -82,6 +83,10 @@ async function expandOptions(options) {
 		expanded.collations[0].modules.unshift('node_modules/mojl/frontend');
 	}
 	
+	if (extend) {
+		expanded._cache = new CtimeCache(expanded);
+	}
+
 	return expanded;
 }
 

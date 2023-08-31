@@ -15,7 +15,7 @@ describe(name, async () => {
 
 	it('should generate a link tag with the styles filename from settings', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let settings = await expandOptions();
+			let settings = await expandOptions({}, true);
 			let currentPage = '/index.html';
 			let collations = undefined;
 			let options = undefined;
@@ -28,7 +28,7 @@ describe(name, async () => {
 
 	it('should generate a link tag with the custom styles filename', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let settings = await expandOptions();
+			let settings = await expandOptions({}, true);
 			let currentPage = '/index.html';
 			let collations = ['custom'];
 			let options = undefined;

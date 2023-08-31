@@ -12,6 +12,8 @@ const has = Object.prototype.hasOwnProperty;
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe(name, async () => {
+
+	// to-do: add tests for nonexistent files
 	
 	it('should do some basic things', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars

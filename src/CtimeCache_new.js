@@ -16,14 +16,16 @@ const map = {
 	'/': '!'
 };
 
+const infix = 'hashes';
+const suffix = '.mojlcache';
+
+
 const has = Object.prototype.hasOwnProperty;
 
 class CtimeCache {
 	#base;
 	#cacheTTL;
 	#cacheDir;
-	#infix = 'hashes';
-	#suffix = '.mojlcache';
 	
 	#memoryCache = {};
 	
@@ -34,13 +36,11 @@ class CtimeCache {
 	constructor(settings) {
 		this.#base = settings.base;
 		this.#cacheTTL = settings.cacheTTL;
-		this.#cacheDir = path.join(this.#base, settings.cacheDir, this.#infix);
+		this.#cacheDir = path.join(this.#base, settings.cacheDir, infix);
 	}
 	
 	async stamp(relFile) {
-		const entry = this.entryIsStale(relFile) ?
-			(await this.#readEntry(relFile)) : 
-			(await this.freshenEntry(relFile));
+		const entry = await this.getEntry(relFile);
 		return `?h=${entry.hash}`;
 	}
 	
@@ -117,7 +117,7 @@ class CtimeCache {
 	// Get the path of the cache file that corresponds to the supplied project file
 	// regardless of whether either file exists.
 	#getCacheFileAbsPath(relFile) {
-		return path.join(this.#cacheDir, relFile + this.#suffix);
+		return path.join(this.#cacheDir, relFile + suffix);
 	}
 	
 }

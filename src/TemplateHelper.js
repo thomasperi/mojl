@@ -6,7 +6,7 @@ const linkUrl = require('./linkUrl.js');
 const templateTagFn = require('./templateTagFn.js');
 const scriptTag = require('./scriptTag.js');
 const styleTag = require('./styleTag.js');
-const ctimeCache = require('./ctimeCache.js');
+// const ctimeCache = require('./ctimeCache.js');
 
 function TemplateHelper(settings, urlDocument = '/index.html') {
 	const {
@@ -109,9 +109,14 @@ function getTemplate(base, module) {
 
 // Returns a Promise
 function includeTemplate(templatePath, mojlBuilder, props) {
-	if (ctimeCache.freshen(templatePath)) {
-		delete require.cache[templatePath];
-	}
+	// to-do:
+	// Remove the template from the require cache if it has changed.
+	// Need access to a central CtimeCache instance.
+
+	// 	if (ctimeCache.freshen(templatePath)) {
+	// 		delete require.cache[templatePath];
+	// 	}
+
 	let fn = require(templatePath);
 	if (typeof fn !== 'function') {
 		throw `Template must export a function (${templatePath})`;
