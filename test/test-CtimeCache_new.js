@@ -5,7 +5,7 @@ const path = require('path').posix;
 const DirectoryTester = require('../dev/DirectoryTester.js');
 const { name, cloneRun } = new DirectoryTester(__filename);
 
-const CtimeCache = require('../src/CtimeCache_new.js');
+const CtimeCache = require('../src/CtimeCache.js');
 const expandOptions = require('../src/expandOptions.js');
 
 const has = Object.prototype.hasOwnProperty;

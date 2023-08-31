@@ -1,28 +1,129 @@
 const fs = require('fs');
+const path = require('path').posix;
+const crypto = require('crypto');
+const writeFileRecursive = require('./writeFileRecursive.js');
 
-module.exports.reset = () => {
-	module.exports.ttl = 24 * 60 * 60 * 1000;
-	module.exports.cache = {};
+// The hash is in base64, so replace the base64 characters
+// that are reserved for URIs with characters that aren't.
+// Seems nicer than url-encoding them, and since they never need
+// to be decoded, they don't need to be standard base64 values.
+const pattern = /[+=/]/g;
+const map = {
+	'+': '*',
+	'=': '~',
+	'/': '!'
 };
 
-module.exports.freshen = (file) => {
-	let cache = module.exports.cache;
-	let modTime = fs.existsSync(file) && fs.statSync(file).ctimeMs;
+const infix = 'hashes';
+const suffix = '.mojlcache';
 
-	Object.keys(cache).forEach(f => {
-		if (Date.now() > cache[f].expires) {
-			delete cache[f];
-		}
-	});
 
-	if (!cache[file] || cache[file].modTime !== modTime) {
-		cache[file] = {
-			modTime,
-			expires: Date.now() + module.exports.ttl
-		};
-		return true;
+const has = Object.prototype.hasOwnProperty;
+
+class CtimeCache {
+	#base;
+	#cacheTTL;
+	#cacheDir;
+	
+	#memoryCache = {};
+	
+	// to-do: On read, if #lastPurged was at #cacheTTL ago or more,
+	// then delete all the cache entries that are expired.
+	// #lastPurged;
+	
+	constructor(settings) {
+		this.#base = settings.base;
+		this.#cacheTTL = settings.cacheTTL;
+		this.#cacheDir = path.join(this.#base, settings.cacheDir, infix);
 	}
-	return false;
-};
+	
+	async stamp(relFile) {
+		const entry = await this.getEntry(relFile);
+		return `?h=${entry.hash}`;
+	}
+	
+	async stampAbs(absFile) {
+		const relFile = path.relative(this.#base, absFile);
+		const entry = await this.getEntry(relFile);
+		return `?h=${entry.hash}`;
+	}
+	
+	async getEntry(relFile) {
+		if (await this.entryIsStale(relFile)) {
+			await this.freshenEntry(relFile);
+		}
+		return await this.#readEntry(relFile);
+	}
+	
+	async entryIsStale(relFile) {
+		const absFile = path.join(this.#base, relFile);
+		const entry = await this.#readEntry(relFile);
+		const ctimeMs = String(fs.existsSync(absFile) && fs.statSync(absFile).ctimeMs);
+		return !entry || entry.ctimeMs !== ctimeMs || Date.now() > entry.expires;
+	}
+	
+	async freshenEntry(relFile) {
+		const absFile = path.join(this.#base, relFile);
+		const entry = {
+			hash: await this.hash(absFile),
+			ctimeMs: String(fs.existsSync(absFile) && fs.statSync(absFile).ctimeMs),
+			expires: Date.now() + this.#cacheTTL,
+		};
+		await this.#writeEntry(relFile, entry);
+	}
+	
+	async hash(absFile) {
+		if (fs.existsSync(absFile) && fs.statSync(absFile).isFile()) {
+			let content = await fs.promises.readFile(absFile, 'binary');
+			let sha = crypto.createHash('sha1');
+			sha.update(content);
+			return sha.digest('base64').replace(pattern, m => map[m]);
+		} else {
+			return 'not-found';
+		}
+	}
+	
+	async #readEntry(relFile) {
+		if (has.call(this.#memoryCache, relFile)) {
+			return {...this.#memoryCache[relFile]};
+		}
+		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
+		if (fs.existsSync(cacheAbsFile)) {
+			const content = await fs.promises.readFile(cacheAbsFile, 'utf-8');
+			let [hash, ctimeMs, expires] = content.trim().split(/\s+/);
+			expires = parseFloat(expires);
+			if (Date.now() <= expires) {
+				const entry = { hash, ctimeMs, expires };
+				this.#memoryCache[relFile] = entry;
+				return {...entry};
+			}
+		}
+	}
 
-module.exports.reset();
+	async #writeEntry(relFile, entry) {
+		this.#memoryCache[relFile] = entry;
+		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
+		await writeFileRecursive(
+			cacheAbsFile,
+			`${entry.hash} ${entry.ctimeMs} ${entry.expires}`,
+			'utf-8'
+		);
+	}
+
+	async #deleteEntry(relFile) {
+		delete this.#memoryCache[relFile];
+		const cacheAbsFile = this.#getCacheFileAbsPath(relFile);
+		if (fs.existsSync(cacheAbsFile)) {
+			await fs.promises.rm(cacheAbsFile);
+		}
+	}
+	
+	// Get the path of the cache file that corresponds to the supplied project file
+	// regardless of whether either file exists.
+	#getCacheFileAbsPath(relFile) {
+		return path.join(this.#cacheDir, relFile + suffix);
+	}
+	
+}
+
+module.exports = CtimeCache;

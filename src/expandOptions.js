@@ -3,7 +3,7 @@ const path = require("path").posix;
 const defaults = require('./Options.js');
 const expandModulePaths = require('./expandModulePaths.js');
 const findPageModules = require('./findPageModules.js');
-const CtimeCache = require('./CtimeCache_new.js');
+const CtimeCache = require('./CtimeCache.js');
 
 const has = Object.prototype.hasOwnProperty;
 const { isArray } = Array;

@@ -6,7 +6,7 @@ const { name, cloneRun } = new DirectoryTester(__filename);
 
 const defaultOptions = require('../src/Options.js');
 const expandOptions = require('../src/expandOptions.js');
-const CtimeCache = require('../src/CtimeCache_new.js');
+const CtimeCache = require('../src/CtimeCache.js');
 
 describe(name, async () => {
 
