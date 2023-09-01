@@ -13,6 +13,22 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe(name, async () => {
 
+	it('should be fresh after being freshened', async () => {
+		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+			const settings = await expandOptions({ base });
+			const cache = new CtimeCache(settings);
+			const relFile = 'src/foo/file.txt';
+	
+			const fresh1 = await cache.hasFreshEntry(relFile);
+			assert(!fresh1);
+
+			await cache.freshenEntry(relFile);
+	
+			const fresh2 = await cache.hasFreshEntry(relFile);
+			assert(fresh2);
+		});
+	});
+	
 	it('should not add cache files without cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
@@ -20,8 +36,8 @@ describe(name, async () => {
 			
 			const relFile = 'src/foo/file.txt';
 			
-			const stale = await cache.entryIsStale(relFile);
-			assert(stale);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(!fresh);
 			
 			await cache.freshenEntry(relFile);
 			
@@ -29,17 +45,15 @@ describe(name, async () => {
 			
 			assert(has.call(entry, 'hash'));
 			assert(has.call(entry, 'ctimeMs'));
-			assert(has.call(entry, 'expires'));
-
+	
 			assert(!!entry.hash);
 			assert(!!entry.ctimeMs);
-			assert(!!entry.expires);
 			
 			const after = box.snapshot();
 			assert(!has.call(after, 'mojl_cache/hashes/src/foo/file.txt.mojlcache'));
 		});
 	});
-
+	
 	it('should add cache files with cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base, cacheSave: true });
@@ -47,8 +61,8 @@ describe(name, async () => {
 			
 			const relFile = 'src/foo/file.txt';
 			
-			const stale = await cache.entryIsStale(relFile);
-			assert(stale);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(!fresh);
 			
 			await cache.freshenEntry(relFile);
 			
@@ -56,20 +70,18 @@ describe(name, async () => {
 			
 			assert(has.call(entry, 'hash'));
 			assert(has.call(entry, 'ctimeMs'));
-			assert(has.call(entry, 'expires'));
-
+	
 			assert(!!entry.hash);
 			assert(!!entry.ctimeMs);
-			assert(!!entry.expires);
 			
 			const after = box.snapshot();
 			assert.equal(
 				after['mojl_cache/hashes/src/foo/file.txt.mojlcache'],
-				`${entry.hash} ${entry.ctimeMs} ${entry.expires}`
+				`${entry.hash} ${entry.ctimeMs}`
 			);
 		});
 	});
-
+	
 	it('should use custom cacheDir name', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base, cacheDir: 'zote_cache', cacheSave: true });
@@ -84,11 +96,11 @@ describe(name, async () => {
 			const after = box.snapshot();
 			assert.equal(
 				after['zote_cache/hashes/src/foo/file.txt.mojlcache'],
-				`${entry.hash} ${entry.ctimeMs} ${entry.expires}`
+				`${entry.hash} ${entry.ctimeMs}`
 			);
 		});
 	});
-
+	
 	it('should change after file is added', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
@@ -96,8 +108,8 @@ describe(name, async () => {
 			
 			const relFile = 'src/foo/file.txt';
 			
-			const stale = await cache.entryIsStale(relFile);
-			assert(stale);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(!fresh);
 		});
 	});
 	
@@ -108,8 +120,8 @@ describe(name, async () => {
 			
 			const relFile = 'src/foo/file.txt';
 			
-			const stale = await cache.entryIsStale(relFile);
-			assert(stale);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(!fresh);
 		});
 	});
 	
@@ -125,11 +137,11 @@ describe(name, async () => {
 			await sleep(50);
 			fs.writeFileSync(absFile, 'foo', 'utf8');
 			
-			const changed = await cache.entryIsStale(relFile);
-			assert(changed);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(!fresh);
 		});
 	});
-
+	
 	it('should change when file is modified with cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base, cacheSave: true });
@@ -142,11 +154,11 @@ describe(name, async () => {
 			await sleep(50);
 			fs.writeFileSync(absFile, 'foo', 'utf8');
 			
-			const changed = await cache.entryIsStale(relFile);
-			assert(changed);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(!fresh);
 		});
 	});
-
+	
 	it('should NOT change when file is NOT modified', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
@@ -157,8 +169,8 @@ describe(name, async () => {
 			await cache.freshenEntry(relFile);
 			await sleep(50);
 			
-			const changed = await cache.entryIsStale(relFile);
-			assert(!changed);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(fresh);
 		});
 	});
 	
@@ -172,8 +184,8 @@ describe(name, async () => {
 			await cache.freshenEntry(relFile);
 			await sleep(50);
 			
-			const changed = await cache.entryIsStale(relFile);
-			assert(!changed);
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(fresh);
 		});
 	});
 	
@@ -190,68 +202,38 @@ describe(name, async () => {
 			
 			const oneSecondAgo = new Date(Date.now() - 1000);
 			fs.utimesSync(absFile, oneSecondAgo, oneSecondAgo);
-
-			const changed = await cache.entryIsStale(relFile);
-			assert(changed);
+	
+			const fresh = await cache.hasFreshEntry(relFile);
+			assert(!fresh);
 		});
 	});
 	
-	it('should change when ttl is exceeded', async () => {
-		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			const settings = await expandOptions({ base, cacheTTL: 1 });
-			const cache = new CtimeCache(settings);
-			const relFile = 'src/foo/file.txt';
+	// // to-do
+	// // it('should remove a record when its ttl is exceeded and a different file is changed', async () => {
+	// // 	await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
+	// // 		let file1 = path.join(base, 'ctime-test.txt');
+	// // 		let file2 = path.join(base, 'ctime-test-2.txt');
+	// // 		
+	// // 		ctimeCache.ttl = 1;
+	// // 
+	// // 		ctimeCache.freshen(file1);
+	// // 		ctimeCache.freshen(file2);
+	// // 
+	// // 		await sleep(50);
+	// // 
+	// // 		ctimeCache.freshen(file2);
+	// // 		
+	// // 		try {
+	// // 			assert(!has.call(ctimeCache.cache, file1));
+	// // 			assert(has.call(ctimeCache.cache, file2));
+	// // 		} finally {
+	// // 			ctimeCache.reset();
+	// // 		}
+	// // 
+	// // 	});
+	// // });
 	
-			await cache.freshenEntry(relFile);
-
-			await sleep(50);
-	
-			const changed = await cache.entryIsStale(relFile);
-			assert(changed);
-		});
-	});
-	
-	// to-do
-	// it('should remove a record when its ttl is exceeded and a different file is changed', async () => {
-	// 	await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-	// 		let file1 = path.join(base, 'ctime-test.txt');
-	// 		let file2 = path.join(base, 'ctime-test-2.txt');
-	// 		
-	// 		ctimeCache.ttl = 1;
-	// 
-	// 		ctimeCache.freshen(file1);
-	// 		ctimeCache.freshen(file2);
-	// 
-	// 		await sleep(50);
-	// 
-	// 		ctimeCache.freshen(file2);
-	// 		
-	// 		try {
-	// 			assert(!has.call(ctimeCache.cache, file1));
-	// 			assert(has.call(ctimeCache.cache, file2));
-	// 		} finally {
-	// 			ctimeCache.reset();
-	// 		}
-	// 
-	// 	});
-	// });
-	
-	it('should not change when nothing has changed', async () => {
-		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			const settings = await expandOptions({ base });
-			const cache = new CtimeCache(settings);
-			const relFile = 'src/foo/file.txt';
-	
-			await cache.freshenEntry(relFile);
-
-			await sleep(50);
-	
-			const stale = await cache.entryIsStale(relFile);
-			assert(!stale);
-		});
-	});
-
-	it('should mark nonexistent files as such', async () => {
+	it('should not create entries for nonexistent files', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base, cacheSave: true });
 			const cache = new CtimeCache(settings);
@@ -262,57 +244,54 @@ describe(name, async () => {
 			await cache.freshenEntry(rel404);
 			
 			const entry = await cache.getEntry(rel404);
-			assert.equal(entry.hash, 'not-found');
-			assert.equal(entry.ctimeMs, 'false');
+			assert(!entry);
 			
 			const after = box.snapshot();
 			
-			assert(has.call(after, 'mojl_cache/hashes/src/foo/404.txt.mojlcache'));
 			assert(has.call(after, 'mojl_cache/hashes/src/foo/file.txt.mojlcache'));
-			
-			assert(after['mojl_cache/hashes/src/foo/404.txt.mojlcache'].startsWith('not-found false '));
+			assert(!has.call(after, 'mojl_cache/hashes/src/foo/404.txt.mojlcache'));
 		});
 	});
-
+	
 	it('should read existing cache entries without cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base });
 			const relFile = 'src/foo/file.txt';
-
+	
 			// Create cache entry
 			const cache_1 = new CtimeCache({...settings, cacheSave: true}); // write the files...
-			const stale_1a = await cache_1.entryIsStale(relFile);
-			assert(stale_1a);
-
+			const fresh_1a = await cache_1.hasFreshEntry(relFile);
+			assert(!fresh_1a);
+	
 			await cache_1.freshenEntry(relFile);
-			const stale_1b = await cache_1.entryIsStale(relFile);
-			assert(!stale_1b);
+			const fresh_1b = await cache_1.hasFreshEntry(relFile);
+			assert(fresh_1b);
 			
 			// Read cache entry
 			const cache_2 = new CtimeCache(settings); // ...but don't read the files.
-			const stale_2 = await cache_2.entryIsStale(relFile);
-			assert(stale_2);
+			const fresh_2 = await cache_2.hasFreshEntry(relFile);
+			assert(!fresh_2);
 		});
 	});
-
+	
 	it('should read existing cache entries with cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ base, cacheSave: true }); // write and read them.
 			const relFile = 'src/foo/file.txt';
-
+	
 			// Create cache entry
 			const cache_1 = new CtimeCache(settings);
-			const stale_1a = await cache_1.entryIsStale(relFile);
-			assert(stale_1a);
-
+			const fresh_1a = await cache_1.hasFreshEntry(relFile);
+			assert(!fresh_1a);
+	
 			await cache_1.freshenEntry(relFile);
-			const stale_1b = await cache_1.entryIsStale(relFile);
-			assert(!stale_1b);
+			const fresh_1b = await cache_1.hasFreshEntry(relFile);
+			assert(fresh_1b);
 			
 			// Read cache entry
 			const cache_2 = new CtimeCache(settings);
-			const stale_2 = await cache_2.entryIsStale(relFile);
-			assert(!stale_2);
+			const fresh_2 = await cache_2.hasFreshEntry(relFile);
+			assert(fresh_2);
 		});
 	});
 

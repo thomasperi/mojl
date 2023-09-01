@@ -268,18 +268,18 @@ Where cache files are written when `cacheSave` is `true`.
 
 > *constructor only*
 
-Write cache entries to `cacheDir` instead of only storing them in memory for the duration of the build.
+Write cache entries to `cacheDir` instead of only storing them in memory for the life of the Mojl instance. This can reduce build time if you have large files being hashed.
 
 | Type    | Default
 |---------|----------
 | boolean | false
 
 
-### `cacheTTL`
+### `cacheCleanInterval`
 
 > *constructor only*
 
-How long before each cache entry expires, in milliseconds.
+The frequency, in milliseconds, at which cache entries for files that no longer exist should be removed.
 
 | Type   | Default      | Notes
 |--------|--------------|-----------
@@ -655,7 +655,7 @@ The `initializer` function will be called once for each DOM element matched by t
   * [`buildDistDir`](#builddistdir)
   * [`cacheDir`](#cachedir)
   * [`cacheSave`](#cachesave)
-  * [`cacheTTL`](#cachettl)
+  * [`cacheCleanInterval`](#cachepurgeinterval)
   * [`collatePages`](#collatepages)
   * [`collations`](#collations)
   * [`cssMinifierAdapter`](#cssminifieradapter)

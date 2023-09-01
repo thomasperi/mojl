@@ -13,7 +13,7 @@ const nonOverridables = [
 	'base',
 	'cacheDir',
 	'cacheSave',
-	'cacheTTL',
+	'cacheCleanInterval',
 	'collations',
 	'collatePages',
 	'collationNamePrefix',
@@ -84,6 +84,10 @@ class Mojl {
 		} finally {
 			this[flagName] = false;
 		}
+	}
+	
+	async clearCache() {
+		// to-do
 	}
 	
 	async build(options) {
