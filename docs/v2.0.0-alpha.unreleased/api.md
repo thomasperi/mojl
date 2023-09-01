@@ -253,37 +253,31 @@ The directory where production builds are to be written.
 | string | `'dist'` | Relative to `base`
 
 
-### `cacheDir`
-
-> *constructor only*
+### `cacheFile`
 
 Where cache files are written when `cacheSave` is `true`.
 
-| Type   | Default        | Notes
-|--------|----------------|-----------
-| string | `'mojl_cache'` | Relative to `base`
+| Type   | Default             | Notes
+|--------|---------------------|-----------
+| string | `'mojl-cache.json'` | Relative to `base`
 
 
 ### `cacheSave`
 
-> *constructor only*
-
-Write cache entries to `cacheDir` instead of only storing them in memory for the life of the Mojl instance. This can reduce build time if you have large files being hashed.
+Write cache entries to `cacheFile` instead of only storing them in memory for the life of the cache instance. This can reduce build time if you have large files being hashed.
 
 | Type    | Default
 |---------|----------
 | boolean | false
 
 
-### `cacheCleanInterval`
+### `cacheTTL`
 
-> *constructor only*
-
-The frequency, in milliseconds, at which cache entries for files that no longer exist should be removed.
+The frequency, in milliseconds, at which to purge the cache of entries for files that no longer exist.
 
 | Type   | Default      | Notes
 |--------|--------------|-----------
-| number | `86_400_000` | 24 hours
+| number | `86_400_000` | One day
 
 
 ### `collatePages`

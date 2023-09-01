@@ -165,7 +165,8 @@ describe(name, async () => {
 			]);
 			
 			const savedCache = JSON.parse(after['mojl-cache.json']);
-			assert.deepEqual(Object.keys(savedCache), ['entries']);
+			assert.deepEqual(Object.keys(savedCache), ['entries', 'expires']);
+			assert(savedCache.expires > Date.now());
 			
 			const savedEntries = savedCache.entries;
 			assert.deepEqual(Object.keys(savedEntries), ['src/foo/foo.txt']);
@@ -232,23 +233,6 @@ describe(name, async () => {
 			const cache_2 = new HashCache(settings);
 			const fresh_2 = await cache_2.readExistingEntry(relFile);
 			assert(cache_2.entryIsFresh(fresh_2));
-		});
-	});
-	
-	it('should not read existing cache entries when cacheRead is false', async () => {
-		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			const settings = await expandOptions();
-			const relFile = 'src/foo/foo.txt';
-			
-			// Create cache entry
-			const cache_1 = new HashCache({...settings, cacheSave: true});
-			await cache_1.createEntry(relFile);
-			await cache_1.saveCache(); 
-			
-			// Read cache entry
-			const cache_2 = new HashCache({...settings, cacheRead: false});
-			const fresh_2 = await cache_2.readExistingEntry(relFile);
-			assert(!cache_2.entryIsFresh(fresh_2));
 		});
 	});
 

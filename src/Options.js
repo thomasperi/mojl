@@ -102,13 +102,13 @@ const Options = {
 	 * @type boolean
 	 * @default #value
 	 */
-	cacheRead: true,
+	cacheSave: false,
 
 	/**
-	 * @type boolean
+	 * @type number
 	 * @default #value
 	 */
-	cacheSave: false,
+	cacheTTL: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
 	
 	/**
 	 * A NodeJS module descriptor to a file or module that exports an object to use as an
