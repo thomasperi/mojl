@@ -14,7 +14,7 @@ const map = {
 	'/': '!'
 };
 
-class CtimeCache {
+class HashCache {
 	#base = '';
 	#cacheFile = '';
 	#cacheRead = false;
@@ -256,4 +256,4 @@ class CtimeCache {
 	
 }
 
-module.exports = CtimeCache;
+module.exports = HashCache;

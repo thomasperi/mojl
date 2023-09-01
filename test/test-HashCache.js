@@ -5,11 +5,11 @@ const path = require('path').posix;
 const DirectoryTester = require('../dev/DirectoryTester.js');
 const { name, cloneRun } = new DirectoryTester(__filename);
 
-const CtimeCache = require('../src/CtimeCache.js');
+const HashCache = require('../src/HashCache.js');
 const expandOptions = require('../src/expandOptions.js');
 
-const has = Object.prototype.hasOwnProperty;
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// const has = Object.prototype.hasOwnProperty;
+// const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const fooHash = 'C*7Hteo!D9vJXQ3UfzxbwnXaijM~';
 
@@ -18,7 +18,7 @@ describe(name, async () => {
 	it('should not have any entries initially', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			
 			const internalCache = await cache.getCache();
 			assert.deepEqual(internalCache.entries, {});
@@ -28,7 +28,7 @@ describe(name, async () => {
 	it('should have no existing entry for a file before the entry is created', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			const relFile = 'src/foo/foo.txt';
 			
 			let entry = await cache.readExistingEntry(relFile);
@@ -39,7 +39,7 @@ describe(name, async () => {
 	it('should have a fresh entry for a file after the entry is created', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			const relFile = 'src/foo/foo.txt';
 			
 			let entryCreated = await cache.createEntry(relFile);
@@ -57,7 +57,7 @@ describe(name, async () => {
 	it('should not have a fresh entry for a file after the file is modified', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			const relFile = 'src/foo/foo.txt';
 			
 			await cache.createEntry(relFile);
@@ -78,7 +78,7 @@ describe(name, async () => {
 	it('should not have a fresh entry for a file after modification date is changed', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			const relFile = 'src/foo/foo.txt';
 			
 			await cache.createEntry(relFile);
@@ -100,7 +100,7 @@ describe(name, async () => {
 	it('should create a new fresh entry if not already fresh', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			const relFile = 'src/foo/foo.txt';
 			
 			let createdEntry = await cache.createEntry(relFile);
@@ -119,7 +119,7 @@ describe(name, async () => {
 	it('should get the same fresh entry if already fresh', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			const relFile = 'src/foo/foo.txt';
 			
 			let createdEntry = await cache.createEntry(relFile);
@@ -136,11 +136,11 @@ describe(name, async () => {
 	it('should not save mojl-cache.json without cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions();
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			
 			const relFile = 'src/foo/foo.txt';
 			
-			const entry = await cache.getFreshEntry(relFile);
+			await cache.getFreshEntry(relFile);
 			const after = box.snapshot();
 			
 			assert.deepEqual(after, { 'src/foo/foo.txt': 'foo' });
@@ -150,11 +150,11 @@ describe(name, async () => {
 	it('should save mojl-cache.json file with cacheSave', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ cacheSave: true });
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			
 			const relFile = 'src/foo/foo.txt';
 			
-			const entry = await cache.getFreshEntry(relFile);
+			await cache.getFreshEntry(relFile);
 			await cache.saveCache();
 			const after = box.snapshot();
 			
@@ -180,11 +180,11 @@ describe(name, async () => {
 	it('should use custom cacheFile name', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ cacheFile: 'zote-cache.json', cacheSave: true });
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			
 			const relFile = 'src/foo/foo.txt';
 			
-			const entry = await cache.getFreshEntry(relFile);
+			await cache.getFreshEntry(relFile);
 			await cache.saveCache();
 			const after = box.snapshot();
 			
@@ -199,7 +199,7 @@ describe(name, async () => {
 	it('should not create entries for nonexistent files', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			const settings = await expandOptions({ cacheSave: true });
-			const cache = new CtimeCache(settings);
+			const cache = new HashCache(settings);
 			const relFileFoo = 'src/foo/foo.txt';
 			const relFileBar = 'src/foo/bar.txt'; // not there
 	
@@ -224,12 +224,12 @@ describe(name, async () => {
 			const relFile = 'src/foo/foo.txt';
 			
 			// Create cache entry
-			const cache_1 = new CtimeCache({...settings, cacheSave: true});
+			const cache_1 = new HashCache({...settings, cacheSave: true});
 			await cache_1.createEntry(relFile);
 			await cache_1.saveCache(); 
 			
 			// Read cache entry
-			const cache_2 = new CtimeCache(settings);
+			const cache_2 = new HashCache(settings);
 			const fresh_2 = await cache_2.readExistingEntry(relFile);
 			assert(cache_2.entryIsFresh(fresh_2));
 		});
@@ -241,12 +241,12 @@ describe(name, async () => {
 			const relFile = 'src/foo/foo.txt';
 			
 			// Create cache entry
-			const cache_1 = new CtimeCache({...settings, cacheSave: true});
+			const cache_1 = new HashCache({...settings, cacheSave: true});
 			await cache_1.createEntry(relFile);
 			await cache_1.saveCache(); 
 			
 			// Read cache entry
-			const cache_2 = new CtimeCache({...settings, cacheRead: false});
+			const cache_2 = new HashCache({...settings, cacheRead: false});
 			const fresh_2 = await cache_2.readExistingEntry(relFile);
 			assert(!cache_2.entryIsFresh(fresh_2));
 		});

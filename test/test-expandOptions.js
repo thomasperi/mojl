@@ -6,14 +6,14 @@ const { name, cloneRun } = new DirectoryTester(__filename);
 
 const defaultOptions = require('../src/Options.js');
 const expandOptions = require('../src/expandOptions.js');
-const CtimeCache = require('../src/CtimeCache.js');
+const HashCache = require('../src/HashCache.js');
 
 describe(name, async () => {
 
 	it('should add a _cache field', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
 			let actual = await expandOptions();
-			assert(actual._cache instanceof CtimeCache);
+			assert(actual._cache instanceof HashCache);
 			delete actual._cache;
 		});
 	});

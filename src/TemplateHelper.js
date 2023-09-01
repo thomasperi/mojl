@@ -111,7 +111,7 @@ function getTemplate(base, module) {
 function includeTemplate(templatePath, mojlBuilder, props) {
 	// to-do:
 	// Remove the template from the require cache if it has changed.
-	// Need access to a central CtimeCache instance.
+	// Need access to a central HashCache instance.
 
 	// 	if (ctimeCache.freshen(templatePath)) {
 	// 		delete require.cache[templatePath];

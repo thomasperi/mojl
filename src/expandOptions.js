@@ -3,7 +3,7 @@ const path = require("path").posix;
 const defaults = require('./Options.js');
 const expandModulePaths = require('./expandModulePaths.js');
 const findPageModules = require('./findPageModules.js');
-const CtimeCache = require('./CtimeCache.js');
+const HashCache = require('./HashCache.js');
 
 const has = Object.prototype.hasOwnProperty;
 const { isArray } = Array;
@@ -83,7 +83,7 @@ async function expandOptions(options) {
 		expanded.collations[0].modules.unshift('node_modules/mojl/frontend');
 	}
 	
-	expanded._cache = new CtimeCache(expanded);
+	expanded._cache = new HashCache(expanded);
 
 	return expanded;
 }
