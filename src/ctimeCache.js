@@ -14,33 +14,116 @@ const map = {
 	'/': '!'
 };
 
-const infix = 'hashes';
-const cleanFile = 'lastclean';
-const suffix = '.mojlcache';
-
-const has = Object.prototype.hasOwnProperty;
-
 class CtimeCache {
-	base;
-	cacheDir;
-	cacheSave;
-	cacheCleanInterval;
-	cleanFile;
-	
-	lastClean = 0;
-	memoryCache = {};
-	
-	// to-do: On read, if lastClean was at cacheCleanInterval ago or more,
-	// then delete all the cache entries that are expired.
-	// lastPurged;
+	#base = '';
+	#cacheFile = '';
+	#cacheRead = false;
+	#cacheSave = false;
+	#cache = null;
 	
 	constructor(settings) {
-		this.base = settings.base;
-		this.cacheSave = settings.cacheSave;
-		this.cacheCleanInterval = settings.cacheCleanInterval;
-		this.cacheDir = path.join(this.base, settings.cacheDir, infix);
-		this.cleanFile = path.join(this.cacheDir, cleanFile);
+		this.#base = settings.base;
+		if (settings.cacheFile) {
+			this.#cacheFile = path.join(settings.base, settings.cacheFile);
+			this.#cacheRead = settings.cacheRead;
+			this.#cacheSave = settings.cacheSave;
+		}
 	}
+	
+	async stamp(relFile) {
+		const entry = await this.getFreshEntry(relFile);
+		const stamp = entry ? entry.hash : 'not-found';
+		return `?h=${stamp}`;
+	}
+	
+	async stampAbs(absFile) {
+		const relFile = path.relative(this.#base, absFile);
+		return await this.stamp(relFile);
+	}
+
+	getCtimeMs(absFile) {
+		return fs.statSync(absFile).ctimeMs;
+	}
+	
+	async getCache() {
+		if (!this.#cache) {
+			if (this.#cacheRead && this.#cacheFile && fs.existsSync(this.#cacheFile)) {
+				const jsonString = await fs.promises.readFile(this.#cacheFile, 'utf8');
+				this.#cache = JSON.parse(jsonString);
+			} else {
+				this.#cache = { entries: {} };
+			}
+		}
+		return this.#cache;
+	}
+	
+	async readExistingEntry(relFile) {
+		return (await this.getCache()).entries[relFile];
+	}
+	
+	async getFreshEntry(relFile) {
+		let entry = await this.readExistingEntry(relFile);
+		if (!this.entryIsFresh(entry)) {
+			entry = await this.createEntry(relFile);
+		}
+		return entry; // undefined if the file doesn't exist
+	}
+	
+	entryIsFresh(entry) {
+		if (!entry) {
+			return false;
+		}
+		const absFile = path.join(this.#base, entry.relFile);
+		return fs.existsSync(absFile) && (entry.ctimeMs === this.getCtimeMs(absFile));
+	}
+	
+	async createEntry(relFile) {
+		const absFile = path.join(this.#base, relFile);
+		const hash = await this.createHash(absFile);
+		if (hash) {
+			const ctimeMs = this.getCtimeMs(absFile);
+			const entry = { ctimeMs, hash, relFile };
+			(await this.getCache()).entries[relFile] = entry;
+			return entry;
+		}
+	}
+	
+	async getHash(relFile) {
+		let entry = this.getFreshEntry(relFile);
+		if (!this.entryIsFresh(entry)) {
+			entry = this.createEntry(relFile);
+		}
+		if (entry) {
+			return entry.hash;
+		}
+	}
+	
+	async createHash(absFile) {
+		if (fs.existsSync(absFile) && fs.statSync(absFile).isFile()) {
+			let content = await fs.promises.readFile(absFile, 'binary');
+			let sha = crypto.createHash('sha1');
+			sha.update(content);
+			return sha.digest('base64').replace(pattern, m => map[m]);
+		}
+	}
+
+	async saveCache() {
+		if (!this.#cache) {
+			return;
+		}
+		const { entries } = this.#cache;
+		for (let relFile of Object.keys(entries)) {
+			let absFile = path.join(this.#base, relFile);
+			if (!fs.existsSync(absFile)) {
+				delete entries[relFile];
+			}
+		}
+		if (this.#cacheSave && this.#cacheFile) {
+			await writeFileRecursive(this.#cacheFile, JSON.stringify(this.#cache), 'utf8');
+		}
+	}
+	
+	/*
 	
 	async checkClean() {
 		if (this.lastClean === 0 && this.cacheSave && fs.existsSync(this.cleanFile)) {
@@ -76,18 +159,7 @@ class CtimeCache {
 			}
 		}
 	}
-	
-	async stamp(relFile) {
-		const entry = await this.getEntry(relFile);
-		const stamp = entry ? entry.hash : 'not-found';
-		return `?h=${stamp}`;
-	}
-	
-	async stampAbs(absFile) {
-		const relFile = path.relative(this.base, absFile);
-		return this.stamp(relFile);
-	}
-	
+		
 	async getEntry(relFile) {
 		if (!(await this.hasFreshEntry(relFile))) {
 			await this.freshenEntry(relFile);
@@ -125,10 +197,6 @@ class CtimeCache {
 			sha.update(content);
 			return sha.digest('base64').replace(pattern, m => map[m]);
 		}
-	}
-	
-	getCtimeMs(absFile) {
-		return String(fs.statSync(absFile).ctimeMs);
 	}
 	
 	async readEntry(relFile) {
@@ -184,7 +252,8 @@ class CtimeCache {
 		return path.relative(this.cacheDir, absCacheFile.slice(0, -suffix.length));
 	}
 	
+	*/
+	
 }
 
 module.exports = CtimeCache;
-

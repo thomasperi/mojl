@@ -91,32 +91,24 @@ const Options = {
 	buildAssetsDir: 'assets',
 	
 	/**
-	 * *constructor only*
-	 *
 	 * Relative to `base`
 	 * 
 	 * @type string
 	 * @default #value
 	 */
-	cacheDir: 'mojl_cache',
+	cacheFile: 'mojl-cache.json',
 	
 	/**
-	 * *constructor only*
-	 *
-	 * Save the cached hashes to the `cacheDir` directory inside `base`.
-	 * 
+	 * @type boolean
+	 * @default #value
+	 */
+	cacheRead: true,
+
+	/**
 	 * @type boolean
 	 * @default #value
 	 */
 	cacheSave: false,
-	
-	/**
-	 * *constructor only*
-	 *
-	 * @type number
-	 * @default #value
-	 */
-	cacheCleanInterval: 24 * 60 * 60 * 1000,
 	
 	/**
 	 * A NodeJS module descriptor to a file or module that exports an object to use as an

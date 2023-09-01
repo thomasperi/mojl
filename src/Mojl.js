@@ -11,9 +11,6 @@ const has = Object.prototype.hasOwnProperty;
 
 const nonOverridables = [
 	'base',
-	'cacheDir',
-	'cacheSave',
-	'cacheCleanInterval',
 	'collations',
 	'collatePages',
 	'collationNamePrefix',
