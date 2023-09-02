@@ -40,8 +40,8 @@ class HashCache {
 		return await this.stamp(relFile);
 	}
 
-	getCtimeMs(absFile) {
-		return fs.statSync(absFile).ctimeMs;
+	getMtime(absFile) {
+		return Math.floor(fs.statSync(absFile).mtimeMs / 1000);
 	}
 	
 	async getCache() {
@@ -73,7 +73,7 @@ class HashCache {
 			return false;
 		}
 		const absFile = path.join(this.#base, entry.relFile);
-		return fs.existsSync(absFile) && (entry.ctimeMs === this.getCtimeMs(absFile));
+		return fs.existsSync(absFile) && (entry.mtime === this.getMtime(absFile));
 	}
 	
 	async createEntry(relFile) {
@@ -95,8 +95,8 @@ class HashCache {
 		const absFile = path.join(this.#base, relFile);
 		const hash = await this.createHash(absFile);
 		if (hash) {
-			const ctimeMs = this.getCtimeMs(absFile);
-			const entry = { ctimeMs, hash, relFile };
+			const mtime = this.getMtime(absFile);
+			const entry = { mtime, hash, relFile };
 			(await this.getCache()).entries[relFile] = entry;
 			return entry;
 		}
