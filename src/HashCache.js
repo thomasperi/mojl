@@ -19,6 +19,7 @@ class HashCache {
 	#cacheFile = '';
 	#cacheTTL = 0;
 	#cache = null;
+	#jsonString = '';
 	
 	constructor(settings) {
 		this.#base = settings.base;
@@ -46,8 +47,8 @@ class HashCache {
 	async getCache() {
 		if (!this.#cache) {
 			if (this.#cacheFile && fs.existsSync(this.#cacheFile)) {
-				const jsonString = await fs.promises.readFile(this.#cacheFile, 'utf8');
-				this.#cache = JSON.parse(jsonString);
+				this.#jsonString = await fs.promises.readFile(this.#cacheFile, 'utf8');
+				this.#cache = JSON.parse(this.#jsonString);
 			} else {
 				this.#cache = { entries: {}, expires: 0 };
 			}
@@ -122,7 +123,10 @@ class HashCache {
 
 	async saveCache() {
 		if (this.#cache && this.#cacheFile) {
-			await writeFileRecursive(this.#cacheFile, JSON.stringify(this.#cache), 'utf8');
+			const newJsonString = JSON.stringify(this.#cache);
+			if (newJsonString !== this.#jsonString) {
+				await writeFileRecursive(this.#cacheFile, newJsonString, 'utf8');
+			}
 		}
 	}
 	
