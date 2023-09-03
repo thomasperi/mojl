@@ -19,7 +19,7 @@ describe(name, async () => {
 			let baseDest = path.join(base, 'destination/mirror');
 			let cssCode = fs.readFileSync(cssSourceFile, 'utf8');
 			
-			let expected = '#foo{ background: url(mirror/src/foo/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }';
+			let expected = '#foo{ background: url(mirror/src/foo/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~) }';
 			let actual = await relativizeCssUrls(
 				settings,
 				cssCode,

@@ -13,14 +13,14 @@ const expectedCss = `
 /* AUTO-GENERATED FILE. EDIT SOURCE FILES INSTEAD. */
 #a{}
 #b{}
-#c{ background: url(assets/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }
+#c{ background: url(assets/src/c/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~) }
 `;
 
 const expectedWeirdCss = `
 /* AUTO-GENERATED FILE. EDIT SOURCE FILES INSTEAD. */
 #a{}
 #b{}
-#c{ background: url(../assets/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }
+#c{ background: url(../assets/src/c/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~) }
 `;
 
 const expectedJs = `
@@ -34,7 +34,7 @@ const expectedCssCaps = `
 /* AUTO-GENERATED FILE. EDIT SOURCE FILES INSTEAD. */
 #A{}
 #B{}
-#C{ BACKGROUND: URL(ASSETS/SRC/C/ICON.GIF?H=GJI5YP!NG9C6F7MGWXYBWDBCL38~) }
+#C{ BACKGROUND: URL(ASSETS/SRC/C/ICON.GIF?H=WYCFIYXUNTNH1LGBCIFEKOG4RLW~) }
 `;
 
 const expectedJsCaps = `
@@ -95,7 +95,7 @@ describe(name, async () => {
 			]);
 			assert.equal(
 				after["dist/site.css"].trim(),
-				'#c{background:url(assets/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)}'
+				'#c{background:url(assets/src/c/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)}'
 			);
 		});
 	});

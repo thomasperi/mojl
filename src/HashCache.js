@@ -114,7 +114,7 @@ class HashCache {
 	
 	async createHash(absFile) {
 		if (fs.existsSync(absFile) && fs.statSync(absFile).isFile()) {
-			let content = await fs.promises.readFile(absFile, 'binary');
+			let content = await fs.promises.readFile(absFile);
 			let sha = crypto.createHash('sha1');
 			sha.update(content);
 			return sha.digest('base64').replace(pattern, m => map[m]);

@@ -27,9 +27,9 @@ describe(name, async () => {
 			
 			let after = box.snapshot();
 
-			assert.equal(after["dist/one.css"], ".d{--d:4}.e{--e:5}.f{--f:6;background:url(assets/src/collation1/f/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)}");
+			assert.equal(after["dist/one.css"], ".d{--d:4}.e{--e:5}.f{--f:6;background:url(assets/src/collation1/f/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)}");
 			assert.equal(after["dist/one.js"], "function d(){console.log(\"d\")}function e(){console.log(\"e\")}function f(){console.log(\"f\")}");
-			assert.equal(after["dist/two.css"], ".g{--g:7}.h{--h:8}.i{--i:9;background:url(assets/src/collation2/i/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)}");
+			assert.equal(after["dist/two.css"], ".g{--g:7}.h{--h:8}.i{--i:9;background:url(assets/src/collation2/i/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)}");
 			assert.equal(after["dist/two.js"], "function g(){console.log(\"g\")}function h(){console.log(\"h\")}function i(){console.log(\"i\")}");
 		});
 	});

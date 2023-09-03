@@ -18,7 +18,7 @@ describe(name, async () => {
 			let filePath = 'images/icon.gif';
 			let options = undefined;
 			let actual = await fileUrl(settings, currentTemplate, currentPage, filePath, options);
-			let expected = '/assets/src/home/foo/images/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~';
+			let expected = '/assets/src/home/foo/images/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~';
 			assert.equal(actual, expected);
 		});
 	});
@@ -31,7 +31,7 @@ describe(name, async () => {
 			let filePath = path.join(base, 'src/home/foo/images/icon.gif');
 			let options = undefined;
 			let actual = await fileUrl(settings, currentTemplate, currentPage, filePath, options);
-			let expected = '/assets/src/home/foo/images/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~';
+			let expected = '/assets/src/home/foo/images/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~';
 			assert.equal(actual, expected);
 		});
 	});
@@ -44,7 +44,7 @@ describe(name, async () => {
 			let filePath = 'images/icon.gif';
 			let options = undefined;
 			let actual = await fileUrl(settings, currentTemplate, currentPage, filePath, options);
-			let expected = '../assets/src/home/foo/images/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~';
+			let expected = '../assets/src/home/foo/images/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~';
 			assert.equal(actual, expected);
 		});
 	});

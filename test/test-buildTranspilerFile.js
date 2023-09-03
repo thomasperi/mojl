@@ -56,7 +56,7 @@ describe(name, async () => {
 			assert.equal(after[`dev/${temp}/assets/src/b/b.scss`], '#b-sass{}');
 			assert.equal(after[`dev/${temp}/assets/src/c/c.scss`],
 				// relative to {base}/dev, since that's where output.css will be.
-				'#c-sass{ background: url(assets/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }'
+				'#c-sass{ background: url(assets/src/c/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~) }'
 			);
 		
 			assert.deepEqual(JSON.parse(after[`dev/${temp}/site.css.scss`]), {
@@ -123,7 +123,7 @@ describe(name, async () => {
 
 			assert.equal(after[`dev-weird/${temp}/zote/sbor/src/c/c.scss`],
 				// relative to {base}/dev-weird/foo, since that's where output.css will be.
-				'#c-sass{ background: url(../zote/sbor/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }'
+				'#c-sass{ background: url(../zote/sbor/src/c/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~) }'
 			);
 		
 			assert.deepEqual(JSON.parse(after[`dev-weird/${temp}/foo/output.css.scss`]), {
@@ -161,7 +161,7 @@ describe(name, async () => {
 
 			assert.equal(after[`dev-weird/${temp}/zote/sbor/src/c/c.scss`],
 				// relative to {base}/dev-weird/foo, since that's where output.css will be.
-				'#c-sass{ background: url(../zote/sbor/src/c/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~) }'
+				'#c-sass{ background: url(../zote/sbor/src/c/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~) }'
 			);
 		
 			assert.deepEqual(JSON.parse(after[`dev-weird/${temp}/foo/output.css.scss`]), {

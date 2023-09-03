@@ -15,7 +15,7 @@ describe(name, async () => {
 			let settings = await expandOptions();
 			let builder = TemplateHelper(settings, '/abc/def/index.html');
 			let actual = await builder.include('src/foo');
-			let expected = 'foo(/assets/src/foo/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)';
+			let expected = 'foo(/assets/src/foo/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)';
 			assert.equal(actual, expected);
 		});
 	});
@@ -45,7 +45,7 @@ describe(name, async () => {
 			let settings = await expandOptions();
 			let builder = TemplateHelper(settings);
 			let actual = await builder.include('src/bar');
-			let expected = 'bar(/assets/src/foo/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)';
+			let expected = 'bar(/assets/src/foo/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)';
 			assert.equal(actual, expected);
 		});
 	});
@@ -55,7 +55,7 @@ describe(name, async () => {
 			let settings = await expandOptions({ pageRelativeUrls: true });
 			let builder = TemplateHelper(settings, '/abc/def/index.html');
 			let actual = await builder.include('src/bar');
-			let expected = 'bar(../../assets/src/foo/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)';
+			let expected = 'bar(../../assets/src/foo/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)';
 			assert.equal(actual, expected);
 		});
 	});
@@ -65,7 +65,7 @@ describe(name, async () => {
 			let settings = await expandOptions();
 			let builder = TemplateHelper(settings);
 			let actual = await builder.include('src/zote');
-			let expected = 'zote(/assets/src/foo/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)';
+			let expected = 'zote(/assets/src/foo/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)';
 			assert.equal(actual, expected);
 		});
 	});
@@ -75,7 +75,7 @@ describe(name, async () => {
 			let settings = await expandOptions({ pageRelativeUrls: true });
 			let builder = TemplateHelper(settings, '/abc/def/index.html');
 			let actual = await builder.include('src/zote');
-			let expected = 'zote(../../assets/src/foo/icon.gif?h=gJI5Yp!Ng9C6F7mGWXybWDBcL38~)';
+			let expected = 'zote(../../assets/src/foo/icon.gif?h=wyCFiYxuNtNh1LgBcIfekOG4Rlw~)';
 			assert.equal(actual, expected);
 		});
 	});
