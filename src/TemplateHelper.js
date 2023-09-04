@@ -21,13 +21,14 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 	
 	const stack = [];
 
-	const helper = function (strings, ...values) {
-		let outputPromise = templateTagFn(strings, ...values);
-		if (trimIncludes) {
-			outputPromise = outputPromise.then(output => output.trim());
-		}
-		return outputPromise;
-	};
+	const helper = templateTagFn;
+	// const helper = function (strings, ...values) {
+	// 	let outputPromise = templateTagFn(strings, ...values);
+	// 	if (trimIncludes) {
+	// 		outputPromise = outputPromise.then(output => output.trim());
+	// 	}
+	// 	return outputPromise;
+	// };
 	
 	helper.exists = (module) => {
 		return !!getTemplate(base, expandModule(base, stack, module));
@@ -46,11 +47,12 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 		}
 		
 		stack.push({module, templatePath});
-		
 		let outputPromise = includeTemplate(templatePath, helper, props);
-		
 		stack.pop();
 		
+		if (trimIncludes && outputPromise instanceof Promise) {
+			outputPromise = outputPromise.then(output => output.trim());
+		}
 		return outputPromise;
 	};
 	
@@ -123,7 +125,7 @@ function includeTemplate(templatePath, mojlBuilder, props) {
 	}
 	let outputPromise = fn(mojlBuilder, props);
 	if (outputPromise !== false && !(outputPromise instanceof Promise)) {
-		throw `Template function must return false or a Promise such as "mojl.template\`...\`" (${templatePath})`;
+		throw `Template function must return false or a Promise such as "tpl\`...\`" (${templatePath})`;
 	}
 	return outputPromise;
 }
