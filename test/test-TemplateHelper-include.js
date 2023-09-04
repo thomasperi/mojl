@@ -81,9 +81,7 @@ describe(name, async () => {
 
 	it('should trim whitespace by default', async () => {
 		await cloneRun(async (base, box) => { // eslint-disable-line no-unused-vars
-			let settings = await expandOptions({
-				modules: ['src-trim/*']
-			});
+			let settings = await expandOptions();
 			let builder = TemplateHelper(settings);
 			let actual = await builder.include('src-trim/foo');
 			let expected = 'outer(inner)';
