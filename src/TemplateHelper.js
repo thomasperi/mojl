@@ -21,14 +21,9 @@ function TemplateHelper(settings, urlDocument = '/index.html') {
 	
 	const stack = [];
 
-	const helper = templateTagFn;
-	// const helper = function (strings, ...values) {
-	// 	let outputPromise = templateTagFn(strings, ...values);
-	// 	if (trimIncludes) {
-	// 		outputPromise = outputPromise.then(output => output.trim());
-	// 	}
-	// 	return outputPromise;
-	// };
+	// A proxy function for the actual tag function,
+	// so we're not adding methods to the original.
+	const helper = (...args) => templateTagFn(...args);
 	
 	helper.exists = (module) => {
 		return !!getTemplate(base, expandModule(base, stack, module));
