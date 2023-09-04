@@ -1,0 +1,1 @@
+module.exports = (tpl, props) => tpl`${ tpl.scripts() }`;
