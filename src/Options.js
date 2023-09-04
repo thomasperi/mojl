@@ -111,6 +111,20 @@ const Options = {
 	cacheTTL: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
 	
 	/**
+	 * @type boolean
+	 * @default #value
+	 */
+	exportConfig: false,
+
+	/**
+	 * Relative to `base`
+	 * 
+	 * @type string
+	 * @default #value
+	 */
+	exportConfigFile: 'mojl-config.json',
+	
+	/**
 	 * A NodeJS module descriptor to a file or module that exports an object to use as an
 	 * adapter for a CSS transpiler such as LESS or SASS.
 	 *
